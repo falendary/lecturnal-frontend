@@ -1,0 +1,32 @@
+<nav>
+    <div class="nav-wrapper">
+        <a href="#" class="brand-logo">Lecturnal</a>
+        <ul id="nav-mobile" class="right hide-on-med-and-down">
+            <li><a href="sass.html">Sass</a></li>
+            <li><a href="badges.html">Components</a></li>
+            <li><a href="collapsible.html">JavaScript</a></li>
+        </ul>
+    </div>
+</nav>
+<div class="dashboard-component">
+
+    <div class="container">
+
+        Недавние файлы
+
+        <div class="row">
+
+            <div class="col s3" *ngFor="let presentation of presentations"
+                 [routerLink]="['/presentation', presentation.id]">
+                <div class="card">
+                    <div class="card-content">
+                        {{presentation.name}}
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

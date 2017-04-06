@@ -1,0 +1,32 @@
+<!DOCTYPE html><html><head><title>Lecturnal</title><base href="/"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="core/materialize-css/materialize.min.css"><link rel="stylesheet" href="index/content/css/main.min.css"><script src="core/core-js/client/shim.min.js"></script><script src="core/zone.js/dist/zone.js"></script><script src="core/systemjs/dist/system.js"></script><script src="index/scripts/main.js"></script><script>System.config({
+            packages: {
+//                app: {
+//                    main: './app.js',
+//                    format: 'register',
+//                    defaultExtension: 'js'
+//                },
+                rxjs: {
+                    defaultExtension: 'js'
+                }
+            },
+            paths: {
+                'npm:': 'core/'
+            },
+            map: {
+//                app: 'index/main.js',
+
+                '@angular/core': 'npm:@angular/core/bundles/core.umd.js',
+                '@angular/common': 'npm:@angular/common/bundles/common.umd.js',
+                '@angular/compiler': 'npm:@angular/compiler/bundles/compiler.umd.js',
+                '@angular/platform-browser': 'npm:@angular/platform-browser/bundles/platform-browser.umd.js',
+                '@angular/platform-browser-dynamic': 'npm:@angular/platform-browser-dynamic/bundles/platform-browser-dynamic.umd.js',
+                '@angular/http': 'npm:@angular/http/bundles/http.umd.js',
+                '@angular/router': 'npm:@angular/router/bundles/router.umd.js',
+                '@angular/forms': 'npm:@angular/forms/bundles/forms.umd.js',
+
+                'rxjs': 'npm:rxjs'
+            }
+        });
+        System.import('main').catch(function (err) {
+            console.error(err);
+        });</script></head><body><base href="/"><shell>Loading AppComponent content here ...</shell></body></html>
