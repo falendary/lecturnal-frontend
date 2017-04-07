@@ -7,14 +7,612 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-System.register("app/components/shell-component/shell.component", ["@angular/core"], function (exports_1, context_1) {
+System.register("editor-features/components/interfaces/IEditorButton", [], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var core_1, ShellComponent;
+    return {
+        setters: [],
+        execute: function () {
+        }
+    };
+});
+System.register("editor-features/models/selectionData", [], function (exports_2, context_2) {
+    "use strict";
+    var __moduleName = context_2 && context_2.id;
+    var SelectionData;
+    return {
+        setters: [],
+        execute: function () {
+            SelectionData = class SelectionData {
+            };
+            exports_2("SelectionData", SelectionData);
+        }
+    };
+});
+System.register("editor-features/helpers/selectionHelper", ["editor-features/models/selectionData"], function (exports_3, context_3) {
+    "use strict";
+    var __moduleName = context_3 && context_3.id;
+    var selectionData_1, SelectionHelper;
+    return {
+        setters: [
+            function (selectionData_1_1) {
+                selectionData_1 = selectionData_1_1;
+            }
+        ],
+        execute: function () {
+            SelectionHelper = class SelectionHelper {
+                static getSelectionData() {
+                    let selectionData = new selectionData_1.SelectionData();
+                    let selection = window.getSelection();
+                    let offsetFrom = selection.focusOffset;
+                    let offsetTo = selection.anchorOffset;
+                    if (selection.focusOffset > selection.anchorOffset) {
+                        offsetFrom = selection.anchorOffset;
+                        offsetTo = selection.focusOffset;
+                    }
+                    let node = selection.focusNode;
+                    let startString = node.nodeValue.slice(0, offsetFrom);
+                    let middleString = node.nodeValue.slice(offsetFrom, offsetTo);
+                    let endString = node.nodeValue.slice(offsetTo, node.nodeValue.length);
+                    selectionData.offsetFrom = offsetFrom;
+                    selectionData.offsetTo = offsetTo;
+                    selectionData.startString = startString;
+                    selectionData.middleString = middleString;
+                    selectionData.endString = endString;
+                    return selectionData;
+                }
+                static findBlockParent(element) {
+                    if (element.parentElement.localName == 'p' || element.parentElement.localName == 'div' || element.parentElement.localName == 'li') {
+                        return element.parentElement;
+                    }
+                    else {
+                        return SelectionHelper.findBlockParent(element.parentElement);
+                    }
+                }
+            };
+            exports_3("SelectionHelper", SelectionHelper);
+        }
+    };
+});
+System.register("editor-features/components/b-component/b.component", ["@angular/core", "editor-features/helpers/selectionHelper"], function (exports_4, context_4) {
+    "use strict";
+    var __moduleName = context_4 && context_4.id;
+    var core_1, core_2, selectionHelper_1, BComponent;
     return {
         setters: [
             function (core_1_1) {
                 core_1 = core_1_1;
+                core_2 = core_1_1;
+            },
+            function (selectionHelper_1_1) {
+                selectionHelper_1 = selectionHelper_1_1;
+            }
+        ],
+        execute: function () {
+            BComponent = class BComponent {
+                constructor() {
+                    this.update = new core_1.EventEmitter();
+                }
+                wrapSelected() {
+                    let selection = window.getSelection();
+                    let node = selection.focusNode;
+                    let selectionData = selectionHelper_1.SelectionHelper.getSelectionData();
+                    if (document.getElementById(this.editorId).contains(node)) {
+                        node.parentNode.innerHTML = selectionData.startString + '<b>' + selectionData.middleString + '</b>' + selectionData.endString;
+                        this.update.emit();
+                    }
+                }
+            };
+            __decorate([
+                core_2.Output('contenteditableModelChange'),
+                __metadata("design:type", Object)
+            ], BComponent.prototype, "update", void 0);
+            __decorate([
+                core_2.Input('content'),
+                __metadata("design:type", String)
+            ], BComponent.prototype, "content", void 0);
+            __decorate([
+                core_2.Input('editorId'),
+                __metadata("design:type", String)
+            ], BComponent.prototype, "editorId", void 0);
+            BComponent = __decorate([
+                core_1.Component({
+                    selector: 'b-editor-button',
+                    template: `
+      <a (click)="wrapSelected()" class="waves-effect waves-light btn"><b>B</b></a>
+    `
+                })
+            ], BComponent);
+            exports_4("BComponent", BComponent);
+        }
+    };
+});
+System.register("editor-features/components/i-component/i.component", ["@angular/core", "editor-features/helpers/selectionHelper"], function (exports_5, context_5) {
+    "use strict";
+    var __moduleName = context_5 && context_5.id;
+    var core_3, core_4, selectionHelper_2, IComponent;
+    return {
+        setters: [
+            function (core_3_1) {
+                core_3 = core_3_1;
+                core_4 = core_3_1;
+            },
+            function (selectionHelper_2_1) {
+                selectionHelper_2 = selectionHelper_2_1;
+            }
+        ],
+        execute: function () {
+            IComponent = class IComponent {
+                constructor() {
+                    this.update = new core_3.EventEmitter();
+                }
+                wrapSelected() {
+                    let selection = window.getSelection();
+                    let node = selection.focusNode;
+                    let selectionData = selectionHelper_2.SelectionHelper.getSelectionData();
+                    if (document.getElementById(this.editorId).contains(node)) {
+                        node.parentNode.innerHTML = selectionData.startString + '<i>' + selectionData.middleString + '</i>' + selectionData.endString;
+                        this.update.emit();
+                    }
+                }
+            };
+            __decorate([
+                core_4.Output('contenteditableModelChange'),
+                __metadata("design:type", Object)
+            ], IComponent.prototype, "update", void 0);
+            __decorate([
+                core_4.Input('content'),
+                __metadata("design:type", String)
+            ], IComponent.prototype, "content", void 0);
+            __decorate([
+                core_4.Input('editorId'),
+                __metadata("design:type", String)
+            ], IComponent.prototype, "editorId", void 0);
+            IComponent = __decorate([
+                core_3.Component({
+                    selector: 'i-editor-button',
+                    template: `
+      <a (click)="wrapSelected()" class="waves-effect waves-light btn"><i>I</i></a>
+    `
+                })
+            ], IComponent);
+            exports_5("IComponent", IComponent);
+        }
+    };
+});
+System.register("editor-features/components/u-component/u.component", ["@angular/core", "editor-features/helpers/selectionHelper"], function (exports_6, context_6) {
+    "use strict";
+    var __moduleName = context_6 && context_6.id;
+    var core_5, core_6, selectionHelper_3, UComponent;
+    return {
+        setters: [
+            function (core_5_1) {
+                core_5 = core_5_1;
+                core_6 = core_5_1;
+            },
+            function (selectionHelper_3_1) {
+                selectionHelper_3 = selectionHelper_3_1;
+            }
+        ],
+        execute: function () {
+            UComponent = class UComponent {
+                constructor() {
+                    this.update = new core_5.EventEmitter();
+                }
+                wrapSelected() {
+                    let selection = window.getSelection();
+                    let node = selection.focusNode;
+                    let selectionData = selectionHelper_3.SelectionHelper.getSelectionData();
+                    if (document.getElementById(this.editorId).contains(node)) {
+                        node.parentNode.innerHTML = selectionData.startString + '<span class="e-style-underline">' + selectionData.middleString + '</span>' + selectionData.endString;
+                        this.update.emit();
+                    }
+                }
+            };
+            __decorate([
+                core_6.Output('contenteditableModelChange'),
+                __metadata("design:type", Object)
+            ], UComponent.prototype, "update", void 0);
+            __decorate([
+                core_6.Input('content'),
+                __metadata("design:type", String)
+            ], UComponent.prototype, "content", void 0);
+            __decorate([
+                core_6.Input('editorId'),
+                __metadata("design:type", String)
+            ], UComponent.prototype, "editorId", void 0);
+            UComponent = __decorate([
+                core_5.Component({
+                    selector: 'u-editor-button',
+                    template: `
+      <a (click)="wrapSelected()" class="waves-effect waves-light btn"><span class="e-style-underline">U</span></a>
+    `
+                })
+            ], UComponent);
+            exports_6("UComponent", UComponent);
+        }
+    };
+});
+System.register("editor-features/components/text-center-component/text-center.component", ["@angular/core"], function (exports_7, context_7) {
+    "use strict";
+    var __moduleName = context_7 && context_7.id;
+    var core_7, core_8, TextCenterComponent;
+    return {
+        setters: [
+            function (core_7_1) {
+                core_7 = core_7_1;
+                core_8 = core_7_1;
+            }
+        ],
+        execute: function () {
+            TextCenterComponent = class TextCenterComponent {
+                constructor() {
+                    this.update = new core_7.EventEmitter();
+                }
+                wrapSelected() {
+                    let selection = window.getSelection();
+                    let node = selection.focusNode;
+                    if (document.getElementById(this.editorId).contains(node)) {
+                        if (node.parentNode.classList.contains('e-style-text-center')) {
+                            node.parentNode.classList.remove('e-style-text-center');
+                        }
+                        else {
+                            node.parentNode.classList.remove('e-style-text-left');
+                            node.parentNode.classList.remove('e-style-text-right');
+                            node.parentNode.classList.add('e-style-text-center');
+                        }
+                    }
+                }
+            };
+            __decorate([
+                core_8.Output('contenteditableModelChange'),
+                __metadata("design:type", Object)
+            ], TextCenterComponent.prototype, "update", void 0);
+            __decorate([
+                core_8.Input('content'),
+                __metadata("design:type", String)
+            ], TextCenterComponent.prototype, "content", void 0);
+            __decorate([
+                core_8.Input('editorId'),
+                __metadata("design:type", String)
+            ], TextCenterComponent.prototype, "editorId", void 0);
+            TextCenterComponent = __decorate([
+                core_7.Component({
+                    selector: 'text-center-editor-button',
+                    template: `
+      <a (click)="wrapSelected()" class="waves-effect waves-light btn">C</a>
+    `
+                })
+            ], TextCenterComponent);
+            exports_7("TextCenterComponent", TextCenterComponent);
+        }
+    };
+});
+System.register("editor-features/components/text-right-component/text-right.component", ["@angular/core"], function (exports_8, context_8) {
+    "use strict";
+    var __moduleName = context_8 && context_8.id;
+    var core_9, core_10, TextRightComponent;
+    return {
+        setters: [
+            function (core_9_1) {
+                core_9 = core_9_1;
+                core_10 = core_9_1;
+            }
+        ],
+        execute: function () {
+            TextRightComponent = class TextRightComponent {
+                constructor() {
+                    this.update = new core_9.EventEmitter();
+                }
+                wrapSelected() {
+                    let selection = window.getSelection();
+                    let node = selection.focusNode;
+                    if (document.getElementById(this.editorId).contains(node)) {
+                        if (node.parentNode.classList.contains('e-style-text-right')) {
+                            node.parentNode.classList.remove('e-style-text-right');
+                        }
+                        else {
+                            node.parentNode.classList.remove('e-style-text-center');
+                            node.parentNode.classList.remove('e-style-text-left');
+                            node.parentNode.classList.add('e-style-text-right');
+                        }
+                    }
+                }
+            };
+            __decorate([
+                core_10.Output('contenteditableModelChange'),
+                __metadata("design:type", Object)
+            ], TextRightComponent.prototype, "update", void 0);
+            __decorate([
+                core_10.Input('content'),
+                __metadata("design:type", String)
+            ], TextRightComponent.prototype, "content", void 0);
+            __decorate([
+                core_10.Input('editorId'),
+                __metadata("design:type", String)
+            ], TextRightComponent.prototype, "editorId", void 0);
+            TextRightComponent = __decorate([
+                core_9.Component({
+                    selector: 'text-right-editor-button',
+                    template: `
+      <a (click)="wrapSelected()" class="waves-effect waves-light btn">R</a>
+    `
+                })
+            ], TextRightComponent);
+            exports_8("TextRightComponent", TextRightComponent);
+        }
+    };
+});
+System.register("editor-features/components/text-left-component/text-left.component", ["@angular/core"], function (exports_9, context_9) {
+    "use strict";
+    var __moduleName = context_9 && context_9.id;
+    var core_11, core_12, TextLeftComponent;
+    return {
+        setters: [
+            function (core_11_1) {
+                core_11 = core_11_1;
+                core_12 = core_11_1;
+            }
+        ],
+        execute: function () {
+            TextLeftComponent = class TextLeftComponent {
+                constructor() {
+                    this.update = new core_11.EventEmitter();
+                }
+                wrapSelected() {
+                    let selection = window.getSelection();
+                    let node = selection.focusNode;
+                    if (document.getElementById(this.editorId).contains(node)) {
+                        if (node.parentNode.classList.contains('e-style-text-left')) {
+                            node.parentNode.classList.remove('e-style-text-left');
+                        }
+                        else {
+                            node.parentNode.classList.remove('e-style-text-center');
+                            node.parentNode.classList.remove('e-style-text-right');
+                            node.parentNode.classList.add('e-style-text-left');
+                        }
+                    }
+                }
+            };
+            __decorate([
+                core_12.Output('contenteditableModelChange'),
+                __metadata("design:type", Object)
+            ], TextLeftComponent.prototype, "update", void 0);
+            __decorate([
+                core_12.Input('content'),
+                __metadata("design:type", String)
+            ], TextLeftComponent.prototype, "content", void 0);
+            __decorate([
+                core_12.Input('editorId'),
+                __metadata("design:type", String)
+            ], TextLeftComponent.prototype, "editorId", void 0);
+            TextLeftComponent = __decorate([
+                core_11.Component({
+                    selector: 'text-left-editor-button',
+                    template: `
+      <a (click)="wrapSelected()" class="waves-effect waiting-right btn">L</a>
+    `
+                })
+            ], TextLeftComponent);
+            exports_9("TextLeftComponent", TextLeftComponent);
+        }
+    };
+});
+System.register("editor-features/components/ul-component/ul.component", ["@angular/core"], function (exports_10, context_10) {
+    "use strict";
+    var __moduleName = context_10 && context_10.id;
+    var core_13, core_14, UlComponent;
+    return {
+        setters: [
+            function (core_13_1) {
+                core_13 = core_13_1;
+                core_14 = core_13_1;
+            }
+        ],
+        execute: function () {
+            UlComponent = class UlComponent {
+                constructor() {
+                    this.update = new core_13.EventEmitter();
+                }
+                wrapSelected() {
+                }
+            };
+            __decorate([
+                core_14.Output('contenteditableModelChange'),
+                __metadata("design:type", Object)
+            ], UlComponent.prototype, "update", void 0);
+            __decorate([
+                core_14.Input('content'),
+                __metadata("design:type", String)
+            ], UlComponent.prototype, "content", void 0);
+            __decorate([
+                core_14.Input('editorId'),
+                __metadata("design:type", String)
+            ], UlComponent.prototype, "editorId", void 0);
+            UlComponent = __decorate([
+                core_13.Component({
+                    selector: 'ul-editor-button',
+                    template: `
+      <a (click)="wrapSelected()" class="waves-effect waves-light btn">UL</a>
+    `
+                })
+            ], UlComponent);
+            exports_10("UlComponent", UlComponent);
+        }
+    };
+});
+System.register("editor-features/components/ol-component/ol.component", ["@angular/core", "editor-features/helpers/selectionHelper"], function (exports_11, context_11) {
+    "use strict";
+    var __moduleName = context_11 && context_11.id;
+    var core_15, core_16, selectionHelper_4, OlComponent;
+    return {
+        setters: [
+            function (core_15_1) {
+                core_15 = core_15_1;
+                core_16 = core_15_1;
+            },
+            function (selectionHelper_4_1) {
+                selectionHelper_4 = selectionHelper_4_1;
+            }
+        ],
+        execute: function () {
+            OlComponent = class OlComponent {
+                constructor() {
+                    this.update = new core_15.EventEmitter();
+                }
+                getNodeIndex(elements, node) {
+                    let index;
+                    for (let i = 0; i < elements.length; i = i + 1) {
+                        if (elements[i].contains(node)) {
+                            index = i;
+                        }
+                    }
+                    return index;
+                }
+                getElementsToWrap(elements, startIndex, endIndex) {
+                    let result = [];
+                    for (let i = startIndex; i <= endIndex; i = i + 1) {
+                        result.push(elements[i]);
+                    }
+                    return result;
+                }
+                wrapSelected() {
+                    let selection = window.getSelection();
+                    let node = selection.focusNode;
+                    console.log('selection', selection);
+                    console.log('selection.extentOffset', selection.extentOffset);
+                    console.log('selection.anchorOffset', selection.anchorOffset);
+                    console.log('node.parentNode.innerText.length', node.parentNode.innerText.length);
+                    if (document.getElementById(this.editorId).contains(node)) {
+                        let startNode = selection.extentNode;
+                        let endNode = selection.anchorNode;
+                        let startParent = selectionHelper_4.SelectionHelper.findBlockParent(startNode.parentElement);
+                        let endParent = selectionHelper_4.SelectionHelper.findBlockParent(endNode.parentElement);
+                        if (startParent == endParent) {
+                            let startIndex = this.getNodeIndex(startParent.children, startNode);
+                            let endIndex = this.getNodeIndex(startParent.children, startNode);
+                            console.log('startIndex', startIndex);
+                            console.log('endIndex', endIndex);
+                            let elementsToWrap = this.getElementsToWrap(startParent.children, startIndex, endIndex);
+                            let ol = document.createElement("OL");
+                            for (let i = 0; i < elementsToWrap.length; i = i + 1) {
+                                elementsToWrap[i].outerHTML = '<li>' + startParent.children[i].outerHTML + '</li>';
+                                console.log('startParent.children[i].outerHTML', startParent.children[i].outerHTML);
+                                ol.appendChild(elementsToWrap[i]);
+                            }
+                            for (let i = startIndex; i <= endIndex; i = i + 1) {
+                                startParent.children[i].remove();
+                            }
+                            startParent.insertBefore(ol, startParent.children[startIndex + 1]);
+                            console.log('startParent', startParent);
+                            this.update.emit();
+                        }
+                    }
+                }
+            };
+            __decorate([
+                core_16.Output('contenteditableModelChange'),
+                __metadata("design:type", Object)
+            ], OlComponent.prototype, "update", void 0);
+            __decorate([
+                core_16.Input('content'),
+                __metadata("design:type", String)
+            ], OlComponent.prototype, "content", void 0);
+            __decorate([
+                core_16.Input('editorId'),
+                __metadata("design:type", String)
+            ], OlComponent.prototype, "editorId", void 0);
+            OlComponent = __decorate([
+                core_15.Component({
+                    selector: 'ol-editor-button',
+                    template: `
+      <a (click)="wrapSelected()" class="waves-effect waves-light btn">OL</a>
+    `
+                })
+            ], OlComponent);
+            exports_11("OlComponent", OlComponent);
+        }
+    };
+});
+System.register("editor-features/editor-featrues.module", ["@angular/core", "editor-features/components/b-component/b.component", "editor-features/components/i-component/i.component", "editor-features/components/u-component/u.component", "editor-features/components/text-center-component/text-center.component", "editor-features/components/text-right-component/text-right.component", "editor-features/components/text-left-component/text-left.component", "editor-features/components/ul-component/ul.component", "editor-features/components/ol-component/ol.component"], function (exports_12, context_12) {
+    "use strict";
+    var __moduleName = context_12 && context_12.id;
+    var core_17, b_component_1, i_component_1, u_component_1, text_center_component_1, text_right_component_1, text_left_component_1, ul_component_1, ol_component_1, EditorFeaturesModule;
+    return {
+        setters: [
+            function (core_17_1) {
+                core_17 = core_17_1;
+            },
+            function (b_component_1_1) {
+                b_component_1 = b_component_1_1;
+            },
+            function (i_component_1_1) {
+                i_component_1 = i_component_1_1;
+            },
+            function (u_component_1_1) {
+                u_component_1 = u_component_1_1;
+            },
+            function (text_center_component_1_1) {
+                text_center_component_1 = text_center_component_1_1;
+            },
+            function (text_right_component_1_1) {
+                text_right_component_1 = text_right_component_1_1;
+            },
+            function (text_left_component_1_1) {
+                text_left_component_1 = text_left_component_1_1;
+            },
+            function (ul_component_1_1) {
+                ul_component_1 = ul_component_1_1;
+            },
+            function (ol_component_1_1) {
+                ol_component_1 = ol_component_1_1;
+            }
+        ],
+        execute: function () {
+            EditorFeaturesModule = class EditorFeaturesModule {
+                constructor() {
+                    console.log('EditorFeaturesModule init');
+                }
+            };
+            EditorFeaturesModule = __decorate([
+                core_17.NgModule({
+                    declarations: [
+                        b_component_1.BComponent,
+                        i_component_1.IComponent,
+                        u_component_1.UComponent,
+                        text_center_component_1.TextCenterComponent,
+                        text_right_component_1.TextRightComponent,
+                        text_left_component_1.TextLeftComponent,
+                        ol_component_1.OlComponent,
+                        ul_component_1.UlComponent
+                    ],
+                    imports: [],
+                    exports: [
+                        b_component_1.BComponent,
+                        i_component_1.IComponent,
+                        u_component_1.UComponent,
+                        text_center_component_1.TextCenterComponent,
+                        text_right_component_1.TextRightComponent,
+                        text_left_component_1.TextLeftComponent,
+                        ol_component_1.OlComponent,
+                        ul_component_1.UlComponent
+                    ],
+                    bootstrap: []
+                }),
+                __metadata("design:paramtypes", [])
+            ], EditorFeaturesModule);
+            exports_12("EditorFeaturesModule", EditorFeaturesModule);
+        }
+    };
+});
+System.register("app/components/shell-component/shell.component", ["@angular/core"], function (exports_13, context_13) {
+    "use strict";
+    var __moduleName = context_13 && context_13.id;
+    var core_18, ShellComponent;
+    return {
+        setters: [
+            function (core_18_1) {
+                core_18 = core_18_1;
             }
         ],
         execute: function () {
@@ -24,7 +622,7 @@ System.register("app/components/shell-component/shell.component", ["@angular/cor
                 }
             };
             ShellComponent = __decorate([
-                core_1.Component({
+                core_18.Component({
                     selector: 'shell',
                     template: `
       <router-outlet></router-outlet>
@@ -32,44 +630,44 @@ System.register("app/components/shell-component/shell.component", ["@angular/cor
                 }),
                 __metadata("design:paramtypes", [])
             ], ShellComponent);
-            exports_1("ShellComponent", ShellComponent);
+            exports_13("ShellComponent", ShellComponent);
         }
     };
 });
-System.register("app/models/Slide", [], function (exports_2, context_2) {
+System.register("app/models/Slide", [], function (exports_14, context_14) {
     "use strict";
-    var __moduleName = context_2 && context_2.id;
+    var __moduleName = context_14 && context_14.id;
     var Slide;
     return {
         setters: [],
         execute: function () {
             Slide = class Slide {
             };
-            exports_2("Slide", Slide);
+            exports_14("Slide", Slide);
         }
     };
 });
-System.register("app/models/Presentation", [], function (exports_3, context_3) {
+System.register("app/models/Presentation", [], function (exports_15, context_15) {
     "use strict";
-    var __moduleName = context_3 && context_3.id;
+    var __moduleName = context_15 && context_15.id;
     var Presentation;
     return {
         setters: [],
         execute: function () {
             Presentation = class Presentation {
             };
-            exports_3("Presentation", Presentation);
+            exports_15("Presentation", Presentation);
         }
     };
 });
-System.register("app/components/dashboard-component/dashboard.component", ["@angular/core"], function (exports_4, context_4) {
+System.register("app/components/dashboard-component/dashboard.component", ["@angular/core"], function (exports_16, context_16) {
     "use strict";
-    var __moduleName = context_4 && context_4.id;
-    var core_2, DashboardComponent;
+    var __moduleName = context_16 && context_16.id;
+    var core_19, DashboardComponent;
     return {
         setters: [
-            function (core_2_1) {
-                core_2 = core_2_1;
+            function (core_19_1) {
+                core_19 = core_19_1;
             }
         ],
         execute: function () {
@@ -80,7 +678,7 @@ System.register("app/components/dashboard-component/dashboard.component", ["@ang
                 }
             };
             DashboardComponent = __decorate([
-                core_2.Component({
+                core_19.Component({
                     selector: 'dashboard',
                     template: `
       <nav>
@@ -119,18 +717,18 @@ System.register("app/components/dashboard-component/dashboard.component", ["@ang
                 }),
                 __metadata("design:paramtypes", [])
             ], DashboardComponent);
-            exports_4("DashboardComponent", DashboardComponent);
+            exports_16("DashboardComponent", DashboardComponent);
         }
     };
 });
-System.register("app/components/presentation-component/presentation.component", ["@angular/core"], function (exports_5, context_5) {
+System.register("app/components/presentation-component/presentation.component", ["@angular/core"], function (exports_17, context_17) {
     "use strict";
-    var __moduleName = context_5 && context_5.id;
-    var core_3, PresentationComponent;
+    var __moduleName = context_17 && context_17.id;
+    var core_20, PresentationComponent;
     return {
         setters: [
-            function (core_3_1) {
-                core_3 = core_3_1;
+            function (core_20_1) {
+                core_20 = core_20_1;
             }
         ],
         execute: function () {
@@ -140,7 +738,7 @@ System.register("app/components/presentation-component/presentation.component", 
                 }
             };
             PresentationComponent = __decorate([
-                core_3.Component({
+                core_20.Component({
                     selector: 'presentation',
                     template: `
       <nav>
@@ -162,42 +760,81 @@ System.register("app/components/presentation-component/presentation.component", 
                 }),
                 __metadata("design:paramtypes", [])
             ], PresentationComponent);
-            exports_5("PresentationComponent", PresentationComponent);
+            exports_17("PresentationComponent", PresentationComponent);
         }
     };
 });
-System.register("app/components/slide-editor-component/slide-editor.component", ["@angular/core"], function (exports_6, context_6) {
+System.register("app/components/slide-editor-component/slide-editor.component", ["@angular/core"], function (exports_18, context_18) {
     "use strict";
-    var __moduleName = context_6 && context_6.id;
-    var core_4, SlideEditorComponent;
+    var __moduleName = context_18 && context_18.id;
+    var core_21, SlideEditorComponent;
     return {
         setters: [
-            function (core_4_1) {
-                core_4 = core_4_1;
+            function (core_21_1) {
+                core_21 = core_21_1;
             }
         ],
         execute: function () {
             SlideEditorComponent = class SlideEditorComponent {
                 constructor() {
+                    this.isVisualizer = true;
                     console.log('SlideEditorCompoennt init');
+                    this.editorId = 'editor1';
                     this.slide = {
-                        content: '123'
+                        content: '<div style="border-bottom: 2px solid #ccc; padding-bottom: 10px"><div></div><ul style="padding-left: 40px"><li>Item 1</li><li>Item 2</li><li>Item 3</li><li>Item 4</li></ul></div></div><p>'
+                            + 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod'
+                            + 'tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam'
+                            + 'quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo '
+                            + 'consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse '
+                            + 'cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non '
+                            + 'proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>'
                     };
                 }
             };
             SlideEditorComponent = __decorate([
-                core_4.Component({
+                core_21.Component({
                     selector: 'slide-editor',
                     template: `
       <div>
 
-          <div>
-              {{slide.content}}
+          <div class="row editor-switchers">
+
+              <a (click)="isVisualizer = true" class="{{ isVisualizer ? 'active' : '' }} waves-effect waves-light btn">Визуализатор</a>
+              <a (click)="isVisualizer = false" class="{{ isVisualizer ? '' : 'active' }} waves-effect waves-light btn">Исходный
+                  текст</a>
+
+          </div>
+
+          <div class="editor-toolbox">
+
+              <b-editor-button [content]="slide.content" [editorId]="editorId"></b-editor-button>
+              <i-editor-button [content]="slide.content" [editorId]="editorId"></i-editor-button>
+              <u-editor-button [content]="slide.content" [editorId]="editorId"></u-editor-button>
+
+              <text-center-editor-button [content]="slide.content" [editorId]="editorId"></text-center-editor-button>
+              <text-right-editor-button [content]="slide.content" [editorId]="editorId"></text-right-editor-button>
+              <text-left-editor-button [content]="slide.content" [editorId]="editorId"></text-left-editor-button>
+
+              <ul-editor-button [content]="slide.content" [editorId]="editorId"></ul-editor-button>
+              <ol-editor-button [content]="slide.content" [editorId]="editorId"></ol-editor-button>
+
           </div>
 
           <div>
 
-              <textarea [(ngModel)]="slide.content" name="" id="" cols="30" rows="10"></textarea>
+              <div *ngIf="isVisualizer == true">
+
+                  <div contentEditable="true"
+                       id="{{editorId}}"
+                       [(contenteditableModel)]="slide.content"
+                       class="slide-editor-wrapper" tabindex="1">
+                  </div>
+              </div>
+
+              <div *ngIf="isVisualizer == false">
+                  <textarea class="slide-editor-textarea" name="" id="" cols="30" rows="10"
+                            [(ngModel)]="slide.content"></textarea>
+              </div>
 
           </div>
 
@@ -206,18 +843,18 @@ System.register("app/components/slide-editor-component/slide-editor.component", 
                 }),
                 __metadata("design:paramtypes", [])
             ], SlideEditorComponent);
-            exports_6("SlideEditorComponent", SlideEditorComponent);
+            exports_18("SlideEditorComponent", SlideEditorComponent);
         }
     };
 });
-System.register("app/components/slides-tree-component/slides-tree.component", ["@angular/core"], function (exports_7, context_7) {
+System.register("app/components/slides-tree-component/slides-tree.component", ["@angular/core"], function (exports_19, context_19) {
     "use strict";
-    var __moduleName = context_7 && context_7.id;
-    var core_5, SlidesTreeComponent;
+    var __moduleName = context_19 && context_19.id;
+    var core_22, SlidesTreeComponent;
     return {
         setters: [
-            function (core_5_1) {
-                core_5 = core_5_1;
+            function (core_22_1) {
+                core_22 = core_22_1;
             }
         ],
         execute: function () {
@@ -236,7 +873,7 @@ System.register("app/components/slides-tree-component/slides-tree.component", ["
                 }
             };
             SlidesTreeComponent = __decorate([
-                core_5.Component({
+                core_22.Component({
                     selector: 'slides-tree',
                     template: `
       <div>
@@ -258,13 +895,65 @@ System.register("app/components/slides-tree-component/slides-tree.component", ["
                 }),
                 __metadata("design:paramtypes", [])
             ], SlidesTreeComponent);
-            exports_7("SlidesTreeComponent", SlidesTreeComponent);
+            exports_19("SlidesTreeComponent", SlidesTreeComponent);
         }
     };
 });
-System.register("app/app.routing", ["@angular/router", "app/components/dashboard-component/dashboard.component", "app/components/presentation-component/presentation.component"], function (exports_8, context_8) {
+System.register("app/directives/content-editable.directive", ["@angular/core"], function (exports_20, context_20) {
     "use strict";
-    var __moduleName = context_8 && context_8.id;
+    var __moduleName = context_20 && context_20.id;
+    var core_23, core_24, ContentEditableDirective;
+    return {
+        setters: [
+            function (core_23_1) {
+                core_23 = core_23_1;
+                core_24 = core_23_1;
+            }
+        ],
+        execute: function () {
+            ContentEditableDirective = class ContentEditableDirective {
+                constructor(elementRef) {
+                    this.elementRef = elementRef;
+                    this.update = new core_23.EventEmitter();
+                }
+                ngOnChanges(changes) {
+                    if (changes.model.firstChange == true) {
+                        this.refreshView();
+                    }
+                }
+                onEdit() {
+                    let value = this.elementRef.nativeElement.innerHTML;
+                    this.update.emit(value);
+                }
+                refreshView() {
+                    this.elementRef.nativeElement.innerHTML = this.model;
+                }
+            };
+            __decorate([
+                core_24.Input('contenteditableModel'),
+                __metadata("design:type", Object)
+            ], ContentEditableDirective.prototype, "model", void 0);
+            __decorate([
+                core_24.Output('contenteditableModelChange'),
+                __metadata("design:type", Object)
+            ], ContentEditableDirective.prototype, "update", void 0);
+            ContentEditableDirective = __decorate([
+                core_23.Directive({
+                    selector: '[contenteditableModel]',
+                    host: {
+                        '(blur)': 'onEdit()',
+                        '(keyup)': 'onEdit()'
+                    }
+                }),
+                __metadata("design:paramtypes", [core_23.ElementRef])
+            ], ContentEditableDirective);
+            exports_20("ContentEditableDirective", ContentEditableDirective);
+        }
+    };
+});
+System.register("app/app.routing", ["@angular/router", "app/components/dashboard-component/dashboard.component", "app/components/presentation-component/presentation.component"], function (exports_21, context_21) {
+    "use strict";
+    var __moduleName = context_21 && context_21.id;
     var router_1, dashboard_component_1, presentation_component_1, appRoutes, routing;
     return {
         setters: [
@@ -295,18 +984,18 @@ System.register("app/app.routing", ["@angular/router", "app/components/dashboard
                         }]
                 },
             ];
-            exports_8("routing", routing = router_1.RouterModule.forRoot(appRoutes));
+            exports_21("routing", routing = router_1.RouterModule.forRoot(appRoutes));
         }
     };
 });
-System.register("app/app.module", ["@angular/core", "@angular/http", "@angular/forms", "@angular/platform-browser", "app/components/shell-component/shell.component", "app/components/dashboard-component/dashboard.component", "app/components/presentation-component/presentation.component", "app/components/slide-editor-component/slide-editor.component", "app/components/slides-tree-component/slides-tree.component", "app/app.routing"], function (exports_9, context_9) {
+System.register("app/app.module", ["@angular/core", "@angular/http", "@angular/forms", "@angular/platform-browser", "editor-features/editor-featrues.module", "app/components/shell-component/shell.component", "app/components/dashboard-component/dashboard.component", "app/components/presentation-component/presentation.component", "app/components/slide-editor-component/slide-editor.component", "app/components/slides-tree-component/slides-tree.component", "app/directives/content-editable.directive", "app/app.routing"], function (exports_22, context_22) {
     "use strict";
-    var __moduleName = context_9 && context_9.id;
-    var core_6, http_1, forms_1, platform_browser_1, shell_component_1, dashboard_component_2, presentation_component_2, slide_editor_component_1, slides_tree_component_1, app_routing_1, AppModule;
+    var __moduleName = context_22 && context_22.id;
+    var core_25, http_1, forms_1, platform_browser_1, editor_featrues_module_1, shell_component_1, dashboard_component_2, presentation_component_2, slide_editor_component_1, slides_tree_component_1, content_editable_directive_1, app_routing_1, AppModule;
     return {
         setters: [
-            function (core_6_1) {
-                core_6 = core_6_1;
+            function (core_25_1) {
+                core_25 = core_25_1;
             },
             function (http_1_1) {
                 http_1 = http_1_1;
@@ -316,6 +1005,9 @@ System.register("app/app.module", ["@angular/core", "@angular/http", "@angular/f
             },
             function (platform_browser_1_1) {
                 platform_browser_1 = platform_browser_1_1;
+            },
+            function (editor_featrues_module_1_1) {
+                editor_featrues_module_1 = editor_featrues_module_1_1;
             },
             function (shell_component_1_1) {
                 shell_component_1 = shell_component_1_1;
@@ -332,6 +1024,9 @@ System.register("app/app.module", ["@angular/core", "@angular/http", "@angular/f
             function (slides_tree_component_1_1) {
                 slides_tree_component_1 = slides_tree_component_1_1;
             },
+            function (content_editable_directive_1_1) {
+                content_editable_directive_1 = content_editable_directive_1_1;
+            },
             function (app_routing_1_1) {
                 app_routing_1 = app_routing_1_1;
             }
@@ -343,31 +1038,33 @@ System.register("app/app.module", ["@angular/core", "@angular/http", "@angular/f
                 }
             };
             AppModule = __decorate([
-                core_6.NgModule({
+                core_25.NgModule({
                     imports: [
                         platform_browser_1.BrowserModule,
                         http_1.HttpModule,
                         forms_1.FormsModule,
-                        app_routing_1.routing
+                        app_routing_1.routing,
+                        editor_featrues_module_1.EditorFeaturesModule
                     ],
                     declarations: [
                         shell_component_1.ShellComponent,
                         dashboard_component_2.DashboardComponent,
                         presentation_component_2.PresentationComponent,
                         slide_editor_component_1.SlideEditorComponent,
-                        slides_tree_component_1.SlidesTreeComponent
+                        slides_tree_component_1.SlidesTreeComponent,
+                        content_editable_directive_1.ContentEditableDirective
                     ],
                     bootstrap: [shell_component_1.ShellComponent]
                 }),
                 __metadata("design:paramtypes", [])
             ], AppModule);
-            exports_9("AppModule", AppModule);
+            exports_22("AppModule", AppModule);
         }
     };
 });
-System.register("main", ["@angular/platform-browser-dynamic", "app/app.module"], function (exports_10, context_10) {
+System.register("main", ["@angular/platform-browser-dynamic", "app/app.module"], function (exports_23, context_23) {
     "use strict";
-    var __moduleName = context_10 && context_10.id;
+    var __moduleName = context_23 && context_23.id;
     var platform_browser_dynamic_1, app_module_1;
     return {
         setters: [

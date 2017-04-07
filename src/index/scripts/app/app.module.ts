@@ -3,11 +3,15 @@ import { HttpModule } from '@angular/http';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 
+import { EditorFeaturesModule } from '../editor-features/editor-featrues.module'
+
 import { ShellComponent } from './components/shell-component/shell.component';
 import { DashboardComponent } from './components/dashboard-component/dashboard.component';
 import { PresentationComponent} from './components/presentation-component/presentation.component';
 import { SlideEditorComponent } from './components/slide-editor-component/slide-editor.component';
 import { SlidesTreeComponent } from './components/slides-tree-component/slides-tree.component';
+
+import { ContentEditableDirective } from './directives/content-editable.directive';
 
 import { routing } from './app.routing';
 
@@ -16,14 +20,18 @@ import { routing } from './app.routing';
         BrowserModule,
         HttpModule,
         FormsModule,
-        routing
+        routing,
+        EditorFeaturesModule
     ],
     declarations: [
+
         ShellComponent,
         DashboardComponent,
         PresentationComponent,
         SlideEditorComponent,
-        SlidesTreeComponent
+        SlidesTreeComponent,
+
+        ContentEditableDirective
     ],
     bootstrap: [ShellComponent]
 })
