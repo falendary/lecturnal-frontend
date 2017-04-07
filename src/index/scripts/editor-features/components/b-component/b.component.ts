@@ -1,8 +1,9 @@
 import {Component,EventEmitter} from '@angular/core';
 import {Input, Output} from '@angular/core';
 import {IEditorButton} from '../interfaces/IEditorButton';
-import {SelectionHelper} from '../../helpers/selectionHelper';
+import {SelectionHelper} from '../../helpers/selection.helper';
 import {SelectionData} from '../../models/selectionData';
+import {NodeHelper} from '../../helpers/node.helper';
 
 @Component({
     selector: 'b-editor-button',
@@ -27,7 +28,18 @@ export class BComponent implements IEditorButton {
 
         if (document.getElementById(this.editorId).contains(node)) {
 
-            node.parentNode.innerHTML = selectionData.startString + '<b>' + selectionData.middleString + '</b>' + selectionData.endString;
+            console.log({parentNode: node.parentNode});
+
+            if(NodeHelper.haveParentWithLocalName(node, 'b')) {
+
+                let parent = NodeHelper.findParentByLocalName(node, 'b');
+                parent.outerHTML = parent.innerHTML;
+
+            } else {
+                node.parentNode.innerHTML = selectionData.startString + '<b>' + selectionData.middleString + '</b>' + selectionData.endString;
+            }
+
+
 
             this.update.emit()
         }

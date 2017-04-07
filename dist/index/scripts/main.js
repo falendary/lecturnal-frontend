@@ -29,7 +29,7 @@ System.register("editor-features/models/selectionData", [], function (exports_2,
         }
     };
 });
-System.register("editor-features/helpers/selectionHelper", ["editor-features/models/selectionData"], function (exports_3, context_3) {
+System.register("editor-features/helpers/selection.helper", ["editor-features/models/selectionData"], function (exports_3, context_3) {
     "use strict";
     var __moduleName = context_3 && context_3.id;
     var selectionData_1, SelectionHelper;
@@ -74,18 +74,91 @@ System.register("editor-features/helpers/selectionHelper", ["editor-features/mod
         }
     };
 });
-System.register("editor-features/components/b-component/b.component", ["@angular/core", "editor-features/helpers/selectionHelper"], function (exports_4, context_4) {
+System.register("editor-features/helpers/node.helper", [], function (exports_4, context_4) {
     "use strict";
     var __moduleName = context_4 && context_4.id;
-    var core_1, core_2, selectionHelper_1, BComponent;
+    var NodeHelper;
+    return {
+        setters: [],
+        execute: function () {
+            NodeHelper = class NodeHelper {
+                static getListOfBlockTags() {
+                    return ['div', 'p', 'ul'];
+                }
+                static isInlineTag(tag) {
+                    let blockTags = NodeHelper.getListOfBlockTags();
+                    if (blockTags.indexOf(tag) == -1) {
+                        return true;
+                    }
+                    return false;
+                }
+                static findParentByLocalName(node, tag) {
+                    if (NodeHelper.isInlineTag(node.parentElement.localName)) {
+                        if (node.parentElement.localName == tag) {
+                            return node.parentElement;
+                        }
+                        else {
+                            return NodeHelper.findParentByLocalName(node.parentElement, tag);
+                        }
+                    }
+                    else {
+                        return undefined;
+                    }
+                }
+                static findParentByClassName(node, className) {
+                    if (NodeHelper.isInlineTag(node.parentElement.localName)) {
+                        if (node.parentElement.classList.contains(className)) {
+                            return node.parentElement;
+                        }
+                        else {
+                            return NodeHelper.findParentByClassName(node.parentElement, className);
+                        }
+                    }
+                    else {
+                        return undefined;
+                    }
+                }
+                static findParentByLocalNameAndClassName(node, tag, className) {
+                    if (NodeHelper.isInlineTag(node.parentElement.localName)) {
+                        if (node.parentElement.classList.contains(className) && node.parentElement.localName == tag) {
+                            return node.parentElement;
+                        }
+                        else {
+                            return NodeHelper.findParentByClassName(node.parentElement, className);
+                        }
+                    }
+                    else {
+                        return undefined;
+                    }
+                }
+                static haveParentWithLocalName(node, tag) {
+                    let parentElement = NodeHelper.findParentByLocalName(node, tag);
+                    return !!parentElement;
+                }
+                static haveParentWithClassName(node, className) {
+                    let parentElement = NodeHelper.findParentByClassName(node, className);
+                    return !!parentElement;
+                }
+            };
+            exports_4("NodeHelper", NodeHelper);
+        }
+    };
+});
+System.register("editor-features/components/b-component/b.component", ["@angular/core", "editor-features/helpers/selection.helper", "editor-features/helpers/node.helper"], function (exports_5, context_5) {
+    "use strict";
+    var __moduleName = context_5 && context_5.id;
+    var core_1, core_2, selection_helper_1, node_helper_1, BComponent;
     return {
         setters: [
             function (core_1_1) {
                 core_1 = core_1_1;
                 core_2 = core_1_1;
             },
-            function (selectionHelper_1_1) {
-                selectionHelper_1 = selectionHelper_1_1;
+            function (selection_helper_1_1) {
+                selection_helper_1 = selection_helper_1_1;
+            },
+            function (node_helper_1_1) {
+                node_helper_1 = node_helper_1_1;
             }
         ],
         execute: function () {
@@ -96,9 +169,16 @@ System.register("editor-features/components/b-component/b.component", ["@angular
                 wrapSelected() {
                     let selection = window.getSelection();
                     let node = selection.focusNode;
-                    let selectionData = selectionHelper_1.SelectionHelper.getSelectionData();
+                    let selectionData = selection_helper_1.SelectionHelper.getSelectionData();
                     if (document.getElementById(this.editorId).contains(node)) {
-                        node.parentNode.innerHTML = selectionData.startString + '<b>' + selectionData.middleString + '</b>' + selectionData.endString;
+                        console.log({ parentNode: node.parentNode });
+                        if (node_helper_1.NodeHelper.haveParentWithLocalName(node, 'b')) {
+                            let parent = node_helper_1.NodeHelper.findParentByLocalName(node, 'b');
+                            parent.outerHTML = parent.innerHTML;
+                        }
+                        else {
+                            node.parentNode.innerHTML = selectionData.startString + '<b>' + selectionData.middleString + '</b>' + selectionData.endString;
+                        }
                         this.update.emit();
                     }
                 }
@@ -123,22 +203,25 @@ System.register("editor-features/components/b-component/b.component", ["@angular
     `
                 })
             ], BComponent);
-            exports_4("BComponent", BComponent);
+            exports_5("BComponent", BComponent);
         }
     };
 });
-System.register("editor-features/components/i-component/i.component", ["@angular/core", "editor-features/helpers/selectionHelper"], function (exports_5, context_5) {
+System.register("editor-features/components/i-component/i.component", ["@angular/core", "editor-features/helpers/selection.helper", "editor-features/helpers/node.helper"], function (exports_6, context_6) {
     "use strict";
-    var __moduleName = context_5 && context_5.id;
-    var core_3, core_4, selectionHelper_2, IComponent;
+    var __moduleName = context_6 && context_6.id;
+    var core_3, core_4, selection_helper_2, node_helper_2, IComponent;
     return {
         setters: [
             function (core_3_1) {
                 core_3 = core_3_1;
                 core_4 = core_3_1;
             },
-            function (selectionHelper_2_1) {
-                selectionHelper_2 = selectionHelper_2_1;
+            function (selection_helper_2_1) {
+                selection_helper_2 = selection_helper_2_1;
+            },
+            function (node_helper_2_1) {
+                node_helper_2 = node_helper_2_1;
             }
         ],
         execute: function () {
@@ -149,9 +232,15 @@ System.register("editor-features/components/i-component/i.component", ["@angular
                 wrapSelected() {
                     let selection = window.getSelection();
                     let node = selection.focusNode;
-                    let selectionData = selectionHelper_2.SelectionHelper.getSelectionData();
+                    let selectionData = selection_helper_2.SelectionHelper.getSelectionData();
                     if (document.getElementById(this.editorId).contains(node)) {
-                        node.parentNode.innerHTML = selectionData.startString + '<i>' + selectionData.middleString + '</i>' + selectionData.endString;
+                        if (node_helper_2.NodeHelper.haveParentWithLocalName(node, 'i')) {
+                            let parent = node_helper_2.NodeHelper.findParentByLocalName(node, 'i');
+                            parent.outerHTML = parent.innerHTML;
+                        }
+                        else {
+                            node.parentNode.innerHTML = selectionData.startString + '<i>' + selectionData.middleString + '</i>' + selectionData.endString;
+                        }
                         this.update.emit();
                     }
                 }
@@ -176,22 +265,25 @@ System.register("editor-features/components/i-component/i.component", ["@angular
     `
                 })
             ], IComponent);
-            exports_5("IComponent", IComponent);
+            exports_6("IComponent", IComponent);
         }
     };
 });
-System.register("editor-features/components/u-component/u.component", ["@angular/core", "editor-features/helpers/selectionHelper"], function (exports_6, context_6) {
+System.register("editor-features/components/u-component/u.component", ["@angular/core", "editor-features/helpers/selection.helper", "editor-features/helpers/node.helper"], function (exports_7, context_7) {
     "use strict";
-    var __moduleName = context_6 && context_6.id;
-    var core_5, core_6, selectionHelper_3, UComponent;
+    var __moduleName = context_7 && context_7.id;
+    var core_5, core_6, selection_helper_3, node_helper_3, UComponent;
     return {
         setters: [
             function (core_5_1) {
                 core_5 = core_5_1;
                 core_6 = core_5_1;
             },
-            function (selectionHelper_3_1) {
-                selectionHelper_3 = selectionHelper_3_1;
+            function (selection_helper_3_1) {
+                selection_helper_3 = selection_helper_3_1;
+            },
+            function (node_helper_3_1) {
+                node_helper_3 = node_helper_3_1;
             }
         ],
         execute: function () {
@@ -202,9 +294,15 @@ System.register("editor-features/components/u-component/u.component", ["@angular
                 wrapSelected() {
                     let selection = window.getSelection();
                     let node = selection.focusNode;
-                    let selectionData = selectionHelper_3.SelectionHelper.getSelectionData();
+                    let selectionData = selection_helper_3.SelectionHelper.getSelectionData();
                     if (document.getElementById(this.editorId).contains(node)) {
-                        node.parentNode.innerHTML = selectionData.startString + '<span class="e-style-underline">' + selectionData.middleString + '</span>' + selectionData.endString;
+                        if (node_helper_3.NodeHelper.haveParentWithLocalName(node, 'span') && node_helper_3.NodeHelper.haveParentWithClassName(node, 'e-style-underline')) {
+                            let parent = node_helper_3.NodeHelper.findParentByLocalNameAndClassName(node, 'span', 'e-style-underline');
+                            parent.outerHTML = parent.innerHTML;
+                        }
+                        else {
+                            node.parentNode.innerHTML = selectionData.startString + '<span class="e-style-underline">' + selectionData.middleString + '</span>' + selectionData.endString;
+                        }
                         this.update.emit();
                     }
                 }
@@ -229,13 +327,13 @@ System.register("editor-features/components/u-component/u.component", ["@angular
     `
                 })
             ], UComponent);
-            exports_6("UComponent", UComponent);
+            exports_7("UComponent", UComponent);
         }
     };
 });
-System.register("editor-features/components/text-center-component/text-center.component", ["@angular/core"], function (exports_7, context_7) {
+System.register("editor-features/components/text-center-component/text-center.component", ["@angular/core"], function (exports_8, context_8) {
     "use strict";
-    var __moduleName = context_7 && context_7.id;
+    var __moduleName = context_8 && context_8.id;
     var core_7, core_8, TextCenterComponent;
     return {
         setters: [
@@ -284,13 +382,13 @@ System.register("editor-features/components/text-center-component/text-center.co
     `
                 })
             ], TextCenterComponent);
-            exports_7("TextCenterComponent", TextCenterComponent);
+            exports_8("TextCenterComponent", TextCenterComponent);
         }
     };
 });
-System.register("editor-features/components/text-right-component/text-right.component", ["@angular/core"], function (exports_8, context_8) {
+System.register("editor-features/components/text-right-component/text-right.component", ["@angular/core"], function (exports_9, context_9) {
     "use strict";
-    var __moduleName = context_8 && context_8.id;
+    var __moduleName = context_9 && context_9.id;
     var core_9, core_10, TextRightComponent;
     return {
         setters: [
@@ -339,13 +437,13 @@ System.register("editor-features/components/text-right-component/text-right.comp
     `
                 })
             ], TextRightComponent);
-            exports_8("TextRightComponent", TextRightComponent);
+            exports_9("TextRightComponent", TextRightComponent);
         }
     };
 });
-System.register("editor-features/components/text-left-component/text-left.component", ["@angular/core"], function (exports_9, context_9) {
+System.register("editor-features/components/text-left-component/text-left.component", ["@angular/core"], function (exports_10, context_10) {
     "use strict";
-    var __moduleName = context_9 && context_9.id;
+    var __moduleName = context_10 && context_10.id;
     var core_11, core_12, TextLeftComponent;
     return {
         setters: [
@@ -394,13 +492,13 @@ System.register("editor-features/components/text-left-component/text-left.compon
     `
                 })
             ], TextLeftComponent);
-            exports_9("TextLeftComponent", TextLeftComponent);
+            exports_10("TextLeftComponent", TextLeftComponent);
         }
     };
 });
-System.register("editor-features/components/ul-component/ul.component", ["@angular/core"], function (exports_10, context_10) {
+System.register("editor-features/components/ul-component/ul.component", ["@angular/core"], function (exports_11, context_11) {
     "use strict";
-    var __moduleName = context_10 && context_10.id;
+    var __moduleName = context_11 && context_11.id;
     var core_13, core_14, UlComponent;
     return {
         setters: [
@@ -437,22 +535,22 @@ System.register("editor-features/components/ul-component/ul.component", ["@angul
     `
                 })
             ], UlComponent);
-            exports_10("UlComponent", UlComponent);
+            exports_11("UlComponent", UlComponent);
         }
     };
 });
-System.register("editor-features/components/ol-component/ol.component", ["@angular/core", "editor-features/helpers/selectionHelper"], function (exports_11, context_11) {
+System.register("editor-features/components/ol-component/ol.component", ["@angular/core", "editor-features/helpers/selection.helper"], function (exports_12, context_12) {
     "use strict";
-    var __moduleName = context_11 && context_11.id;
-    var core_15, core_16, selectionHelper_4, OlComponent;
+    var __moduleName = context_12 && context_12.id;
+    var core_15, core_16, selection_helper_4, OlComponent;
     return {
         setters: [
             function (core_15_1) {
                 core_15 = core_15_1;
                 core_16 = core_15_1;
             },
-            function (selectionHelper_4_1) {
-                selectionHelper_4 = selectionHelper_4_1;
+            function (selection_helper_4_1) {
+                selection_helper_4 = selection_helper_4_1;
             }
         ],
         execute: function () {
@@ -471,6 +569,7 @@ System.register("editor-features/components/ol-component/ol.component", ["@angul
                 }
                 getElementsToWrap(elements, startIndex, endIndex) {
                     let result = [];
+                    console.log('elements', elements);
                     for (let i = startIndex; i <= endIndex; i = i + 1) {
                         result.push(elements[i]);
                     }
@@ -486,8 +585,8 @@ System.register("editor-features/components/ol-component/ol.component", ["@angul
                     if (document.getElementById(this.editorId).contains(node)) {
                         let startNode = selection.extentNode;
                         let endNode = selection.anchorNode;
-                        let startParent = selectionHelper_4.SelectionHelper.findBlockParent(startNode.parentElement);
-                        let endParent = selectionHelper_4.SelectionHelper.findBlockParent(endNode.parentElement);
+                        let startParent = selection_helper_4.SelectionHelper.findBlockParent(startNode.parentElement);
+                        let endParent = selection_helper_4.SelectionHelper.findBlockParent(endNode.parentElement);
                         if (startParent == endParent) {
                             let startIndex = this.getNodeIndex(startParent.children, startNode);
                             let endIndex = this.getNodeIndex(startParent.children, startNode);
@@ -530,13 +629,13 @@ System.register("editor-features/components/ol-component/ol.component", ["@angul
     `
                 })
             ], OlComponent);
-            exports_11("OlComponent", OlComponent);
+            exports_12("OlComponent", OlComponent);
         }
     };
 });
-System.register("editor-features/editor-featrues.module", ["@angular/core", "editor-features/components/b-component/b.component", "editor-features/components/i-component/i.component", "editor-features/components/u-component/u.component", "editor-features/components/text-center-component/text-center.component", "editor-features/components/text-right-component/text-right.component", "editor-features/components/text-left-component/text-left.component", "editor-features/components/ul-component/ul.component", "editor-features/components/ol-component/ol.component"], function (exports_12, context_12) {
+System.register("editor-features/editor-featrues.module", ["@angular/core", "editor-features/components/b-component/b.component", "editor-features/components/i-component/i.component", "editor-features/components/u-component/u.component", "editor-features/components/text-center-component/text-center.component", "editor-features/components/text-right-component/text-right.component", "editor-features/components/text-left-component/text-left.component", "editor-features/components/ul-component/ul.component", "editor-features/components/ol-component/ol.component"], function (exports_13, context_13) {
     "use strict";
-    var __moduleName = context_12 && context_12.id;
+    var __moduleName = context_13 && context_13.id;
     var core_17, b_component_1, i_component_1, u_component_1, text_center_component_1, text_right_component_1, text_left_component_1, ul_component_1, ol_component_1, EditorFeaturesModule;
     return {
         setters: [
@@ -601,13 +700,13 @@ System.register("editor-features/editor-featrues.module", ["@angular/core", "edi
                 }),
                 __metadata("design:paramtypes", [])
             ], EditorFeaturesModule);
-            exports_12("EditorFeaturesModule", EditorFeaturesModule);
+            exports_13("EditorFeaturesModule", EditorFeaturesModule);
         }
     };
 });
-System.register("app/components/shell-component/shell.component", ["@angular/core"], function (exports_13, context_13) {
+System.register("app/components/shell-component/shell.component", ["@angular/core"], function (exports_14, context_14) {
     "use strict";
-    var __moduleName = context_13 && context_13.id;
+    var __moduleName = context_14 && context_14.id;
     var core_18, ShellComponent;
     return {
         setters: [
@@ -630,39 +729,39 @@ System.register("app/components/shell-component/shell.component", ["@angular/cor
                 }),
                 __metadata("design:paramtypes", [])
             ], ShellComponent);
-            exports_13("ShellComponent", ShellComponent);
+            exports_14("ShellComponent", ShellComponent);
         }
     };
 });
-System.register("app/models/Slide", [], function (exports_14, context_14) {
+System.register("app/models/Slide", [], function (exports_15, context_15) {
     "use strict";
-    var __moduleName = context_14 && context_14.id;
+    var __moduleName = context_15 && context_15.id;
     var Slide;
     return {
         setters: [],
         execute: function () {
             Slide = class Slide {
             };
-            exports_14("Slide", Slide);
+            exports_15("Slide", Slide);
         }
     };
 });
-System.register("app/models/Presentation", [], function (exports_15, context_15) {
+System.register("app/models/Presentation", [], function (exports_16, context_16) {
     "use strict";
-    var __moduleName = context_15 && context_15.id;
+    var __moduleName = context_16 && context_16.id;
     var Presentation;
     return {
         setters: [],
         execute: function () {
             Presentation = class Presentation {
             };
-            exports_15("Presentation", Presentation);
+            exports_16("Presentation", Presentation);
         }
     };
 });
-System.register("app/components/dashboard-component/dashboard.component", ["@angular/core"], function (exports_16, context_16) {
+System.register("app/components/dashboard-component/dashboard.component", ["@angular/core"], function (exports_17, context_17) {
     "use strict";
-    var __moduleName = context_16 && context_16.id;
+    var __moduleName = context_17 && context_17.id;
     var core_19, DashboardComponent;
     return {
         setters: [
@@ -717,13 +816,13 @@ System.register("app/components/dashboard-component/dashboard.component", ["@ang
                 }),
                 __metadata("design:paramtypes", [])
             ], DashboardComponent);
-            exports_16("DashboardComponent", DashboardComponent);
+            exports_17("DashboardComponent", DashboardComponent);
         }
     };
 });
-System.register("app/components/presentation-component/presentation.component", ["@angular/core"], function (exports_17, context_17) {
+System.register("app/components/presentation-component/presentation.component", ["@angular/core"], function (exports_18, context_18) {
     "use strict";
-    var __moduleName = context_17 && context_17.id;
+    var __moduleName = context_18 && context_18.id;
     var core_20, PresentationComponent;
     return {
         setters: [
@@ -760,13 +859,13 @@ System.register("app/components/presentation-component/presentation.component", 
                 }),
                 __metadata("design:paramtypes", [])
             ], PresentationComponent);
-            exports_17("PresentationComponent", PresentationComponent);
+            exports_18("PresentationComponent", PresentationComponent);
         }
     };
 });
-System.register("app/components/slide-editor-component/slide-editor.component", ["@angular/core"], function (exports_18, context_18) {
+System.register("app/components/slide-editor-component/slide-editor.component", ["@angular/core"], function (exports_19, context_19) {
     "use strict";
-    var __moduleName = context_18 && context_18.id;
+    var __moduleName = context_19 && context_19.id;
     var core_21, SlideEditorComponent;
     return {
         setters: [
@@ -843,13 +942,13 @@ System.register("app/components/slide-editor-component/slide-editor.component", 
                 }),
                 __metadata("design:paramtypes", [])
             ], SlideEditorComponent);
-            exports_18("SlideEditorComponent", SlideEditorComponent);
+            exports_19("SlideEditorComponent", SlideEditorComponent);
         }
     };
 });
-System.register("app/components/slides-tree-component/slides-tree.component", ["@angular/core"], function (exports_19, context_19) {
+System.register("app/components/slides-tree-component/slides-tree.component", ["@angular/core"], function (exports_20, context_20) {
     "use strict";
-    var __moduleName = context_19 && context_19.id;
+    var __moduleName = context_20 && context_20.id;
     var core_22, SlidesTreeComponent;
     return {
         setters: [
@@ -895,13 +994,13 @@ System.register("app/components/slides-tree-component/slides-tree.component", ["
                 }),
                 __metadata("design:paramtypes", [])
             ], SlidesTreeComponent);
-            exports_19("SlidesTreeComponent", SlidesTreeComponent);
+            exports_20("SlidesTreeComponent", SlidesTreeComponent);
         }
     };
 });
-System.register("app/directives/content-editable.directive", ["@angular/core"], function (exports_20, context_20) {
+System.register("app/directives/content-editable.directive", ["@angular/core"], function (exports_21, context_21) {
     "use strict";
-    var __moduleName = context_20 && context_20.id;
+    var __moduleName = context_21 && context_21.id;
     var core_23, core_24, ContentEditableDirective;
     return {
         setters: [
@@ -947,13 +1046,13 @@ System.register("app/directives/content-editable.directive", ["@angular/core"], 
                 }),
                 __metadata("design:paramtypes", [core_23.ElementRef])
             ], ContentEditableDirective);
-            exports_20("ContentEditableDirective", ContentEditableDirective);
+            exports_21("ContentEditableDirective", ContentEditableDirective);
         }
     };
 });
-System.register("app/app.routing", ["@angular/router", "app/components/dashboard-component/dashboard.component", "app/components/presentation-component/presentation.component"], function (exports_21, context_21) {
+System.register("app/app.routing", ["@angular/router", "app/components/dashboard-component/dashboard.component", "app/components/presentation-component/presentation.component"], function (exports_22, context_22) {
     "use strict";
-    var __moduleName = context_21 && context_21.id;
+    var __moduleName = context_22 && context_22.id;
     var router_1, dashboard_component_1, presentation_component_1, appRoutes, routing;
     return {
         setters: [
@@ -984,13 +1083,13 @@ System.register("app/app.routing", ["@angular/router", "app/components/dashboard
                         }]
                 },
             ];
-            exports_21("routing", routing = router_1.RouterModule.forRoot(appRoutes));
+            exports_22("routing", routing = router_1.RouterModule.forRoot(appRoutes));
         }
     };
 });
-System.register("app/app.module", ["@angular/core", "@angular/http", "@angular/forms", "@angular/platform-browser", "editor-features/editor-featrues.module", "app/components/shell-component/shell.component", "app/components/dashboard-component/dashboard.component", "app/components/presentation-component/presentation.component", "app/components/slide-editor-component/slide-editor.component", "app/components/slides-tree-component/slides-tree.component", "app/directives/content-editable.directive", "app/app.routing"], function (exports_22, context_22) {
+System.register("app/app.module", ["@angular/core", "@angular/http", "@angular/forms", "@angular/platform-browser", "editor-features/editor-featrues.module", "app/components/shell-component/shell.component", "app/components/dashboard-component/dashboard.component", "app/components/presentation-component/presentation.component", "app/components/slide-editor-component/slide-editor.component", "app/components/slides-tree-component/slides-tree.component", "app/directives/content-editable.directive", "app/app.routing"], function (exports_23, context_23) {
     "use strict";
-    var __moduleName = context_22 && context_22.id;
+    var __moduleName = context_23 && context_23.id;
     var core_25, http_1, forms_1, platform_browser_1, editor_featrues_module_1, shell_component_1, dashboard_component_2, presentation_component_2, slide_editor_component_1, slides_tree_component_1, content_editable_directive_1, app_routing_1, AppModule;
     return {
         setters: [
@@ -1058,13 +1157,13 @@ System.register("app/app.module", ["@angular/core", "@angular/http", "@angular/f
                 }),
                 __metadata("design:paramtypes", [])
             ], AppModule);
-            exports_22("AppModule", AppModule);
+            exports_23("AppModule", AppModule);
         }
     };
 });
-System.register("main", ["@angular/platform-browser-dynamic", "app/app.module"], function (exports_23, context_23) {
+System.register("main", ["@angular/platform-browser-dynamic", "app/app.module"], function (exports_24, context_24) {
     "use strict";
-    var __moduleName = context_23 && context_23.id;
+    var __moduleName = context_24 && context_24.id;
     var platform_browser_dynamic_1, app_module_1;
     return {
         setters: [

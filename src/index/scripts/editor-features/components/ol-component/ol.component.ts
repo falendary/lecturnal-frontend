@@ -1,7 +1,7 @@
 import {Component, EventEmitter} from '@angular/core';
 import {Input, Output} from '@angular/core';
 import {IEditorButton} from '../interfaces/IEditorButton';
-import {SelectionHelper} from "../../helpers/selectionHelper";
+import {SelectionHelper} from "../../helpers/selection.helper";
 
 @Component({
     selector: 'ol-editor-button',

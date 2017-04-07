@@ -2,7 +2,7 @@ import {Component, EventEmitter} from '@angular/core';
 import {Input, Output} from '@angular/core';
 import {IEditorButton} from '../interfaces/IEditorButton';
 import {SelectionData} from '../../models/selectionData';
-import {SelectionHelper} from '../../helpers/selectionHelper';
+import {SelectionHelper} from '../../helpers/selection.helper';
 
 @Component({
     selector: 'text-center-editor-button',
