@@ -15,30 +15,27 @@ export class BComponent implements IEditorButton {
     @Output('contenteditableModelChange') update = new EventEmitter();
 
     @Input('content')
-    public content:string;
+    public content: string;
 
     @Input('editorId')
-    public editorId:string;
+    public editorId: string;
 
-    wrapSelected():void {
+    wrapSelected(): void {
 
         let selection = window.getSelection();
-        let node:any = selection.focusNode;
-        let selectionData:SelectionData = SelectionHelper.getSelectionData();
+        let node: any = selection.focusNode;
+        let selectionData: SelectionData = SelectionHelper.getSelectionData();
 
         if (document.getElementById(this.editorId).contains(node)) {
-
-            console.log({parentNode: node.parentNode});
 
             if(NodeHelper.haveParentWithLocalName(node, 'b')) {
 
                 let parent = NodeHelper.findParentByLocalName(node, 'b');
                 parent.outerHTML = parent.innerHTML;
 
-            } else {
+            }  else {
                 node.parentNode.innerHTML = selectionData.startString + '<b>' + selectionData.middleString + '</b>' + selectionData.endString;
             }
-
 
 
             this.update.emit()

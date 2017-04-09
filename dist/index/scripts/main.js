@@ -51,23 +51,17 @@ System.register("editor-features/helpers/selection.helper", ["editor-features/mo
                         offsetTo = selection.focusOffset;
                     }
                     let node = selection.focusNode;
-                    let startString = node.nodeValue.slice(0, offsetFrom);
-                    let middleString = node.nodeValue.slice(offsetFrom, offsetTo);
-                    let endString = node.nodeValue.slice(offsetTo, node.nodeValue.length);
+                    console.log('node', { n: node });
+                    console.log('selection', selection);
+                    let startString = node.textContent.slice(0, offsetFrom);
+                    let middleString = node.textContent.slice(offsetFrom, offsetTo);
+                    let endString = node.textContent.slice(offsetTo, node.textContent.length);
                     selectionData.offsetFrom = offsetFrom;
                     selectionData.offsetTo = offsetTo;
                     selectionData.startString = startString;
                     selectionData.middleString = middleString;
                     selectionData.endString = endString;
                     return selectionData;
-                }
-                static findBlockParent(element) {
-                    if (element.parentElement.localName == 'p' || element.parentElement.localName == 'div' || element.parentElement.localName == 'li') {
-                        return element.parentElement;
-                    }
-                    else {
-                        return SelectionHelper.findBlockParent(element.parentElement);
-                    }
                 }
             };
             exports_3("SelectionHelper", SelectionHelper);
@@ -139,6 +133,107 @@ System.register("editor-features/helpers/node.helper", [], function (exports_4, 
                     let parentElement = NodeHelper.findParentByClassName(node, className);
                     return !!parentElement;
                 }
+                static haveParentWithLocalNameAndClassName(node, tag, className) {
+                    let parentElement = NodeHelper.findParentByLocalNameAndClassName(node, tag, className);
+                    return !!parentElement;
+                }
+                static findBlockParent(element) {
+                    if (element.parentElement.localName == 'p' || element.parentElement.localName == 'div' || element.parentElement.localName == 'li') {
+                        return element.parentElement;
+                    }
+                    else {
+                        return NodeHelper.findBlockParent(element.parentElement);
+                    }
+                }
+                static unwrapElements(elements, tag, startOffset, endOffset) {
+                    let currentLength = 0;
+                    console.log('Action: unwrapElements');
+                    console.log('endOffset: ' + startOffset);
+                    console.log('endOffset: ' + endOffset);
+                    console.log('elements.length: ' + elements.length);
+                    for (let i = 0; i < elements.length; i = i + 1) {
+                        currentLength = currentLength + elements[i].textContent.length;
+                        console.log('Index: ' + i);
+                        console.log('Current length: ' + currentLength);
+                        if (elements[i].hasOwnProperty('localName')) {
+                            if (elements[i].localName == tag) {
+                                if (currentLength >= startOffset) {
+                                    if (currentLength - endOffset <= elements[i].textContent.length) {
+                                        let inElementEndOffset = currentLength - endOffset;
+                                        if (inElementEndOffset == elements[i].textContent.length) {
+                                            elements[i].outerHTML = elements[i].innerHTML;
+                                        }
+                                        else {
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    return elements;
+                }
+                ;
+                static wrapElements(elements, tag, startOffset, endOffset) {
+                    let element = document.createElement(tag);
+                    let currentLength = 0;
+                    let elementInnerHTML = '';
+                    let insertionIndex;
+                    console.log('Action: wrapElements');
+                    console.log('endOffset: ' + startOffset);
+                    console.log('endOffset: ' + endOffset);
+                    console.log('elements.length: ' + elements.length);
+                    for (let i = 0; i < elements.length; i = i + 1) {
+                        currentLength = currentLength + elements[i].textContent.length;
+                        console.log('Index: ' + i);
+                        console.log('Current length: ' + currentLength);
+                        if (currentLength - startOffset >= 0) {
+                            console.log('Node at start offset have been found, index: ' + i);
+                            if (currentLength - startOffset <= elements[i].textContent.length) {
+                                elementInnerHTML = elementInnerHTML + elements[i].textContent.slice(startOffset, endOffset);
+                                let secondPartText = elements[i].textContent.slice(endOffset, elements[i].textContent.length);
+                                elements[i].textContent = elements[i].textContent.slice(0, startOffset);
+                                if (secondPartText.length > 0) {
+                                    insertionIndex = i;
+                                    let secondPartNode = document.createTextNode(secondPartText);
+                                    if (i == elements.length - 1) {
+                                        elements[i].parentNode.appendChild(secondPartNode);
+                                    }
+                                    else {
+                                        elements[i].parentNode.insertBefore(secondPartNode, elements[i + 1]);
+                                    }
+                                }
+                            }
+                        }
+                        else {
+                            console.log('Node at end offset have been found, index: ' + i);
+                            if (currentLength > endOffset) {
+                                if (endOffset - currentLength < elements[i].textContent.length) {
+                                    let localElementOffset = endOffset - currentLength;
+                                    insertionIndex = i;
+                                    elementInnerHTML = elementInnerHTML + elements[i].textContent.slice(0, localElementOffset);
+                                    elements[i].textContent = elements[i].textContent.slice(localElementOffset);
+                                }
+                            }
+                            else {
+                                console.log('Wrapping regular node at index: ' + i);
+                                if (elements[i].hasOwnProperty('outerHTML')) {
+                                    elementInnerHTML = elementInnerHTML + elements[i].outerHTML;
+                                }
+                                else {
+                                    elementInnerHTML = elementInnerHTML + elements[i].textContent;
+                                }
+                            }
+                        }
+                    }
+                    console.log('elementInnerHTML', elementInnerHTML);
+                    element.innerHTML = elementInnerHTML;
+                    if (insertionIndex == elements.length - 1) {
+                        elements[0].parentNode.appendChild(element);
+                    }
+                    else {
+                        elements[0].parentNode.insertBefore(element, elements[0].parentNode.childNodes[insertionIndex + 1]);
+                    }
+                }
             };
             exports_4("NodeHelper", NodeHelper);
         }
@@ -171,7 +266,6 @@ System.register("editor-features/components/b-component/b.component", ["@angular
                     let node = selection.focusNode;
                     let selectionData = selection_helper_1.SelectionHelper.getSelectionData();
                     if (document.getElementById(this.editorId).contains(node)) {
-                        console.log({ parentNode: node.parentNode });
                         if (node_helper_1.NodeHelper.haveParentWithLocalName(node, 'b')) {
                             let parent = node_helper_1.NodeHelper.findParentByLocalName(node, 'b');
                             parent.outerHTML = parent.innerHTML;
@@ -296,7 +390,7 @@ System.register("editor-features/components/u-component/u.component", ["@angular
                     let node = selection.focusNode;
                     let selectionData = selection_helper_3.SelectionHelper.getSelectionData();
                     if (document.getElementById(this.editorId).contains(node)) {
-                        if (node_helper_3.NodeHelper.haveParentWithLocalName(node, 'span') && node_helper_3.NodeHelper.haveParentWithClassName(node, 'e-style-underline')) {
+                        if (node_helper_3.NodeHelper.haveParentWithLocalNameAndClassName(node, 'span', 'e-style-underline')) {
                             let parent = node_helper_3.NodeHelper.findParentByLocalNameAndClassName(node, 'span', 'e-style-underline');
                             parent.outerHTML = parent.innerHTML;
                         }
@@ -539,18 +633,18 @@ System.register("editor-features/components/ul-component/ul.component", ["@angul
         }
     };
 });
-System.register("editor-features/components/ol-component/ol.component", ["@angular/core", "editor-features/helpers/selection.helper"], function (exports_12, context_12) {
+System.register("editor-features/components/ol-component/ol.component", ["@angular/core", "editor-features/helpers/node.helper"], function (exports_12, context_12) {
     "use strict";
     var __moduleName = context_12 && context_12.id;
-    var core_15, core_16, selection_helper_4, OlComponent;
+    var core_15, core_16, node_helper_4, OlComponent;
     return {
         setters: [
             function (core_15_1) {
                 core_15 = core_15_1;
                 core_16 = core_15_1;
             },
-            function (selection_helper_4_1) {
-                selection_helper_4 = selection_helper_4_1;
+            function (node_helper_4_1) {
+                node_helper_4 = node_helper_4_1;
             }
         ],
         execute: function () {
@@ -585,15 +679,15 @@ System.register("editor-features/components/ol-component/ol.component", ["@angul
                     if (document.getElementById(this.editorId).contains(node)) {
                         let startNode = selection.extentNode;
                         let endNode = selection.anchorNode;
-                        let startParent = selection_helper_4.SelectionHelper.findBlockParent(startNode.parentElement);
-                        let endParent = selection_helper_4.SelectionHelper.findBlockParent(endNode.parentElement);
+                        let startParent = node_helper_4.NodeHelper.findBlockParent(startNode.parentElement);
+                        let endParent = node_helper_4.NodeHelper.findBlockParent(endNode.parentElement);
                         if (startParent == endParent) {
                             let startIndex = this.getNodeIndex(startParent.children, startNode);
                             let endIndex = this.getNodeIndex(startParent.children, startNode);
                             console.log('startIndex', startIndex);
                             console.log('endIndex', endIndex);
                             let elementsToWrap = this.getElementsToWrap(startParent.children, startIndex, endIndex);
-                            let ol = document.createElement("OL");
+                            let ol = document.createElement('OL');
                             for (let i = 0; i < elementsToWrap.length; i = i + 1) {
                                 elementsToWrap[i].outerHTML = '<li>' + startParent.children[i].outerHTML + '</li>';
                                 console.log('startParent.children[i].outerHTML', startParent.children[i].outerHTML);
@@ -1176,6 +1270,98 @@ System.register("main", ["@angular/platform-browser-dynamic", "app/app.module"],
         ],
         execute: function () {
             platform_browser_dynamic_1.platformBrowserDynamic().bootstrapModule(app_module_1.AppModule);
+        }
+    };
+});
+System.register("editor-features/components/b-component/b.component-old", ["@angular/core", "editor-features/helpers/selection.helper", "editor-features/helpers/node.helper"], function (exports_25, context_25) {
+    "use strict";
+    var __moduleName = context_25 && context_25.id;
+    var core_26, core_27, selection_helper_4, node_helper_5, BComponent;
+    return {
+        setters: [
+            function (core_26_1) {
+                core_26 = core_26_1;
+                core_27 = core_26_1;
+            },
+            function (selection_helper_4_1) {
+                selection_helper_4 = selection_helper_4_1;
+            },
+            function (node_helper_5_1) {
+                node_helper_5 = node_helper_5_1;
+            }
+        ],
+        execute: function () {
+            BComponent = class BComponent {
+                constructor() {
+                    this.update = new core_26.EventEmitter();
+                }
+                wrapSelected() {
+                    let selection = window.getSelection();
+                    let node = selection.focusNode;
+                    let selectionData = selection_helper_4.SelectionHelper.getSelectionData();
+                    if (document.getElementById(this.editorId).contains(node)) {
+                        console.log({ parentNode: node.parentNode });
+                        console.log({ node: node });
+                        if (node_helper_5.NodeHelper.haveParentWithLocalName(node, 'b')) {
+                            let parent = node_helper_5.NodeHelper.findParentByLocalName(node, 'b');
+                            parent.outerHTML = parent.innerHTML;
+                        }
+                        else {
+                            let blockParent = node_helper_5.NodeHelper.findBlockParent(node);
+                            if (blockParent.childNodes.length > 1) {
+                                let currentLength = 0;
+                                let nodesToWrap = [];
+                                let startNodeIndex;
+                                let endNodeIndex;
+                                for (let i = 0; i < blockParent.childNodes.length; i = i + 1) {
+                                    currentLength = currentLength + blockParent.childNodes[i].textContent.length;
+                                    if (currentLength >= selectionData.offsetFrom) {
+                                        if (!startNodeIndex) {
+                                            startNodeIndex = i;
+                                        }
+                                        let lengthDiff = currentLength - selectionData.offsetTo;
+                                        if (lengthDiff < blockParent.childNodes[i].textContent.length) {
+                                            nodesToWrap.push(blockParent.childNodes[i]);
+                                            endNodeIndex = i;
+                                        }
+                                    }
+                                }
+                                console.log('nodesToWrap', nodesToWrap);
+                                let b = document.createElement('B');
+                                for (let i = 0; i < nodesToWrap.length; i = i + 1) {
+                                    b.appendChild(nodesToWrap[i]);
+                                }
+                                console.log('B ELEMENT', b);
+                            }
+                            else {
+                                blockParent.innerHTML = selectionData.startString + '<b>' + selectionData.middleString + '</b>' + selectionData.endString;
+                            }
+                        }
+                        this.update.emit();
+                    }
+                }
+            };
+            __decorate([
+                core_27.Output('contenteditableModelChange'),
+                __metadata("design:type", Object)
+            ], BComponent.prototype, "update", void 0);
+            __decorate([
+                core_27.Input('content'),
+                __metadata("design:type", String)
+            ], BComponent.prototype, "content", void 0);
+            __decorate([
+                core_27.Input('editorId'),
+                __metadata("design:type", String)
+            ], BComponent.prototype, "editorId", void 0);
+            BComponent = __decorate([
+                core_26.Component({
+                    selector: 'b-editor-button',
+                    template: `
+      <a (click)="wrapSelected()" class="waves-effect waves-light btn"><b>B</b></a>
+    `
+                })
+            ], BComponent);
+            exports_25("BComponent", BComponent);
         }
     };
 });

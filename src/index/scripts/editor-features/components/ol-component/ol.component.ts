@@ -1,7 +1,8 @@
 import {Component, EventEmitter} from '@angular/core';
 import {Input, Output} from '@angular/core';
 import {IEditorButton} from '../interfaces/IEditorButton';
-import {SelectionHelper} from "../../helpers/selection.helper";
+import {SelectionHelper} from '../../helpers/selection.helper';
+import {NodeHelper} from '../../helpers/node.helper';
 
 @Component({
     selector: 'ol-editor-button',
@@ -69,8 +70,8 @@ export class OlComponent implements IEditorButton {
             let startNode = selection.extentNode;
             let endNode = selection.anchorNode;
 
-            let startParent = SelectionHelper.findBlockParent(startNode.parentElement);
-            let endParent = SelectionHelper.findBlockParent(endNode.parentElement);
+            let startParent = NodeHelper.findBlockParent(startNode.parentElement);
+            let endParent = NodeHelper.findBlockParent(endNode.parentElement);
 
             if (startParent == endParent) {
 
@@ -82,7 +83,7 @@ export class OlComponent implements IEditorButton {
 
                 let elementsToWrap:Element[] = this.getElementsToWrap(startParent.children, startIndex, endIndex);
 
-                let ol:Element = document.createElement("OL");
+                let ol:Element = document.createElement('OL');
 
                 for (let i:number = 0; i < elementsToWrap.length; i = i + 1) {
                     elementsToWrap[i].outerHTML = '<li>' + startParent.children[i].outerHTML + '</li>';

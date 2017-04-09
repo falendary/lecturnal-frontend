@@ -30,7 +30,7 @@ export class UComponent implements IEditorButton {
 
         if (document.getElementById(this.editorId).contains(node)) {
 
-            if(NodeHelper.haveParentWithLocalName(node, 'span') && NodeHelper.haveParentWithClassName(node, 'e-style-underline')) {
+            if(NodeHelper.haveParentWithLocalNameAndClassName(node, 'span', 'e-style-underline')) {
 
                 let parent = NodeHelper.findParentByLocalNameAndClassName(node, 'span', 'e-style-underline');
                 parent.outerHTML = parent.innerHTML;

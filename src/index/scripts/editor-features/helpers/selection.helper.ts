@@ -19,9 +19,12 @@ export class SelectionHelper {
 
         //console.log('node.nodeValue', node.nodeValue);
 
-        let startString = node.nodeValue.slice(0, offsetFrom);
-        let middleString = node.nodeValue.slice(offsetFrom, offsetTo);
-        let endString = node.nodeValue.slice(offsetTo, node.nodeValue.length);
+        console.log('node', {n: node});
+        console.log('selection', selection);
+
+        let startString = node.textContent.slice(0, offsetFrom);
+        let middleString = node.textContent.slice(offsetFrom, offsetTo);
+        let endString = node.textContent.slice(offsetTo, node.textContent.length);
 
         selectionData.offsetFrom = offsetFrom;
         selectionData.offsetTo = offsetTo;
@@ -33,14 +36,6 @@ export class SelectionHelper {
         return selectionData
     }
 
-    public static findBlockParent(element:Element):Element {
 
-        if (element.parentElement.localName == 'p' || element.parentElement.localName == 'div' || element.parentElement.localName == 'li') {
-            return element.parentElement;
-        } else {
-            return SelectionHelper.findBlockParent(element.parentElement);
-        }
-
-    }
 
 }

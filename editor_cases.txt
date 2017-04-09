@@ -1,0 +1,70 @@
+
+Simple
+
+case 1: add rule to text in element with single text node
+
+	<p>                 |    <p>
+		Some text       |        Some <b>text</b>
+	</p>	            |    </p>
+
+case 2: remove applied rule in element with single text node
+
+	<p>                  |    <p>
+		Some <b>text</b> |        Some text
+	</p>	             |    </p>
+
+Normal
+
+case 3: add rule to text in element with many nodes
+
+
+	<p>                                     |    <p>
+		Some text with <b>description</b>   |        Some <b>text</b> with <b>description</b>
+	</p>	                                |    </p>
+
+
+case 4: remove applied rule to text in element with many nodes
+
+
+	<p>                                            |    <p>
+		Some <b>text</b> with <b>description</b>   |        Some text with <b>description</b>
+	</p>	                                       |    </p>
+
+
+Advanced
+
+
+case 5: add rule to nodes with some of the have that rule in element with many nodes
+
+	<p>                                            |    <p>
+		Some text with <b>description</b>          |        Some <b>text with description</b>
+	</p>	                                       |    </p>
+
+case 6: remove rule to nodes with some of the have that rule in element with many nodes	
+
+
+	<p>                                            |    <p>
+		Some <b>text with description</b>          |        Some text with <b>description</b>
+	</p>	                                       |    </p>
+
+Impossible
+
+case 7 add rule to nodes with some of the have that rule in elements with many nodes
+
+	<p>                                            |    <p>
+		Some text with description                 |        Some <b>text with description</b>
+	</p>	                                       |    </p>
+	<p>                                            |    <p>
+		Other text with <b>description</b>         |        <b>Some text</b> with description</b>
+	</p>	                                       |    </p>
+
+case 8 remove rule to nodes with some of the have that rule in elements with many nodes
+
+	<p>                                            |    <p>
+		Some <b>text with description</b>          |        Some text with description
+	</p>	                                       |    </p>
+	<p>                                            |    <p>
+		<b>Some text</b> with description</b       |        Other text with <b>description</b> 
+	</p>	                                       |    </p>
+
+
