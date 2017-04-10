@@ -21,20 +21,22 @@ export class TextRightComponent implements IEditorButton {
 
     wrapSelected():void {
 
-        let selection = window.getSelection();
-        let node:any = selection.focusNode;
+        document.execCommand('justifyRight', false, null);
 
-        if (document.getElementById(this.editorId).contains(node)) {
-
-            if (node.parentNode.classList.contains('e-style-text-right')) {
-                node.parentNode.classList.remove('e-style-text-right');
-            } else {
-                node.parentNode.classList.remove('e-style-text-center');
-                node.parentNode.classList.remove('e-style-text-left');
-                node.parentNode.classList.add('e-style-text-right');
-            }
-
-        }
+        //let selection = window.getSelection();
+        //let node:any = selection.focusNode;
+        //
+        //if (document.getElementById(this.editorId).contains(node)) {
+        //
+        //    if (node.parentNode.classList.contains('e-style-text-right')) {
+        //        node.parentNode.classList.remove('e-style-text-right');
+        //    } else {
+        //        node.parentNode.classList.remove('e-style-text-center');
+        //        node.parentNode.classList.remove('e-style-text-left');
+        //        node.parentNode.classList.add('e-style-text-right');
+        //    }
+        //
+        //}
 
     }
 

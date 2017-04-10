@@ -1,13 +1,13 @@
 import {Component, EventEmitter} from '@angular/core';
 import {Input, Output} from '@angular/core';
-import {IEditorButton} from '../interfaces/IEditorButton';
+import {IEditorButton} from "../interfaces/IEditorButton";
 
 @Component({
-    selector: 'ul-editor-button',
-    templateUrl: 'ul.component.html'
+    selector: 'format-block-editor-button',
+    templateUrl: 'format-block.component.html'
 })
 
-export class UlComponent implements IEditorButton {
+export class FormatBlockComponent implements IEditorButton {
 
     @Output('contenteditableModelChange') update = new EventEmitter();
 
@@ -17,9 +17,12 @@ export class UlComponent implements IEditorButton {
     @Input('editorId')
     public editorId:string;
 
+    public formatBlock:string;
+
     wrapSelected():void {
 
-        document.execCommand('insertUnorderedList', false, null);
+        document.execCommand('formatBlock', false, this.formatBlock);
+
     }
 
 }

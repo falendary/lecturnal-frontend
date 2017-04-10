@@ -22,24 +22,26 @@ export class BComponent implements IEditorButton {
 
     wrapSelected(): void {
 
-        let selection = window.getSelection();
-        let node: any = selection.focusNode;
-        let selectionData: SelectionData = SelectionHelper.getSelectionData();
+        document.execCommand('bold', false, null);
 
-        if (document.getElementById(this.editorId).contains(node)) {
-
-            if(NodeHelper.haveParentWithLocalName(node, 'b')) {
-
-                let parent = NodeHelper.findParentByLocalName(node, 'b');
-                parent.outerHTML = parent.innerHTML;
-
-            }  else {
-                node.parentNode.innerHTML = selectionData.startString + '<b>' + selectionData.middleString + '</b>' + selectionData.endString;
-            }
-
-
-            this.update.emit()
-        }
+        //let selection = window.getSelection();
+        //let node: any = selection.focusNode;
+        //let selectionData: SelectionData = SelectionHelper.getSelectionData();
+        //
+        //if (document.getElementById(this.editorId).contains(node)) {
+        //
+        //    if(NodeHelper.haveParentWithLocalName(node, 'b')) {
+        //
+        //        let parent = NodeHelper.findParentByLocalName(node, 'b');
+        //        parent.outerHTML = parent.innerHTML;
+        //
+        //    }  else {
+        //        node.parentNode.innerHTML = selectionData.startString + '<b>' + selectionData.middleString + '</b>' + selectionData.endString;
+        //    }
+        //
+        //
+        //    this.update.emit()
+        //}
 
 
     }

@@ -1,13 +1,13 @@
 import {Component, EventEmitter} from '@angular/core';
 import {Input, Output} from '@angular/core';
-import {IEditorButton} from '../interfaces/IEditorButton';
+import {IEditorButton} from "../interfaces/IEditorButton";
 
 @Component({
-    selector: 'ul-editor-button',
-    templateUrl: 'ul.component.html'
+    selector: 'strike-editor-button',
+    templateUrl: 'strike.component.html'
 })
 
-export class UlComponent implements IEditorButton {
+export class StrikeComponent implements IEditorButton {
 
     @Output('contenteditableModelChange') update = new EventEmitter();
 
@@ -19,7 +19,8 @@ export class UlComponent implements IEditorButton {
 
     wrapSelected():void {
 
-        document.execCommand('insertUnorderedList', false, null);
+        document.execCommand('strikeThrough', false, null);
+
     }
 
 }

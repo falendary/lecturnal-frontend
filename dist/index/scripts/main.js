@@ -239,21 +239,15 @@ System.register("editor-features/helpers/node.helper", [], function (exports_4, 
         }
     };
 });
-System.register("editor-features/components/b-component/b.component", ["@angular/core", "editor-features/helpers/selection.helper", "editor-features/helpers/node.helper"], function (exports_5, context_5) {
+System.register("editor-features/components/b-component/b.component", ["@angular/core"], function (exports_5, context_5) {
     "use strict";
     var __moduleName = context_5 && context_5.id;
-    var core_1, core_2, selection_helper_1, node_helper_1, BComponent;
+    var core_1, core_2, BComponent;
     return {
         setters: [
             function (core_1_1) {
                 core_1 = core_1_1;
                 core_2 = core_1_1;
-            },
-            function (selection_helper_1_1) {
-                selection_helper_1 = selection_helper_1_1;
-            },
-            function (node_helper_1_1) {
-                node_helper_1 = node_helper_1_1;
             }
         ],
         execute: function () {
@@ -262,19 +256,7 @@ System.register("editor-features/components/b-component/b.component", ["@angular
                     this.update = new core_1.EventEmitter();
                 }
                 wrapSelected() {
-                    let selection = window.getSelection();
-                    let node = selection.focusNode;
-                    let selectionData = selection_helper_1.SelectionHelper.getSelectionData();
-                    if (document.getElementById(this.editorId).contains(node)) {
-                        if (node_helper_1.NodeHelper.haveParentWithLocalName(node, 'b')) {
-                            let parent = node_helper_1.NodeHelper.findParentByLocalName(node, 'b');
-                            parent.outerHTML = parent.innerHTML;
-                        }
-                        else {
-                            node.parentNode.innerHTML = selectionData.startString + '<b>' + selectionData.middleString + '</b>' + selectionData.endString;
-                        }
-                        this.update.emit();
-                    }
+                    document.execCommand('bold', false, null);
                 }
             };
             __decorate([
@@ -301,21 +283,15 @@ System.register("editor-features/components/b-component/b.component", ["@angular
         }
     };
 });
-System.register("editor-features/components/i-component/i.component", ["@angular/core", "editor-features/helpers/selection.helper", "editor-features/helpers/node.helper"], function (exports_6, context_6) {
+System.register("editor-features/components/i-component/i.component", ["@angular/core"], function (exports_6, context_6) {
     "use strict";
     var __moduleName = context_6 && context_6.id;
-    var core_3, core_4, selection_helper_2, node_helper_2, IComponent;
+    var core_3, core_4, IComponent;
     return {
         setters: [
             function (core_3_1) {
                 core_3 = core_3_1;
                 core_4 = core_3_1;
-            },
-            function (selection_helper_2_1) {
-                selection_helper_2 = selection_helper_2_1;
-            },
-            function (node_helper_2_1) {
-                node_helper_2 = node_helper_2_1;
             }
         ],
         execute: function () {
@@ -324,19 +300,7 @@ System.register("editor-features/components/i-component/i.component", ["@angular
                     this.update = new core_3.EventEmitter();
                 }
                 wrapSelected() {
-                    let selection = window.getSelection();
-                    let node = selection.focusNode;
-                    let selectionData = selection_helper_2.SelectionHelper.getSelectionData();
-                    if (document.getElementById(this.editorId).contains(node)) {
-                        if (node_helper_2.NodeHelper.haveParentWithLocalName(node, 'i')) {
-                            let parent = node_helper_2.NodeHelper.findParentByLocalName(node, 'i');
-                            parent.outerHTML = parent.innerHTML;
-                        }
-                        else {
-                            node.parentNode.innerHTML = selectionData.startString + '<i>' + selectionData.middleString + '</i>' + selectionData.endString;
-                        }
-                        this.update.emit();
-                    }
+                    document.execCommand('italic', false, null);
                 }
             };
             __decorate([
@@ -363,21 +327,15 @@ System.register("editor-features/components/i-component/i.component", ["@angular
         }
     };
 });
-System.register("editor-features/components/u-component/u.component", ["@angular/core", "editor-features/helpers/selection.helper", "editor-features/helpers/node.helper"], function (exports_7, context_7) {
+System.register("editor-features/components/u-component/u.component", ["@angular/core"], function (exports_7, context_7) {
     "use strict";
     var __moduleName = context_7 && context_7.id;
-    var core_5, core_6, selection_helper_3, node_helper_3, UComponent;
+    var core_5, core_6, UComponent;
     return {
         setters: [
             function (core_5_1) {
                 core_5 = core_5_1;
                 core_6 = core_5_1;
-            },
-            function (selection_helper_3_1) {
-                selection_helper_3 = selection_helper_3_1;
-            },
-            function (node_helper_3_1) {
-                node_helper_3 = node_helper_3_1;
             }
         ],
         execute: function () {
@@ -386,19 +344,7 @@ System.register("editor-features/components/u-component/u.component", ["@angular
                     this.update = new core_5.EventEmitter();
                 }
                 wrapSelected() {
-                    let selection = window.getSelection();
-                    let node = selection.focusNode;
-                    let selectionData = selection_helper_3.SelectionHelper.getSelectionData();
-                    if (document.getElementById(this.editorId).contains(node)) {
-                        if (node_helper_3.NodeHelper.haveParentWithLocalNameAndClassName(node, 'span', 'e-style-underline')) {
-                            let parent = node_helper_3.NodeHelper.findParentByLocalNameAndClassName(node, 'span', 'e-style-underline');
-                            parent.outerHTML = parent.innerHTML;
-                        }
-                        else {
-                            node.parentNode.innerHTML = selectionData.startString + '<span class="e-style-underline">' + selectionData.middleString + '</span>' + selectionData.endString;
-                        }
-                        this.update.emit();
-                    }
+                    document.execCommand('underline', false, null);
                 }
             };
             __decorate([
@@ -442,18 +388,7 @@ System.register("editor-features/components/text-center-component/text-center.co
                     this.update = new core_7.EventEmitter();
                 }
                 wrapSelected() {
-                    let selection = window.getSelection();
-                    let node = selection.focusNode;
-                    if (document.getElementById(this.editorId).contains(node)) {
-                        if (node.parentNode.classList.contains('e-style-text-center')) {
-                            node.parentNode.classList.remove('e-style-text-center');
-                        }
-                        else {
-                            node.parentNode.classList.remove('e-style-text-left');
-                            node.parentNode.classList.remove('e-style-text-right');
-                            node.parentNode.classList.add('e-style-text-center');
-                        }
-                    }
+                    document.execCommand('justifyCenter', false, null);
                 }
             };
             __decorate([
@@ -497,18 +432,7 @@ System.register("editor-features/components/text-right-component/text-right.comp
                     this.update = new core_9.EventEmitter();
                 }
                 wrapSelected() {
-                    let selection = window.getSelection();
-                    let node = selection.focusNode;
-                    if (document.getElementById(this.editorId).contains(node)) {
-                        if (node.parentNode.classList.contains('e-style-text-right')) {
-                            node.parentNode.classList.remove('e-style-text-right');
-                        }
-                        else {
-                            node.parentNode.classList.remove('e-style-text-center');
-                            node.parentNode.classList.remove('e-style-text-left');
-                            node.parentNode.classList.add('e-style-text-right');
-                        }
-                    }
+                    document.execCommand('justifyRight', false, null);
                 }
             };
             __decorate([
@@ -552,18 +476,7 @@ System.register("editor-features/components/text-left-component/text-left.compon
                     this.update = new core_11.EventEmitter();
                 }
                 wrapSelected() {
-                    let selection = window.getSelection();
-                    let node = selection.focusNode;
-                    if (document.getElementById(this.editorId).contains(node)) {
-                        if (node.parentNode.classList.contains('e-style-text-left')) {
-                            node.parentNode.classList.remove('e-style-text-left');
-                        }
-                        else {
-                            node.parentNode.classList.remove('e-style-text-center');
-                            node.parentNode.classList.remove('e-style-text-right');
-                            node.parentNode.classList.add('e-style-text-left');
-                        }
-                    }
+                    document.execCommand('justifyLeft', false, null);
                 }
             };
             __decorate([
@@ -607,6 +520,7 @@ System.register("editor-features/components/ul-component/ul.component", ["@angul
                     this.update = new core_13.EventEmitter();
                 }
                 wrapSelected() {
+                    document.execCommand('insertUnorderedList', false, null);
                 }
             };
             __decorate([
@@ -633,18 +547,15 @@ System.register("editor-features/components/ul-component/ul.component", ["@angul
         }
     };
 });
-System.register("editor-features/components/ol-component/ol.component", ["@angular/core", "editor-features/helpers/node.helper"], function (exports_12, context_12) {
+System.register("editor-features/components/ol-component/ol.component", ["@angular/core"], function (exports_12, context_12) {
     "use strict";
     var __moduleName = context_12 && context_12.id;
-    var core_15, core_16, node_helper_4, OlComponent;
+    var core_15, core_16, OlComponent;
     return {
         setters: [
             function (core_15_1) {
                 core_15 = core_15_1;
                 core_16 = core_15_1;
-            },
-            function (node_helper_4_1) {
-                node_helper_4 = node_helper_4_1;
             }
         ],
         execute: function () {
@@ -652,55 +563,8 @@ System.register("editor-features/components/ol-component/ol.component", ["@angul
                 constructor() {
                     this.update = new core_15.EventEmitter();
                 }
-                getNodeIndex(elements, node) {
-                    let index;
-                    for (let i = 0; i < elements.length; i = i + 1) {
-                        if (elements[i].contains(node)) {
-                            index = i;
-                        }
-                    }
-                    return index;
-                }
-                getElementsToWrap(elements, startIndex, endIndex) {
-                    let result = [];
-                    console.log('elements', elements);
-                    for (let i = startIndex; i <= endIndex; i = i + 1) {
-                        result.push(elements[i]);
-                    }
-                    return result;
-                }
                 wrapSelected() {
-                    let selection = window.getSelection();
-                    let node = selection.focusNode;
-                    console.log('selection', selection);
-                    console.log('selection.extentOffset', selection.extentOffset);
-                    console.log('selection.anchorOffset', selection.anchorOffset);
-                    console.log('node.parentNode.innerText.length', node.parentNode.innerText.length);
-                    if (document.getElementById(this.editorId).contains(node)) {
-                        let startNode = selection.extentNode;
-                        let endNode = selection.anchorNode;
-                        let startParent = node_helper_4.NodeHelper.findBlockParent(startNode.parentElement);
-                        let endParent = node_helper_4.NodeHelper.findBlockParent(endNode.parentElement);
-                        if (startParent == endParent) {
-                            let startIndex = this.getNodeIndex(startParent.children, startNode);
-                            let endIndex = this.getNodeIndex(startParent.children, startNode);
-                            console.log('startIndex', startIndex);
-                            console.log('endIndex', endIndex);
-                            let elementsToWrap = this.getElementsToWrap(startParent.children, startIndex, endIndex);
-                            let ol = document.createElement('OL');
-                            for (let i = 0; i < elementsToWrap.length; i = i + 1) {
-                                elementsToWrap[i].outerHTML = '<li>' + startParent.children[i].outerHTML + '</li>';
-                                console.log('startParent.children[i].outerHTML', startParent.children[i].outerHTML);
-                                ol.appendChild(elementsToWrap[i]);
-                            }
-                            for (let i = startIndex; i <= endIndex; i = i + 1) {
-                                startParent.children[i].remove();
-                            }
-                            startParent.insertBefore(ol, startParent.children[startIndex + 1]);
-                            console.log('startParent', startParent);
-                            this.update.emit();
-                        }
-                    }
+                    document.execCommand('insertOrderedList', false, null);
                 }
             };
             __decorate([
@@ -727,14 +591,641 @@ System.register("editor-features/components/ol-component/ol.component", ["@angul
         }
     };
 });
-System.register("editor-features/editor-featrues.module", ["@angular/core", "editor-features/components/b-component/b.component", "editor-features/components/i-component/i.component", "editor-features/components/u-component/u.component", "editor-features/components/text-center-component/text-center.component", "editor-features/components/text-right-component/text-right.component", "editor-features/components/text-left-component/text-left.component", "editor-features/components/ul-component/ul.component", "editor-features/components/ol-component/ol.component"], function (exports_13, context_13) {
+System.register("editor-features/components/text-justify-component/text-justify.component", ["@angular/core"], function (exports_13, context_13) {
     "use strict";
     var __moduleName = context_13 && context_13.id;
-    var core_17, b_component_1, i_component_1, u_component_1, text_center_component_1, text_right_component_1, text_left_component_1, ul_component_1, ol_component_1, EditorFeaturesModule;
+    var core_17, core_18, TextJustifyComponent;
     return {
         setters: [
             function (core_17_1) {
                 core_17 = core_17_1;
+                core_18 = core_17_1;
+            }
+        ],
+        execute: function () {
+            TextJustifyComponent = class TextJustifyComponent {
+                constructor() {
+                    this.update = new core_17.EventEmitter();
+                }
+                wrapSelected() {
+                    document.execCommand('justifyFull', false, null);
+                }
+            };
+            __decorate([
+                core_18.Output('contenteditableModelChange'),
+                __metadata("design:type", Object)
+            ], TextJustifyComponent.prototype, "update", void 0);
+            __decorate([
+                core_18.Input('content'),
+                __metadata("design:type", String)
+            ], TextJustifyComponent.prototype, "content", void 0);
+            __decorate([
+                core_18.Input('editorId'),
+                __metadata("design:type", String)
+            ], TextJustifyComponent.prototype, "editorId", void 0);
+            TextJustifyComponent = __decorate([
+                core_17.Component({
+                    selector: 'text-justify-editor-button',
+                    template: `
+      <a (click)="wrapSelected()" class="waves-effect waves-light btn">J</a>
+    `
+                })
+            ], TextJustifyComponent);
+            exports_13("TextJustifyComponent", TextJustifyComponent);
+        }
+    };
+});
+System.register("editor-features/components/indent-component/indent.component", ["@angular/core"], function (exports_14, context_14) {
+    "use strict";
+    var __moduleName = context_14 && context_14.id;
+    var core_19, core_20, IndentComponent;
+    return {
+        setters: [
+            function (core_19_1) {
+                core_19 = core_19_1;
+                core_20 = core_19_1;
+            }
+        ],
+        execute: function () {
+            IndentComponent = class IndentComponent {
+                constructor() {
+                    this.update = new core_19.EventEmitter();
+                }
+                wrapSelected() {
+                    document.execCommand('indent', false, null);
+                }
+            };
+            __decorate([
+                core_20.Output('contenteditableModelChange'),
+                __metadata("design:type", Object)
+            ], IndentComponent.prototype, "update", void 0);
+            __decorate([
+                core_20.Input('content'),
+                __metadata("design:type", String)
+            ], IndentComponent.prototype, "content", void 0);
+            __decorate([
+                core_20.Input('editorId'),
+                __metadata("design:type", String)
+            ], IndentComponent.prototype, "editorId", void 0);
+            IndentComponent = __decorate([
+                core_19.Component({
+                    selector: 'indent-editor-button',
+                    template: `
+      <a (click)="wrapSelected()" class="waves-effect waves-light btn">Ind</a>
+    `
+                })
+            ], IndentComponent);
+            exports_14("IndentComponent", IndentComponent);
+        }
+    };
+});
+System.register("editor-features/components/outdent-component/outdent.component", ["@angular/core"], function (exports_15, context_15) {
+    "use strict";
+    var __moduleName = context_15 && context_15.id;
+    var core_21, core_22, OutdentComponent;
+    return {
+        setters: [
+            function (core_21_1) {
+                core_21 = core_21_1;
+                core_22 = core_21_1;
+            }
+        ],
+        execute: function () {
+            OutdentComponent = class OutdentComponent {
+                constructor() {
+                    this.update = new core_21.EventEmitter();
+                }
+                wrapSelected() {
+                    document.execCommand('outdent', false, null);
+                }
+            };
+            __decorate([
+                core_22.Output('contenteditableModelChange'),
+                __metadata("design:type", Object)
+            ], OutdentComponent.prototype, "update", void 0);
+            __decorate([
+                core_22.Input('content'),
+                __metadata("design:type", String)
+            ], OutdentComponent.prototype, "content", void 0);
+            __decorate([
+                core_22.Input('editorId'),
+                __metadata("design:type", String)
+            ], OutdentComponent.prototype, "editorId", void 0);
+            OutdentComponent = __decorate([
+                core_21.Component({
+                    selector: 'outdent-editor-button',
+                    template: `
+      <a (click)="wrapSelected()" class="waves-effect waves-light btn">Out</a>
+    `
+                })
+            ], OutdentComponent);
+            exports_15("OutdentComponent", OutdentComponent);
+        }
+    };
+});
+System.register("editor-features/components/strike-component/strike.component", ["@angular/core"], function (exports_16, context_16) {
+    "use strict";
+    var __moduleName = context_16 && context_16.id;
+    var core_23, core_24, StrikeComponent;
+    return {
+        setters: [
+            function (core_23_1) {
+                core_23 = core_23_1;
+                core_24 = core_23_1;
+            }
+        ],
+        execute: function () {
+            StrikeComponent = class StrikeComponent {
+                constructor() {
+                    this.update = new core_23.EventEmitter();
+                }
+                wrapSelected() {
+                    document.execCommand('strikeThrough', false, null);
+                }
+            };
+            __decorate([
+                core_24.Output('contenteditableModelChange'),
+                __metadata("design:type", Object)
+            ], StrikeComponent.prototype, "update", void 0);
+            __decorate([
+                core_24.Input('content'),
+                __metadata("design:type", String)
+            ], StrikeComponent.prototype, "content", void 0);
+            __decorate([
+                core_24.Input('editorId'),
+                __metadata("design:type", String)
+            ], StrikeComponent.prototype, "editorId", void 0);
+            StrikeComponent = __decorate([
+                core_23.Component({
+                    selector: 'strike-editor-button',
+                    template: `
+      <a (click)="wrapSelected()" class="waves-effect waves-light btn">S</a>
+    `
+                })
+            ], StrikeComponent);
+            exports_16("StrikeComponent", StrikeComponent);
+        }
+    };
+});
+System.register("editor-features/components/subscript-component/subscript.component", ["@angular/core"], function (exports_17, context_17) {
+    "use strict";
+    var __moduleName = context_17 && context_17.id;
+    var core_25, core_26, SubscriptComponent;
+    return {
+        setters: [
+            function (core_25_1) {
+                core_25 = core_25_1;
+                core_26 = core_25_1;
+            }
+        ],
+        execute: function () {
+            SubscriptComponent = class SubscriptComponent {
+                constructor() {
+                    this.update = new core_25.EventEmitter();
+                }
+                wrapSelected() {
+                    document.execCommand('subscript', false, null);
+                }
+            };
+            __decorate([
+                core_26.Output('contenteditableModelChange'),
+                __metadata("design:type", Object)
+            ], SubscriptComponent.prototype, "update", void 0);
+            __decorate([
+                core_26.Input('content'),
+                __metadata("design:type", String)
+            ], SubscriptComponent.prototype, "content", void 0);
+            __decorate([
+                core_26.Input('editorId'),
+                __metadata("design:type", String)
+            ], SubscriptComponent.prototype, "editorId", void 0);
+            SubscriptComponent = __decorate([
+                core_25.Component({
+                    selector: 'subscript-editor-button',
+                    template: `
+      <a (click)="wrapSelected()" class="waves-effect waves-light btn">Sub</a>
+    `
+                })
+            ], SubscriptComponent);
+            exports_17("SubscriptComponent", SubscriptComponent);
+        }
+    };
+});
+System.register("editor-features/components/superscript-component/superscript.component", ["@angular/core"], function (exports_18, context_18) {
+    "use strict";
+    var __moduleName = context_18 && context_18.id;
+    var core_27, core_28, SuperscriptComponent;
+    return {
+        setters: [
+            function (core_27_1) {
+                core_27 = core_27_1;
+                core_28 = core_27_1;
+            }
+        ],
+        execute: function () {
+            SuperscriptComponent = class SuperscriptComponent {
+                constructor() {
+                    this.update = new core_27.EventEmitter();
+                }
+                wrapSelected() {
+                    document.execCommand('superscript', false, null);
+                }
+            };
+            __decorate([
+                core_28.Output('contenteditableModelChange'),
+                __metadata("design:type", Object)
+            ], SuperscriptComponent.prototype, "update", void 0);
+            __decorate([
+                core_28.Input('content'),
+                __metadata("design:type", String)
+            ], SuperscriptComponent.prototype, "content", void 0);
+            __decorate([
+                core_28.Input('editorId'),
+                __metadata("design:type", String)
+            ], SuperscriptComponent.prototype, "editorId", void 0);
+            SuperscriptComponent = __decorate([
+                core_27.Component({
+                    selector: 'superscript-editor-button',
+                    template: `
+      <a (click)="wrapSelected()" class="waves-effect waves-light btn">Super</a>
+    `
+                })
+            ], SuperscriptComponent);
+            exports_18("SuperscriptComponent", SuperscriptComponent);
+        }
+    };
+});
+System.register("editor-features/components/hr-component/hr.component", ["@angular/core"], function (exports_19, context_19) {
+    "use strict";
+    var __moduleName = context_19 && context_19.id;
+    var core_29, core_30, HrComponent;
+    return {
+        setters: [
+            function (core_29_1) {
+                core_29 = core_29_1;
+                core_30 = core_29_1;
+            }
+        ],
+        execute: function () {
+            HrComponent = class HrComponent {
+                constructor() {
+                    this.update = new core_29.EventEmitter();
+                }
+                wrapSelected() {
+                    document.execCommand('insertHorizontalRule', false, null);
+                }
+            };
+            __decorate([
+                core_30.Output('contenteditableModelChange'),
+                __metadata("design:type", Object)
+            ], HrComponent.prototype, "update", void 0);
+            __decorate([
+                core_30.Input('content'),
+                __metadata("design:type", String)
+            ], HrComponent.prototype, "content", void 0);
+            __decorate([
+                core_30.Input('editorId'),
+                __metadata("design:type", String)
+            ], HrComponent.prototype, "editorId", void 0);
+            HrComponent = __decorate([
+                core_29.Component({
+                    selector: 'hr-editor-button',
+                    template: `
+      <a (click)="wrapSelected()" class="waves-effect waves-light btn">hr</a>
+    `
+                })
+            ], HrComponent);
+            exports_19("HrComponent", HrComponent);
+        }
+    };
+});
+System.register("editor-features/components/format-block-component/foramt-block.component", ["@angular/core"], function (exports_20, context_20) {
+    "use strict";
+    var __moduleName = context_20 && context_20.id;
+    var core_31, core_32, FormatBlockComponent;
+    return {
+        setters: [
+            function (core_31_1) {
+                core_31 = core_31_1;
+                core_32 = core_31_1;
+            }
+        ],
+        execute: function () {
+            FormatBlockComponent = class FormatBlockComponent {
+                constructor() {
+                    this.update = new core_31.EventEmitter();
+                }
+                wrapSelected() {
+                    document.execCommand('formatBlock', false, this.formatBlock);
+                }
+            };
+            __decorate([
+                core_32.Output('contenteditableModelChange'),
+                __metadata("design:type", Object)
+            ], FormatBlockComponent.prototype, "update", void 0);
+            __decorate([
+                core_32.Input('content'),
+                __metadata("design:type", String)
+            ], FormatBlockComponent.prototype, "content", void 0);
+            __decorate([
+                core_32.Input('editorId'),
+                __metadata("design:type", String)
+            ], FormatBlockComponent.prototype, "editorId", void 0);
+            FormatBlockComponent = __decorate([
+                core_31.Component({
+                    selector: 'format-block-editor-button',
+                    template: `
+      <select name="" id="" [(ngModel)]="formatBlock" (ngModelChange)="wrapSelected()">
+          <option value="H1">Heading 1</option>
+          <option value="H2">Heading 2</option>
+          <option value="H3">Heading 3</option>
+          <option value="H4">Heading 4</option>
+          <option value="P" selected>Paragraph</option>
+      </select>
+    `
+                })
+            ], FormatBlockComponent);
+            exports_20("FormatBlockComponent", FormatBlockComponent);
+        }
+    };
+});
+System.register("editor-features/components/rf-component/rf.component", ["@angular/core"], function (exports_21, context_21) {
+    "use strict";
+    var __moduleName = context_21 && context_21.id;
+    var core_33, core_34, RemoveFormatComponent;
+    return {
+        setters: [
+            function (core_33_1) {
+                core_33 = core_33_1;
+                core_34 = core_33_1;
+            }
+        ],
+        execute: function () {
+            RemoveFormatComponent = class RemoveFormatComponent {
+                constructor() {
+                    this.update = new core_33.EventEmitter();
+                }
+                wrapSelected() {
+                    document.execCommand('removeFormat', false, null);
+                }
+            };
+            __decorate([
+                core_34.Output('contenteditableModelChange'),
+                __metadata("design:type", Object)
+            ], RemoveFormatComponent.prototype, "update", void 0);
+            __decorate([
+                core_34.Input('content'),
+                __metadata("design:type", String)
+            ], RemoveFormatComponent.prototype, "content", void 0);
+            __decorate([
+                core_34.Input('editorId'),
+                __metadata("design:type", String)
+            ], RemoveFormatComponent.prototype, "editorId", void 0);
+            RemoveFormatComponent = __decorate([
+                core_33.Component({
+                    selector: 'rf-editor-button',
+                    template: `
+      <a (click)="wrapSelected()" class="waves-effect waves-light btn">RF</a>
+    `
+                })
+            ], RemoveFormatComponent);
+            exports_21("RemoveFormatComponent", RemoveFormatComponent);
+        }
+    };
+});
+System.register("editor-features/components/font-size-component/font-size.component", ["@angular/core"], function (exports_22, context_22) {
+    "use strict";
+    var __moduleName = context_22 && context_22.id;
+    var core_35, core_36, FontSizeComponent;
+    return {
+        setters: [
+            function (core_35_1) {
+                core_35 = core_35_1;
+                core_36 = core_35_1;
+            }
+        ],
+        execute: function () {
+            FontSizeComponent = class FontSizeComponent {
+                constructor() {
+                    this.update = new core_35.EventEmitter();
+                }
+                wrapSelected() {
+                    document.execCommand('fontSize', false, 14);
+                }
+            };
+            __decorate([
+                core_36.Output('contenteditableModelChange'),
+                __metadata("design:type", Object)
+            ], FontSizeComponent.prototype, "update", void 0);
+            __decorate([
+                core_36.Input('content'),
+                __metadata("design:type", String)
+            ], FontSizeComponent.prototype, "content", void 0);
+            __decorate([
+                core_36.Input('editorId'),
+                __metadata("design:type", String)
+            ], FontSizeComponent.prototype, "editorId", void 0);
+            FontSizeComponent = __decorate([
+                core_35.Component({
+                    selector: 'font-size-editor-button',
+                    template: `
+      <a (click)="wrapSelected()" class="waves-effect waves-light btn">14</a>
+    `
+                })
+            ], FontSizeComponent);
+            exports_22("FontSizeComponent", FontSizeComponent);
+        }
+    };
+});
+System.register("editor-features/components/font-name-component/font-name.component", ["@angular/core"], function (exports_23, context_23) {
+    "use strict";
+    var __moduleName = context_23 && context_23.id;
+    var core_37, core_38, FontNameComponent;
+    return {
+        setters: [
+            function (core_37_1) {
+                core_37 = core_37_1;
+                core_38 = core_37_1;
+            }
+        ],
+        execute: function () {
+            FontNameComponent = class FontNameComponent {
+                constructor() {
+                    this.update = new core_37.EventEmitter();
+                }
+                wrapSelected() {
+                    document.execCommand('fontName', false, 'Arial');
+                }
+            };
+            __decorate([
+                core_38.Output('contenteditableModelChange'),
+                __metadata("design:type", Object)
+            ], FontNameComponent.prototype, "update", void 0);
+            __decorate([
+                core_38.Input('content'),
+                __metadata("design:type", String)
+            ], FontNameComponent.prototype, "content", void 0);
+            __decorate([
+                core_38.Input('editorId'),
+                __metadata("design:type", String)
+            ], FontNameComponent.prototype, "editorId", void 0);
+            FontNameComponent = __decorate([
+                core_37.Component({
+                    selector: 'font-name-editor-button',
+                    template: `
+      <a (click)="wrapSelected()" class="waves-effect waves-light btn">Arial</a>
+    `
+                })
+            ], FontNameComponent);
+            exports_23("FontNameComponent", FontNameComponent);
+        }
+    };
+});
+System.register("editor-features/components/create-link-component/create-link.component", ["@angular/core"], function (exports_24, context_24) {
+    "use strict";
+    var __moduleName = context_24 && context_24.id;
+    var core_39, core_40, CreateLinkComponent;
+    return {
+        setters: [
+            function (core_39_1) {
+                core_39 = core_39_1;
+                core_40 = core_39_1;
+            }
+        ],
+        execute: function () {
+            CreateLinkComponent = class CreateLinkComponent {
+                constructor() {
+                    this.update = new core_39.EventEmitter();
+                }
+                wrapSelected() {
+                    let url = prompt('Enter the link here: ', 'http:\/\/');
+                    document.execCommand('createlink', false, url);
+                }
+            };
+            __decorate([
+                core_40.Output('contenteditableModelChange'),
+                __metadata("design:type", Object)
+            ], CreateLinkComponent.prototype, "update", void 0);
+            __decorate([
+                core_40.Input('content'),
+                __metadata("design:type", String)
+            ], CreateLinkComponent.prototype, "content", void 0);
+            __decorate([
+                core_40.Input('editorId'),
+                __metadata("design:type", String)
+            ], CreateLinkComponent.prototype, "editorId", void 0);
+            CreateLinkComponent = __decorate([
+                core_39.Component({
+                    selector: 'create-link-editor-button',
+                    template: `
+      <a (click)="wrapSelected()" class="waves-effect waves-light btn">Link</a>
+    `
+                })
+            ], CreateLinkComponent);
+            exports_24("CreateLinkComponent", CreateLinkComponent);
+        }
+    };
+});
+System.register("editor-features/components/unlink-component/unlink.component", ["@angular/core"], function (exports_25, context_25) {
+    "use strict";
+    var __moduleName = context_25 && context_25.id;
+    var core_41, core_42, UnlinkComponent;
+    return {
+        setters: [
+            function (core_41_1) {
+                core_41 = core_41_1;
+                core_42 = core_41_1;
+            }
+        ],
+        execute: function () {
+            UnlinkComponent = class UnlinkComponent {
+                constructor() {
+                    this.update = new core_41.EventEmitter();
+                }
+                wrapSelected() {
+                    document.execCommand('unlink', false, null);
+                }
+            };
+            __decorate([
+                core_42.Output('contenteditableModelChange'),
+                __metadata("design:type", Object)
+            ], UnlinkComponent.prototype, "update", void 0);
+            __decorate([
+                core_42.Input('content'),
+                __metadata("design:type", String)
+            ], UnlinkComponent.prototype, "content", void 0);
+            __decorate([
+                core_42.Input('editorId'),
+                __metadata("design:type", String)
+            ], UnlinkComponent.prototype, "editorId", void 0);
+            UnlinkComponent = __decorate([
+                core_41.Component({
+                    selector: 'unlink-editor-button',
+                    template: `
+      <a (click)="wrapSelected()" class="waves-effect waves-light btn">Unlink</a>
+    `
+                })
+            ], UnlinkComponent);
+            exports_25("UnlinkComponent", UnlinkComponent);
+        }
+    };
+});
+System.register("editor-features/components/insert-image-component/insert-image.component", ["@angular/core"], function (exports_26, context_26) {
+    "use strict";
+    var __moduleName = context_26 && context_26.id;
+    var core_43, core_44, InsertImageComponent;
+    return {
+        setters: [
+            function (core_43_1) {
+                core_43 = core_43_1;
+                core_44 = core_43_1;
+            }
+        ],
+        execute: function () {
+            InsertImageComponent = class InsertImageComponent {
+                constructor() {
+                    this.update = new core_43.EventEmitter();
+                }
+                wrapSelected() {
+                    let url = prompt('Enter the link here: ', 'http:\/\/');
+                    document.execCommand('insertimage', false, url);
+                }
+            };
+            __decorate([
+                core_44.Output('contenteditableModelChange'),
+                __metadata("design:type", Object)
+            ], InsertImageComponent.prototype, "update", void 0);
+            __decorate([
+                core_44.Input('content'),
+                __metadata("design:type", String)
+            ], InsertImageComponent.prototype, "content", void 0);
+            __decorate([
+                core_44.Input('editorId'),
+                __metadata("design:type", String)
+            ], InsertImageComponent.prototype, "editorId", void 0);
+            InsertImageComponent = __decorate([
+                core_43.Component({
+                    selector: 'insert-image-editor-button',
+                    template: `
+      <a (click)="wrapSelected()" class="waves-effect waves-light btn">IMG</a>
+    `
+                })
+            ], InsertImageComponent);
+            exports_26("InsertImageComponent", InsertImageComponent);
+        }
+    };
+});
+System.register("editor-features/editor-featrues.module", ["@angular/core", "@angular/forms", "editor-features/components/b-component/b.component", "editor-features/components/i-component/i.component", "editor-features/components/u-component/u.component", "editor-features/components/text-center-component/text-center.component", "editor-features/components/text-right-component/text-right.component", "editor-features/components/text-left-component/text-left.component", "editor-features/components/ul-component/ul.component", "editor-features/components/ol-component/ol.component", "editor-features/components/text-justify-component/text-justify.component", "editor-features/components/indent-component/indent.component", "editor-features/components/outdent-component/outdent.component", "editor-features/components/strike-component/strike.component", "editor-features/components/subscript-component/subscript.component", "editor-features/components/superscript-component/superscript.component", "editor-features/components/hr-component/hr.component", "editor-features/components/format-block-component/foramt-block.component", "editor-features/components/rf-component/rf.component", "editor-features/components/font-size-component/font-size.component", "editor-features/components/font-name-component/font-name.component", "editor-features/components/create-link-component/create-link.component", "editor-features/components/unlink-component/unlink.component", "editor-features/components/insert-image-component/insert-image.component"], function (exports_27, context_27) {
+    "use strict";
+    var __moduleName = context_27 && context_27.id;
+    var core_45, forms_1, b_component_1, i_component_1, u_component_1, text_center_component_1, text_right_component_1, text_left_component_1, ul_component_1, ol_component_1, text_justify_component_1, indent_component_1, outdent_component_1, strike_component_1, subscript_component_1, superscript_component_1, hr_component_1, foramt_block_component_1, rf_component_1, font_size_component_1, font_name_component_1, create_link_component_1, unlink_component_1, insert_image_component_1, EditorFeaturesModule;
+    return {
+        setters: [
+            function (core_45_1) {
+                core_45 = core_45_1;
+            },
+            function (forms_1_1) {
+                forms_1 = forms_1_1;
             },
             function (b_component_1_1) {
                 b_component_1 = b_component_1_1;
@@ -759,6 +1250,48 @@ System.register("editor-features/editor-featrues.module", ["@angular/core", "edi
             },
             function (ol_component_1_1) {
                 ol_component_1 = ol_component_1_1;
+            },
+            function (text_justify_component_1_1) {
+                text_justify_component_1 = text_justify_component_1_1;
+            },
+            function (indent_component_1_1) {
+                indent_component_1 = indent_component_1_1;
+            },
+            function (outdent_component_1_1) {
+                outdent_component_1 = outdent_component_1_1;
+            },
+            function (strike_component_1_1) {
+                strike_component_1 = strike_component_1_1;
+            },
+            function (subscript_component_1_1) {
+                subscript_component_1 = subscript_component_1_1;
+            },
+            function (superscript_component_1_1) {
+                superscript_component_1 = superscript_component_1_1;
+            },
+            function (hr_component_1_1) {
+                hr_component_1 = hr_component_1_1;
+            },
+            function (foramt_block_component_1_1) {
+                foramt_block_component_1 = foramt_block_component_1_1;
+            },
+            function (rf_component_1_1) {
+                rf_component_1 = rf_component_1_1;
+            },
+            function (font_size_component_1_1) {
+                font_size_component_1 = font_size_component_1_1;
+            },
+            function (font_name_component_1_1) {
+                font_name_component_1 = font_name_component_1_1;
+            },
+            function (create_link_component_1_1) {
+                create_link_component_1 = create_link_component_1_1;
+            },
+            function (unlink_component_1_1) {
+                unlink_component_1 = unlink_component_1_1;
+            },
+            function (insert_image_component_1_1) {
+                insert_image_component_1 = insert_image_component_1_1;
             }
         ],
         execute: function () {
@@ -768,44 +1301,72 @@ System.register("editor-features/editor-featrues.module", ["@angular/core", "edi
                 }
             };
             EditorFeaturesModule = __decorate([
-                core_17.NgModule({
+                core_45.NgModule({
                     declarations: [
                         b_component_1.BComponent,
                         i_component_1.IComponent,
                         u_component_1.UComponent,
+                        strike_component_1.StrikeComponent,
                         text_center_component_1.TextCenterComponent,
                         text_right_component_1.TextRightComponent,
                         text_left_component_1.TextLeftComponent,
+                        text_justify_component_1.TextJustifyComponent,
+                        indent_component_1.IndentComponent,
+                        outdent_component_1.OutdentComponent,
                         ol_component_1.OlComponent,
-                        ul_component_1.UlComponent
+                        ul_component_1.UlComponent,
+                        subscript_component_1.SubscriptComponent,
+                        superscript_component_1.SuperscriptComponent,
+                        hr_component_1.HrComponent,
+                        rf_component_1.RemoveFormatComponent,
+                        foramt_block_component_1.FormatBlockComponent,
+                        font_size_component_1.FontSizeComponent,
+                        font_name_component_1.FontNameComponent,
+                        create_link_component_1.CreateLinkComponent,
+                        unlink_component_1.UnlinkComponent,
+                        insert_image_component_1.InsertImageComponent
                     ],
-                    imports: [],
+                    imports: [forms_1.FormsModule],
                     exports: [
                         b_component_1.BComponent,
                         i_component_1.IComponent,
                         u_component_1.UComponent,
+                        strike_component_1.StrikeComponent,
                         text_center_component_1.TextCenterComponent,
                         text_right_component_1.TextRightComponent,
                         text_left_component_1.TextLeftComponent,
+                        text_justify_component_1.TextJustifyComponent,
+                        indent_component_1.IndentComponent,
+                        outdent_component_1.OutdentComponent,
                         ol_component_1.OlComponent,
-                        ul_component_1.UlComponent
+                        ul_component_1.UlComponent,
+                        subscript_component_1.SubscriptComponent,
+                        superscript_component_1.SuperscriptComponent,
+                        hr_component_1.HrComponent,
+                        rf_component_1.RemoveFormatComponent,
+                        foramt_block_component_1.FormatBlockComponent,
+                        font_size_component_1.FontSizeComponent,
+                        font_name_component_1.FontNameComponent,
+                        create_link_component_1.CreateLinkComponent,
+                        unlink_component_1.UnlinkComponent,
+                        insert_image_component_1.InsertImageComponent
                     ],
                     bootstrap: []
                 }),
                 __metadata("design:paramtypes", [])
             ], EditorFeaturesModule);
-            exports_13("EditorFeaturesModule", EditorFeaturesModule);
+            exports_27("EditorFeaturesModule", EditorFeaturesModule);
         }
     };
 });
-System.register("app/components/shell-component/shell.component", ["@angular/core"], function (exports_14, context_14) {
+System.register("app/components/shell-component/shell.component", ["@angular/core"], function (exports_28, context_28) {
     "use strict";
-    var __moduleName = context_14 && context_14.id;
-    var core_18, ShellComponent;
+    var __moduleName = context_28 && context_28.id;
+    var core_46, ShellComponent;
     return {
         setters: [
-            function (core_18_1) {
-                core_18 = core_18_1;
+            function (core_46_1) {
+                core_46 = core_46_1;
             }
         ],
         execute: function () {
@@ -815,7 +1376,7 @@ System.register("app/components/shell-component/shell.component", ["@angular/cor
                 }
             };
             ShellComponent = __decorate([
-                core_18.Component({
+                core_46.Component({
                     selector: 'shell',
                     template: `
       <router-outlet></router-outlet>
@@ -823,44 +1384,44 @@ System.register("app/components/shell-component/shell.component", ["@angular/cor
                 }),
                 __metadata("design:paramtypes", [])
             ], ShellComponent);
-            exports_14("ShellComponent", ShellComponent);
+            exports_28("ShellComponent", ShellComponent);
         }
     };
 });
-System.register("app/models/Slide", [], function (exports_15, context_15) {
+System.register("app/models/Slide", [], function (exports_29, context_29) {
     "use strict";
-    var __moduleName = context_15 && context_15.id;
+    var __moduleName = context_29 && context_29.id;
     var Slide;
     return {
         setters: [],
         execute: function () {
             Slide = class Slide {
             };
-            exports_15("Slide", Slide);
+            exports_29("Slide", Slide);
         }
     };
 });
-System.register("app/models/Presentation", [], function (exports_16, context_16) {
+System.register("app/models/Presentation", [], function (exports_30, context_30) {
     "use strict";
-    var __moduleName = context_16 && context_16.id;
+    var __moduleName = context_30 && context_30.id;
     var Presentation;
     return {
         setters: [],
         execute: function () {
             Presentation = class Presentation {
             };
-            exports_16("Presentation", Presentation);
+            exports_30("Presentation", Presentation);
         }
     };
 });
-System.register("app/components/dashboard-component/dashboard.component", ["@angular/core"], function (exports_17, context_17) {
+System.register("app/components/dashboard-component/dashboard.component", ["@angular/core"], function (exports_31, context_31) {
     "use strict";
-    var __moduleName = context_17 && context_17.id;
-    var core_19, DashboardComponent;
+    var __moduleName = context_31 && context_31.id;
+    var core_47, DashboardComponent;
     return {
         setters: [
-            function (core_19_1) {
-                core_19 = core_19_1;
+            function (core_47_1) {
+                core_47 = core_47_1;
             }
         ],
         execute: function () {
@@ -871,7 +1432,7 @@ System.register("app/components/dashboard-component/dashboard.component", ["@ang
                 }
             };
             DashboardComponent = __decorate([
-                core_19.Component({
+                core_47.Component({
                     selector: 'dashboard',
                     template: `
       <nav>
@@ -910,18 +1471,18 @@ System.register("app/components/dashboard-component/dashboard.component", ["@ang
                 }),
                 __metadata("design:paramtypes", [])
             ], DashboardComponent);
-            exports_17("DashboardComponent", DashboardComponent);
+            exports_31("DashboardComponent", DashboardComponent);
         }
     };
 });
-System.register("app/components/presentation-component/presentation.component", ["@angular/core"], function (exports_18, context_18) {
+System.register("app/components/presentation-component/presentation.component", ["@angular/core"], function (exports_32, context_32) {
     "use strict";
-    var __moduleName = context_18 && context_18.id;
-    var core_20, PresentationComponent;
+    var __moduleName = context_32 && context_32.id;
+    var core_48, PresentationComponent;
     return {
         setters: [
-            function (core_20_1) {
-                core_20 = core_20_1;
+            function (core_48_1) {
+                core_48 = core_48_1;
             }
         ],
         execute: function () {
@@ -931,7 +1492,7 @@ System.register("app/components/presentation-component/presentation.component", 
                 }
             };
             PresentationComponent = __decorate([
-                core_20.Component({
+                core_48.Component({
                     selector: 'presentation',
                     template: `
       <nav>
@@ -953,18 +1514,18 @@ System.register("app/components/presentation-component/presentation.component", 
                 }),
                 __metadata("design:paramtypes", [])
             ], PresentationComponent);
-            exports_18("PresentationComponent", PresentationComponent);
+            exports_32("PresentationComponent", PresentationComponent);
         }
     };
 });
-System.register("app/components/slide-editor-component/slide-editor.component", ["@angular/core"], function (exports_19, context_19) {
+System.register("app/components/slide-editor-component/slide-editor.component", ["@angular/core"], function (exports_33, context_33) {
     "use strict";
-    var __moduleName = context_19 && context_19.id;
-    var core_21, SlideEditorComponent;
+    var __moduleName = context_33 && context_33.id;
+    var core_49, SlideEditorComponent;
     return {
         setters: [
-            function (core_21_1) {
-                core_21 = core_21_1;
+            function (core_49_1) {
+                core_49 = core_49_1;
             }
         ],
         execute: function () {
@@ -985,7 +1546,7 @@ System.register("app/components/slide-editor-component/slide-editor.component", 
                 }
             };
             SlideEditorComponent = __decorate([
-                core_21.Component({
+                core_49.Component({
                     selector: 'slide-editor',
                     template: `
       <div>
@@ -1003,14 +1564,33 @@ System.register("app/components/slide-editor-component/slide-editor.component", 
               <b-editor-button [content]="slide.content" [editorId]="editorId"></b-editor-button>
               <i-editor-button [content]="slide.content" [editorId]="editorId"></i-editor-button>
               <u-editor-button [content]="slide.content" [editorId]="editorId"></u-editor-button>
+              <strike-editor-button [content]="slide.content" [editorId]="editorId"></strike-editor-button>
 
               <text-center-editor-button [content]="slide.content" [editorId]="editorId"></text-center-editor-button>
               <text-right-editor-button [content]="slide.content" [editorId]="editorId"></text-right-editor-button>
               <text-left-editor-button [content]="slide.content" [editorId]="editorId"></text-left-editor-button>
+              <text-justify-editor-button [content]="slide.content" [editorId]="editorId"></text-justify-editor-button>
+
+              <indent-editor-button [content]="slide.content" [editorId]="editorId"></indent-editor-button>
+              <outdent-editor-button [content]="slide.content" [editorId]="editorId"></outdent-editor-button>
 
               <ul-editor-button [content]="slide.content" [editorId]="editorId"></ul-editor-button>
               <ol-editor-button [content]="slide.content" [editorId]="editorId"></ol-editor-button>
 
+              <subscript-editor-button [content]="slide.content" [editorId]="editorId"></subscript-editor-button>
+              <superscript-editor-button [content]="slide.content" [editorId]="editorId"></superscript-editor-button>
+
+              <hr-editor-button [content]="slide.content" [editorId]="editorId"></hr-editor-button>
+              <rf-editor-button [content]="slide.content" [editorId]="editorId"></rf-editor-button>
+
+              <format-block-editor-button [content]="slide.content" [editorId]="editorId"></format-block-editor-button>
+              <font-size-editor-button [content]="slide.content" [editorId]="editorId"></font-size-editor-button>
+              <font-name-editor-button [content]="slide.content" [editorId]="editorId"></font-name-editor-button>
+
+              <create-link-editor-button [content]="slide.content" [editorId]="editorId"></create-link-editor-button>
+              <unlink-editor-button [content]="slide.content" [editorId]="editorId"></unlink-editor-button>
+
+              <insert-image-editor-button [content]="slide.content" [editorId]="editorId"></insert-image-editor-button>
           </div>
 
           <div>
@@ -1036,18 +1616,18 @@ System.register("app/components/slide-editor-component/slide-editor.component", 
                 }),
                 __metadata("design:paramtypes", [])
             ], SlideEditorComponent);
-            exports_19("SlideEditorComponent", SlideEditorComponent);
+            exports_33("SlideEditorComponent", SlideEditorComponent);
         }
     };
 });
-System.register("app/components/slides-tree-component/slides-tree.component", ["@angular/core"], function (exports_20, context_20) {
+System.register("app/components/slides-tree-component/slides-tree.component", ["@angular/core"], function (exports_34, context_34) {
     "use strict";
-    var __moduleName = context_20 && context_20.id;
-    var core_22, SlidesTreeComponent;
+    var __moduleName = context_34 && context_34.id;
+    var core_50, SlidesTreeComponent;
     return {
         setters: [
-            function (core_22_1) {
-                core_22 = core_22_1;
+            function (core_50_1) {
+                core_50 = core_50_1;
             }
         ],
         execute: function () {
@@ -1066,7 +1646,7 @@ System.register("app/components/slides-tree-component/slides-tree.component", ["
                 }
             };
             SlidesTreeComponent = __decorate([
-                core_22.Component({
+                core_50.Component({
                     selector: 'slides-tree',
                     template: `
       <div>
@@ -1088,26 +1668,26 @@ System.register("app/components/slides-tree-component/slides-tree.component", ["
                 }),
                 __metadata("design:paramtypes", [])
             ], SlidesTreeComponent);
-            exports_20("SlidesTreeComponent", SlidesTreeComponent);
+            exports_34("SlidesTreeComponent", SlidesTreeComponent);
         }
     };
 });
-System.register("app/directives/content-editable.directive", ["@angular/core"], function (exports_21, context_21) {
+System.register("app/directives/content-editable.directive", ["@angular/core"], function (exports_35, context_35) {
     "use strict";
-    var __moduleName = context_21 && context_21.id;
-    var core_23, core_24, ContentEditableDirective;
+    var __moduleName = context_35 && context_35.id;
+    var core_51, core_52, ContentEditableDirective;
     return {
         setters: [
-            function (core_23_1) {
-                core_23 = core_23_1;
-                core_24 = core_23_1;
+            function (core_51_1) {
+                core_51 = core_51_1;
+                core_52 = core_51_1;
             }
         ],
         execute: function () {
             ContentEditableDirective = class ContentEditableDirective {
                 constructor(elementRef) {
                     this.elementRef = elementRef;
-                    this.update = new core_23.EventEmitter();
+                    this.update = new core_51.EventEmitter();
                 }
                 ngOnChanges(changes) {
                     if (changes.model.firstChange == true) {
@@ -1123,30 +1703,30 @@ System.register("app/directives/content-editable.directive", ["@angular/core"], 
                 }
             };
             __decorate([
-                core_24.Input('contenteditableModel'),
+                core_52.Input('contenteditableModel'),
                 __metadata("design:type", Object)
             ], ContentEditableDirective.prototype, "model", void 0);
             __decorate([
-                core_24.Output('contenteditableModelChange'),
+                core_52.Output('contenteditableModelChange'),
                 __metadata("design:type", Object)
             ], ContentEditableDirective.prototype, "update", void 0);
             ContentEditableDirective = __decorate([
-                core_23.Directive({
+                core_51.Directive({
                     selector: '[contenteditableModel]',
                     host: {
                         '(blur)': 'onEdit()',
                         '(keyup)': 'onEdit()'
                     }
                 }),
-                __metadata("design:paramtypes", [core_23.ElementRef])
+                __metadata("design:paramtypes", [core_51.ElementRef])
             ], ContentEditableDirective);
-            exports_21("ContentEditableDirective", ContentEditableDirective);
+            exports_35("ContentEditableDirective", ContentEditableDirective);
         }
     };
 });
-System.register("app/app.routing", ["@angular/router", "app/components/dashboard-component/dashboard.component", "app/components/presentation-component/presentation.component"], function (exports_22, context_22) {
+System.register("app/app.routing", ["@angular/router", "app/components/dashboard-component/dashboard.component", "app/components/presentation-component/presentation.component"], function (exports_36, context_36) {
     "use strict";
-    var __moduleName = context_22 && context_22.id;
+    var __moduleName = context_36 && context_36.id;
     var router_1, dashboard_component_1, presentation_component_1, appRoutes, routing;
     return {
         setters: [
@@ -1177,24 +1757,24 @@ System.register("app/app.routing", ["@angular/router", "app/components/dashboard
                         }]
                 },
             ];
-            exports_22("routing", routing = router_1.RouterModule.forRoot(appRoutes));
+            exports_36("routing", routing = router_1.RouterModule.forRoot(appRoutes));
         }
     };
 });
-System.register("app/app.module", ["@angular/core", "@angular/http", "@angular/forms", "@angular/platform-browser", "editor-features/editor-featrues.module", "app/components/shell-component/shell.component", "app/components/dashboard-component/dashboard.component", "app/components/presentation-component/presentation.component", "app/components/slide-editor-component/slide-editor.component", "app/components/slides-tree-component/slides-tree.component", "app/directives/content-editable.directive", "app/app.routing"], function (exports_23, context_23) {
+System.register("app/app.module", ["@angular/core", "@angular/http", "@angular/forms", "@angular/platform-browser", "editor-features/editor-featrues.module", "app/components/shell-component/shell.component", "app/components/dashboard-component/dashboard.component", "app/components/presentation-component/presentation.component", "app/components/slide-editor-component/slide-editor.component", "app/components/slides-tree-component/slides-tree.component", "app/directives/content-editable.directive", "app/app.routing"], function (exports_37, context_37) {
     "use strict";
-    var __moduleName = context_23 && context_23.id;
-    var core_25, http_1, forms_1, platform_browser_1, editor_featrues_module_1, shell_component_1, dashboard_component_2, presentation_component_2, slide_editor_component_1, slides_tree_component_1, content_editable_directive_1, app_routing_1, AppModule;
+    var __moduleName = context_37 && context_37.id;
+    var core_53, http_1, forms_2, platform_browser_1, editor_featrues_module_1, shell_component_1, dashboard_component_2, presentation_component_2, slide_editor_component_1, slides_tree_component_1, content_editable_directive_1, app_routing_1, AppModule;
     return {
         setters: [
-            function (core_25_1) {
-                core_25 = core_25_1;
+            function (core_53_1) {
+                core_53 = core_53_1;
             },
             function (http_1_1) {
                 http_1 = http_1_1;
             },
-            function (forms_1_1) {
-                forms_1 = forms_1_1;
+            function (forms_2_1) {
+                forms_2 = forms_2_1;
             },
             function (platform_browser_1_1) {
                 platform_browser_1 = platform_browser_1_1;
@@ -1231,11 +1811,11 @@ System.register("app/app.module", ["@angular/core", "@angular/http", "@angular/f
                 }
             };
             AppModule = __decorate([
-                core_25.NgModule({
+                core_53.NgModule({
                     imports: [
                         platform_browser_1.BrowserModule,
                         http_1.HttpModule,
-                        forms_1.FormsModule,
+                        forms_2.FormsModule,
                         app_routing_1.routing,
                         editor_featrues_module_1.EditorFeaturesModule
                     ],
@@ -1251,13 +1831,13 @@ System.register("app/app.module", ["@angular/core", "@angular/http", "@angular/f
                 }),
                 __metadata("design:paramtypes", [])
             ], AppModule);
-            exports_23("AppModule", AppModule);
+            exports_37("AppModule", AppModule);
         }
     };
 });
-System.register("main", ["@angular/platform-browser-dynamic", "app/app.module"], function (exports_24, context_24) {
+System.register("main", ["@angular/platform-browser-dynamic", "app/app.module"], function (exports_38, context_38) {
     "use strict";
-    var __moduleName = context_24 && context_24.id;
+    var __moduleName = context_38 && context_38.id;
     var platform_browser_dynamic_1, app_module_1;
     return {
         setters: [
@@ -1273,41 +1853,41 @@ System.register("main", ["@angular/platform-browser-dynamic", "app/app.module"],
         }
     };
 });
-System.register("editor-features/components/b-component/b.component-old", ["@angular/core", "editor-features/helpers/selection.helper", "editor-features/helpers/node.helper"], function (exports_25, context_25) {
+System.register("editor-features/components/b-component/b.component-old", ["@angular/core", "editor-features/helpers/selection.helper", "editor-features/helpers/node.helper"], function (exports_39, context_39) {
     "use strict";
-    var __moduleName = context_25 && context_25.id;
-    var core_26, core_27, selection_helper_4, node_helper_5, BComponent;
+    var __moduleName = context_39 && context_39.id;
+    var core_54, core_55, selection_helper_1, node_helper_1, BComponent;
     return {
         setters: [
-            function (core_26_1) {
-                core_26 = core_26_1;
-                core_27 = core_26_1;
+            function (core_54_1) {
+                core_54 = core_54_1;
+                core_55 = core_54_1;
             },
-            function (selection_helper_4_1) {
-                selection_helper_4 = selection_helper_4_1;
+            function (selection_helper_1_1) {
+                selection_helper_1 = selection_helper_1_1;
             },
-            function (node_helper_5_1) {
-                node_helper_5 = node_helper_5_1;
+            function (node_helper_1_1) {
+                node_helper_1 = node_helper_1_1;
             }
         ],
         execute: function () {
             BComponent = class BComponent {
                 constructor() {
-                    this.update = new core_26.EventEmitter();
+                    this.update = new core_54.EventEmitter();
                 }
                 wrapSelected() {
                     let selection = window.getSelection();
                     let node = selection.focusNode;
-                    let selectionData = selection_helper_4.SelectionHelper.getSelectionData();
+                    let selectionData = selection_helper_1.SelectionHelper.getSelectionData();
                     if (document.getElementById(this.editorId).contains(node)) {
                         console.log({ parentNode: node.parentNode });
                         console.log({ node: node });
-                        if (node_helper_5.NodeHelper.haveParentWithLocalName(node, 'b')) {
-                            let parent = node_helper_5.NodeHelper.findParentByLocalName(node, 'b');
+                        if (node_helper_1.NodeHelper.haveParentWithLocalName(node, 'b')) {
+                            let parent = node_helper_1.NodeHelper.findParentByLocalName(node, 'b');
                             parent.outerHTML = parent.innerHTML;
                         }
                         else {
-                            let blockParent = node_helper_5.NodeHelper.findBlockParent(node);
+                            let blockParent = node_helper_1.NodeHelper.findBlockParent(node);
                             if (blockParent.childNodes.length > 1) {
                                 let currentLength = 0;
                                 let nodesToWrap = [];
@@ -1342,26 +1922,26 @@ System.register("editor-features/components/b-component/b.component-old", ["@ang
                 }
             };
             __decorate([
-                core_27.Output('contenteditableModelChange'),
+                core_55.Output('contenteditableModelChange'),
                 __metadata("design:type", Object)
             ], BComponent.prototype, "update", void 0);
             __decorate([
-                core_27.Input('content'),
+                core_55.Input('content'),
                 __metadata("design:type", String)
             ], BComponent.prototype, "content", void 0);
             __decorate([
-                core_27.Input('editorId'),
+                core_55.Input('editorId'),
                 __metadata("design:type", String)
             ], BComponent.prototype, "editorId", void 0);
             BComponent = __decorate([
-                core_26.Component({
+                core_54.Component({
                     selector: 'b-editor-button',
                     template: `
       <a (click)="wrapSelected()" class="waves-effect waves-light btn"><b>B</b></a>
     `
                 })
             ], BComponent);
-            exports_25("BComponent", BComponent);
+            exports_39("BComponent", BComponent);
         }
     };
 });
