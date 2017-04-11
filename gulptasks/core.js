@@ -11,7 +11,7 @@ gulp.task(appName + ':clean', function () {
     return del('dist/' + appName);
 });
 
-gulp.task(appName + ':materialize', function () {
+gulp.task(appName + ':materialize-css', function () {
 
     const pathToMaterialize = ['node_modules/materialize-css/dist/css/materialize.min.css'];
 
@@ -19,6 +19,16 @@ gulp.task(appName + ':materialize', function () {
         .pipe(gulp.dest('dist/' + appName + '/content/css/'));
 
 });
+
+gulp.task(appName + ':materialize-js', function () {
+
+    const pathToMaterialize = ['node_modules/materialize-css/dist/js/materialize.min.js'];
+
+    return gulp.src(pathToMaterialize)
+        .pipe(gulp.dest('dist/' + appName + '/scripts/materialize-css/'));
+
+});
+
 gulp.task(appName + ':material-icons-css', function () {
 
     const pathToMaterialize = ['node_modules/material-design-icons/iconfont/material-icons.css'];
@@ -28,6 +38,7 @@ gulp.task(appName + ':material-icons-css', function () {
         .pipe(gulp.dest('dist/' + appName + '/content/css/'));
 
 });
+
 
 gulp.task(appName + ':material-icons-fonts', function () {
 

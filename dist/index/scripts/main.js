@@ -539,7 +539,7 @@ System.register("editor-features/components/ul-component/ul.component", ["@angul
                 core_13.Component({
                     selector: 'ul-editor-button',
                     template: `
-      <a (click)="wrapSelected()" class="lc-editor-btn waves-effect waves-light btn"><i class="material-icons">format list bulleted</i></a>
+      <a (click)="wrapSelected()" class="lc-editor-btn waves-effect waves-light btn"><i class="material-icons">format_list_bulleted</i></a>
     `
                 })
             ], UlComponent);
@@ -583,7 +583,7 @@ System.register("editor-features/components/ol-component/ol.component", ["@angul
                 core_15.Component({
                     selector: 'ol-editor-button',
                     template: `
-      <a (click)="wrapSelected()" class="lc-editor-btn waves-effect waves-light btn"><i class="material-icons">format list numbered</i></a>
+      <a (click)="wrapSelected()" class="lc-editor-btn waves-effect waves-light btn"><i class="material-icons">format_list_numbered</i></a>
     `
                 })
             ], OlComponent);
@@ -803,7 +803,7 @@ System.register("editor-features/components/subscript-component/subscript.compon
                 core_25.Component({
                     selector: 'subscript-editor-button',
                     template: `
-      <a (click)="wrapSelected()" class="waves-effect waves-light btn">x<sub>2</sub></a>
+      <a (click)="wrapSelected()" class="lc-editor-btn waves-effect waves-light btn">x<sub>2</sub></a>
     `
                 })
             ], SubscriptComponent);
@@ -847,7 +847,7 @@ System.register("editor-features/components/superscript-component/superscript.co
                 core_27.Component({
                     selector: 'superscript-editor-button',
                     template: `
-      <a (click)="wrapSelected()" class="waves-effect waves-light btn">x<sup>2</sup></a>
+      <a (click)="wrapSelected()" class="lc-editor-btn waves-effect waves-light btn">x<sup>2</sup></a>
     `
                 })
             ], SuperscriptComponent);
@@ -891,7 +891,7 @@ System.register("editor-features/components/hr-component/hr.component", ["@angul
                 core_29.Component({
                     selector: 'hr-editor-button',
                     template: `
-      <a (click)="wrapSelected()" class="waves-effect waves-light btn">hr</a>
+      <a (click)="wrapSelected()" class="lc-editor-btn waves-effect waves-light btn">hr</a>
     `
                 })
             ], HrComponent);
@@ -1118,7 +1118,7 @@ System.register("editor-features/components/create-link-component/create-link.co
                 core_39.Component({
                     selector: 'create-link-editor-button',
                     template: `
-      <a (click)="wrapSelected()" class="lc-editor-btn waves-effect waves-light btn"><i class="material-icons">insert link</i></a>
+      <a (click)="wrapSelected()" class="lc-editor-btn waves-effect waves-light btn"><i class="material-icons">insert_link</i></a>
     `
                 })
             ], CreateLinkComponent);
@@ -1162,7 +1162,7 @@ System.register("editor-features/components/unlink-component/unlink.component", 
                 core_41.Component({
                     selector: 'unlink-editor-button',
                     template: `
-      <a (click)="wrapSelected()" class="waves-effect waves-light btn">Unlink</a>
+      <a (click)="wrapSelected()" class="lc-editor-btn waves-effect waves-light btn">Unlink</a>
     `
                 })
             ], UnlinkComponent);
@@ -1207,7 +1207,7 @@ System.register("editor-features/components/insert-image-component/insert-image.
                 core_43.Component({
                     selector: 'insert-image-editor-button',
                     template: `
-      <a (click)="wrapSelected()" class="lc-editor-btn waves-effect waves-light btn"><i class="material-icons">insert photo</i></a>
+      <a (click)="wrapSelected()" class="lc-editor-btn waves-effect waves-light btn"><i class="material-icons">insert_photo</i></a>
     `
                 })
             ], InsertImageComponent);
@@ -1549,48 +1549,50 @@ System.register("app/components/slide-editor-component/slide-editor.component", 
                 core_49.Component({
                     selector: 'slide-editor',
                     template: `
-      <div>
+      <div class="slide-editor-component">
 
-          <div class="row editor-switchers">
+          <div class="row editor-toolbar-holder">
 
-              <a (click)="isVisualizer = true" class="{{ isVisualizer ? 'active' : '' }} waves-effect waves-light btn">Визуализатор</a>
-              <a (click)="isVisualizer = false" class="{{ isVisualizer ? '' : 'active' }} waves-effect waves-light btn">Исходный
-                  текст</a>
+              <div class="editor-toolbox">
 
-          </div>
+                  <b-editor-button [content]="slide.content" [editorId]="editorId"></b-editor-button>
+                  <i-editor-button [content]="slide.content" [editorId]="editorId"></i-editor-button>
+                  <u-editor-button [content]="slide.content" [editorId]="editorId"></u-editor-button>
+                  <strike-editor-button [content]="slide.content" [editorId]="editorId"></strike-editor-button>
 
-          <div class="editor-toolbox">
+                  <text-center-editor-button [content]="slide.content" [editorId]="editorId"></text-center-editor-button>
+                  <text-right-editor-button [content]="slide.content" [editorId]="editorId"></text-right-editor-button>
+                  <text-left-editor-button [content]="slide.content" [editorId]="editorId"></text-left-editor-button>
+                  <text-justify-editor-button [content]="slide.content" [editorId]="editorId"></text-justify-editor-button>
 
-              <b-editor-button [content]="slide.content" [editorId]="editorId"></b-editor-button>
-              <i-editor-button [content]="slide.content" [editorId]="editorId"></i-editor-button>
-              <u-editor-button [content]="slide.content" [editorId]="editorId"></u-editor-button>
-              <strike-editor-button [content]="slide.content" [editorId]="editorId"></strike-editor-button>
+                  <indent-editor-button [content]="slide.content" [editorId]="editorId"></indent-editor-button>
+                  <outdent-editor-button [content]="slide.content" [editorId]="editorId"></outdent-editor-button>
 
-              <text-center-editor-button [content]="slide.content" [editorId]="editorId"></text-center-editor-button>
-              <text-right-editor-button [content]="slide.content" [editorId]="editorId"></text-right-editor-button>
-              <text-left-editor-button [content]="slide.content" [editorId]="editorId"></text-left-editor-button>
-              <text-justify-editor-button [content]="slide.content" [editorId]="editorId"></text-justify-editor-button>
+                  <ul-editor-button [content]="slide.content" [editorId]="editorId"></ul-editor-button>
+                  <ol-editor-button [content]="slide.content" [editorId]="editorId"></ol-editor-button>
 
-              <indent-editor-button [content]="slide.content" [editorId]="editorId"></indent-editor-button>
-              <outdent-editor-button [content]="slide.content" [editorId]="editorId"></outdent-editor-button>
+                  <subscript-editor-button [content]="slide.content" [editorId]="editorId"></subscript-editor-button>
+                  <superscript-editor-button [content]="slide.content" [editorId]="editorId"></superscript-editor-button>
 
-              <ul-editor-button [content]="slide.content" [editorId]="editorId"></ul-editor-button>
-              <ol-editor-button [content]="slide.content" [editorId]="editorId"></ol-editor-button>
+                  <hr-editor-button [content]="slide.content" [editorId]="editorId"></hr-editor-button>
+                  <!--<rf-editor-button [content]="slide.content" [editorId]="editorId"></rf-editor-button>-->
 
-              <subscript-editor-button [content]="slide.content" [editorId]="editorId"></subscript-editor-button>
-              <superscript-editor-button [content]="slide.content" [editorId]="editorId"></superscript-editor-button>
+                  <!--<format-block-editor-button [content]="slide.content" [editorId]="editorId"></format-block-editor-button>-->
+                  <!--<font-size-editor-button [content]="slide.content" [editorId]="editorId"></font-size-editor-button>-->
+                  <!--<font-name-editor-button [content]="slide.content" [editorId]="editorId"></font-name-editor-button>-->
 
-              <hr-editor-button [content]="slide.content" [editorId]="editorId"></hr-editor-button>
-              <rf-editor-button [content]="slide.content" [editorId]="editorId"></rf-editor-button>
+                  <create-link-editor-button [content]="slide.content" [editorId]="editorId"></create-link-editor-button>
+                  <!--<unlink-editor-button [content]="slide.content" [editorId]="editorId"></unlink-editor-button>-->
 
-              <format-block-editor-button [content]="slide.content" [editorId]="editorId"></format-block-editor-button>
-              <font-size-editor-button [content]="slide.content" [editorId]="editorId"></font-size-editor-button>
-              <font-name-editor-button [content]="slide.content" [editorId]="editorId"></font-name-editor-button>
+                  <insert-image-editor-button [content]="slide.content" [editorId]="editorId"></insert-image-editor-button>
+              </div>
 
-              <create-link-editor-button [content]="slide.content" [editorId]="editorId"></create-link-editor-button>
-              <unlink-editor-button [content]="slide.content" [editorId]="editorId"></unlink-editor-button>
+              <div class="editor-switchers">
+                  <a (click)="isVisualizer = true" class="{{ isVisualizer ? 'active' : '' }} waves-effect waves-light btn">Визуализатор</a>
+                  <a (click)="isVisualizer = false" class="{{ isVisualizer ? '' : 'active' }} waves-effect waves-light btn">Исходный
+                      текст</a>
+              </div>
 
-              <insert-image-editor-button [content]="slide.content" [editorId]="editorId"></insert-image-editor-button>
           </div>
 
           <div>
@@ -1605,7 +1607,8 @@ System.register("app/components/slide-editor-component/slide-editor.component", 
               </div>
 
               <div *ngIf="isVisualizer == false">
-                  <textarea class="slide-editor-textarea" name="" id="" cols="30" rows="10"
+
+                  <textarea contentEditable="true" class="slide-editor-textarea" name="" id="" cols="30" rows="10"
                             [(ngModel)]="slide.content"></textarea>
               </div>
 
@@ -1695,6 +1698,7 @@ System.register("app/directives/content-editable.directive", ["@angular/core"], 
                     }
                 }
                 onEdit() {
+                    console.log('heeer?', this.model);
                     let value = this.elementRef.nativeElement.innerHTML;
                     this.update.emit(value);
                 }

@@ -30,6 +30,8 @@ export class ContentEditableDirective implements OnChanges {
 
     public onEdit() {
 
+        console.log('heeer?', this.model);
+
         let value:string = this.elementRef.nativeElement.innerHTML;
         this.update.emit(value);
 

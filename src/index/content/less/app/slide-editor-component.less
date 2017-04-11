@@ -1,0 +1,63 @@
+
+.editor-component {
+  padding-top: 16px;
+
+  .slide-editor-component {
+    position: relative;
+
+    .editor-toolbox {
+      margin-bottom: 8px;
+      width: 100%;
+    }
+  }
+
+  .slide-editor-wrapper {
+    border: 1px solid #ccc;
+    height: 80vh;
+    cursor: text;
+    padding: 12px;
+    border-radius: 4px;
+    outline: none;
+  }
+
+  .slide-editor-textarea {
+    height: 80vh;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    outline: none;
+  }
+
+  .editor-toolbar-holder {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 4px;
+  }
+
+  .editor-switchers {
+    display: flex;
+    justify-content: flex-end;
+
+    a {
+      font-size: 12px;
+      box-shadow: none;
+      background: #ECE9E6;
+      color: #1f1f1f;
+      line-height: 24px;
+      max-height: 32px;
+      margin: 0 4px;
+      white-space: nowrap;
+      padding: 4px 12px;
+      opacity: .8;
+      &:hover {
+        background: #2bbbad;
+        color: #fff;
+      }
+      &.active {
+        background: #2bbbad;
+        color: #fff;
+        opacity: 1;
+      }
+    }
+  }
+}

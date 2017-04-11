@@ -1,45 +1,47 @@
-<div>
+<div class="slide-editor-component">
 
-    <div class="row editor-switchers">
+    <div class="row editor-toolbar-holder">
 
-        <a (click)="isVisualizer = true" class="{{ isVisualizer ? 'active' : '' }} waves-effect waves-light btn">Визуализатор</a>
-        <a (click)="isVisualizer = false" class="{{ isVisualizer ? '' : 'active' }} waves-effect waves-light btn">Исходный
-            текст</a>
+        <div class="editor-toolbox">
 
-    </div>
+            <b-editor-button [content]="slide.content" [editorId]="editorId"></b-editor-button>
+            <i-editor-button [content]="slide.content" [editorId]="editorId"></i-editor-button>
+            <u-editor-button [content]="slide.content" [editorId]="editorId"></u-editor-button>
+            <strike-editor-button [content]="slide.content" [editorId]="editorId"></strike-editor-button>
 
-    <div class="editor-toolbox">
+            <text-center-editor-button [content]="slide.content" [editorId]="editorId"></text-center-editor-button>
+            <text-right-editor-button [content]="slide.content" [editorId]="editorId"></text-right-editor-button>
+            <text-left-editor-button [content]="slide.content" [editorId]="editorId"></text-left-editor-button>
+            <text-justify-editor-button [content]="slide.content" [editorId]="editorId"></text-justify-editor-button>
 
-        <b-editor-button [content]="slide.content" [editorId]="editorId"></b-editor-button>
-        <i-editor-button [content]="slide.content" [editorId]="editorId"></i-editor-button>
-        <u-editor-button [content]="slide.content" [editorId]="editorId"></u-editor-button>
-        <strike-editor-button [content]="slide.content" [editorId]="editorId"></strike-editor-button>
+            <indent-editor-button [content]="slide.content" [editorId]="editorId"></indent-editor-button>
+            <outdent-editor-button [content]="slide.content" [editorId]="editorId"></outdent-editor-button>
 
-        <text-center-editor-button [content]="slide.content" [editorId]="editorId"></text-center-editor-button>
-        <text-right-editor-button [content]="slide.content" [editorId]="editorId"></text-right-editor-button>
-        <text-left-editor-button [content]="slide.content" [editorId]="editorId"></text-left-editor-button>
-        <text-justify-editor-button [content]="slide.content" [editorId]="editorId"></text-justify-editor-button>
+            <ul-editor-button [content]="slide.content" [editorId]="editorId"></ul-editor-button>
+            <ol-editor-button [content]="slide.content" [editorId]="editorId"></ol-editor-button>
 
-        <indent-editor-button [content]="slide.content" [editorId]="editorId"></indent-editor-button>
-        <outdent-editor-button [content]="slide.content" [editorId]="editorId"></outdent-editor-button>
+            <subscript-editor-button [content]="slide.content" [editorId]="editorId"></subscript-editor-button>
+            <superscript-editor-button [content]="slide.content" [editorId]="editorId"></superscript-editor-button>
 
-        <ul-editor-button [content]="slide.content" [editorId]="editorId"></ul-editor-button>
-        <ol-editor-button [content]="slide.content" [editorId]="editorId"></ol-editor-button>
+            <hr-editor-button [content]="slide.content" [editorId]="editorId"></hr-editor-button>
+            <!--<rf-editor-button [content]="slide.content" [editorId]="editorId"></rf-editor-button>-->
 
-        <subscript-editor-button [content]="slide.content" [editorId]="editorId"></subscript-editor-button>
-        <superscript-editor-button [content]="slide.content" [editorId]="editorId"></superscript-editor-button>
+            <!--<format-block-editor-button [content]="slide.content" [editorId]="editorId"></format-block-editor-button>-->
+            <!--<font-size-editor-button [content]="slide.content" [editorId]="editorId"></font-size-editor-button>-->
+            <!--<font-name-editor-button [content]="slide.content" [editorId]="editorId"></font-name-editor-button>-->
 
-        <hr-editor-button [content]="slide.content" [editorId]="editorId"></hr-editor-button>
-        <rf-editor-button [content]="slide.content" [editorId]="editorId"></rf-editor-button>
+            <create-link-editor-button [content]="slide.content" [editorId]="editorId"></create-link-editor-button>
+            <!--<unlink-editor-button [content]="slide.content" [editorId]="editorId"></unlink-editor-button>-->
 
-        <format-block-editor-button [content]="slide.content" [editorId]="editorId"></format-block-editor-button>
-        <font-size-editor-button [content]="slide.content" [editorId]="editorId"></font-size-editor-button>
-        <font-name-editor-button [content]="slide.content" [editorId]="editorId"></font-name-editor-button>
+            <insert-image-editor-button [content]="slide.content" [editorId]="editorId"></insert-image-editor-button>
+        </div>
 
-        <create-link-editor-button [content]="slide.content" [editorId]="editorId"></create-link-editor-button>
-        <unlink-editor-button [content]="slide.content" [editorId]="editorId"></unlink-editor-button>
+        <div class="editor-switchers">
+            <a (click)="isVisualizer = true" class="{{ isVisualizer ? 'active' : '' }} waves-effect waves-light btn">Визуализатор</a>
+            <a (click)="isVisualizer = false" class="{{ isVisualizer ? '' : 'active' }} waves-effect waves-light btn">Исходный
+                текст</a>
+        </div>
 
-        <insert-image-editor-button [content]="slide.content" [editorId]="editorId"></insert-image-editor-button>
     </div>
 
     <div>
@@ -54,7 +56,8 @@
         </div>
 
         <div *ngIf="isVisualizer == false">
-            <textarea class="slide-editor-textarea" name="" id="" cols="30" rows="10"
+
+            <textarea contentEditable="true" class="slide-editor-textarea" name="" id="" cols="30" rows="10"
                       [(ngModel)]="slide.content"></textarea>
         </div>
 
