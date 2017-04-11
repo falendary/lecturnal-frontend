@@ -5,12 +5,13 @@
     <base href="/">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="core/materialize-css/materialize.min.css">
+    <link rel="stylesheet" href="core/content/css/materialize.min.css">
+    <link rel="stylesheet" href="core/content/css/material-icons.css">
     <link rel="stylesheet" href="index/content/css/main.min.css">
 
-    <script src="core/core-js/client/shim.min.js"></script>
-    <script src="core/zone.js/dist/zone.js"></script>
-    <script src="core/systemjs/dist/system.js"></script>
+    <script src="core/scripts/core-js/client/shim.min.js"></script>
+    <script src="core/scripts/zone.js/dist/zone.js"></script>
+    <script src="core/scripts/systemjs/dist/system.js"></script>
     <script src="index/scripts/main.js"></script>
 
     <script>
@@ -26,7 +27,7 @@
                 }
             },
             paths: {
-                'npm:': 'core/'
+                'npm:': 'core/scripts/'
             },
             map: {
 //                app: 'index/main.js',

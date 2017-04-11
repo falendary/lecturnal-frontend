@@ -275,7 +275,7 @@ System.register("editor-features/components/b-component/b.component", ["@angular
                 core_1.Component({
                     selector: 'b-editor-button',
                     template: `
-      <a (click)="wrapSelected()" class="waves-effect waves-light btn"><b>B</b></a>
+      <a (click)="wrapSelected()" class="lc-editor-btn waves-effect waves-light btn"><i class="material-icons">format_bold</i></a>
     `
                 })
             ], BComponent);
@@ -319,7 +319,7 @@ System.register("editor-features/components/i-component/i.component", ["@angular
                 core_3.Component({
                     selector: 'i-editor-button',
                     template: `
-      <a (click)="wrapSelected()" class="waves-effect waves-light btn"><i>I</i></a>
+      <a (click)="wrapSelected()" class="lc-editor-btn waves-effect waves-light btn"><i class="material-icons">format_italic</i></a>
     `
                 })
             ], IComponent);
@@ -363,7 +363,7 @@ System.register("editor-features/components/u-component/u.component", ["@angular
                 core_5.Component({
                     selector: 'u-editor-button',
                     template: `
-      <a (click)="wrapSelected()" class="waves-effect waves-light btn"><span class="e-style-underline">U</span></a>
+      <a (click)="wrapSelected()" class="lc-editor-btn waves-effect waves-light btn"><i class="material-icons">format_underlined</i></a>
     `
                 })
             ], UComponent);
@@ -407,7 +407,7 @@ System.register("editor-features/components/text-center-component/text-center.co
                 core_7.Component({
                     selector: 'text-center-editor-button',
                     template: `
-      <a (click)="wrapSelected()" class="waves-effect waves-light btn">C</a>
+      <a (click)="wrapSelected()" class="lc-editor-btn waves-effect waves-light btn"><i class="material-icons">format_align_center</i></a>
     `
                 })
             ], TextCenterComponent);
@@ -451,7 +451,7 @@ System.register("editor-features/components/text-right-component/text-right.comp
                 core_9.Component({
                     selector: 'text-right-editor-button',
                     template: `
-      <a (click)="wrapSelected()" class="waves-effect waves-light btn">R</a>
+      <a (click)="wrapSelected()" class="lc-editor-btn waves-effect waves-light btn"><i class="material-icons">format_align_right</i></a>
     `
                 })
             ], TextRightComponent);
@@ -495,7 +495,7 @@ System.register("editor-features/components/text-left-component/text-left.compon
                 core_11.Component({
                     selector: 'text-left-editor-button',
                     template: `
-      <a (click)="wrapSelected()" class="waves-effect waiting-right btn">L</a>
+      <a (click)="wrapSelected()" class="lc-editor-btn waves-effect waves-light btn"><i class="material-icons">format_align_left</i></a>
     `
                 })
             ], TextLeftComponent);
@@ -539,7 +539,7 @@ System.register("editor-features/components/ul-component/ul.component", ["@angul
                 core_13.Component({
                     selector: 'ul-editor-button',
                     template: `
-      <a (click)="wrapSelected()" class="waves-effect waves-light btn">UL</a>
+      <a (click)="wrapSelected()" class="lc-editor-btn waves-effect waves-light btn"><i class="material-icons">format list bulleted</i></a>
     `
                 })
             ], UlComponent);
@@ -583,7 +583,7 @@ System.register("editor-features/components/ol-component/ol.component", ["@angul
                 core_15.Component({
                     selector: 'ol-editor-button',
                     template: `
-      <a (click)="wrapSelected()" class="waves-effect waves-light btn">OL</a>
+      <a (click)="wrapSelected()" class="lc-editor-btn waves-effect waves-light btn"><i class="material-icons">format list numbered</i></a>
     `
                 })
             ], OlComponent);
@@ -627,7 +627,7 @@ System.register("editor-features/components/text-justify-component/text-justify.
                 core_17.Component({
                     selector: 'text-justify-editor-button',
                     template: `
-      <a (click)="wrapSelected()" class="waves-effect waves-light btn">J</a>
+      <a (click)="wrapSelected()" class="lc-editor-btn waves-effect waves-light btn"><i class="material-icons">format_align_justify</i></a>
     `
                 })
             ], TextJustifyComponent);
@@ -671,7 +671,7 @@ System.register("editor-features/components/indent-component/indent.component", 
                 core_19.Component({
                     selector: 'indent-editor-button',
                     template: `
-      <a (click)="wrapSelected()" class="waves-effect waves-light btn">Ind</a>
+      <a (click)="wrapSelected()" class="lc-editor-btn waves-effect waves-light btn"><i class="material-icons">format_indent_increase</i></a>
     `
                 })
             ], IndentComponent);
@@ -715,7 +715,7 @@ System.register("editor-features/components/outdent-component/outdent.component"
                 core_21.Component({
                     selector: 'outdent-editor-button',
                     template: `
-      <a (click)="wrapSelected()" class="waves-effect waves-light btn">Out</a>
+      <a (click)="wrapSelected()" class="lc-editor-btn waves-effect waves-light btn"><i class="material-icons">format_indent_decrease</i></a>
     `
                 })
             ], OutdentComponent);
@@ -759,7 +759,7 @@ System.register("editor-features/components/strike-component/strike.component", 
                 core_23.Component({
                     selector: 'strike-editor-button',
                     template: `
-      <a (click)="wrapSelected()" class="waves-effect waves-light btn">S</a>
+      <a (click)="wrapSelected()" class="lc-editor-btn waves-effect waves-light btn"><i class="material-icons">strikethrough_s</i></a>
     `
                 })
             ], StrikeComponent);
@@ -803,7 +803,7 @@ System.register("editor-features/components/subscript-component/subscript.compon
                 core_25.Component({
                     selector: 'subscript-editor-button',
                     template: `
-      <a (click)="wrapSelected()" class="waves-effect waves-light btn">Sub</a>
+      <a (click)="wrapSelected()" class="waves-effect waves-light btn">x<sub>2</sub></a>
     `
                 })
             ], SubscriptComponent);
@@ -847,7 +847,7 @@ System.register("editor-features/components/superscript-component/superscript.co
                 core_27.Component({
                     selector: 'superscript-editor-button',
                     template: `
-      <a (click)="wrapSelected()" class="waves-effect waves-light btn">Super</a>
+      <a (click)="wrapSelected()" class="waves-effect waves-light btn">x<sup>2</sup></a>
     `
                 })
             ], SuperscriptComponent);
@@ -985,7 +985,7 @@ System.register("editor-features/components/rf-component/rf.component", ["@angul
                 core_33.Component({
                     selector: 'rf-editor-button',
                     template: `
-      <a (click)="wrapSelected()" class="waves-effect waves-light btn">RF</a>
+      <a (click)="wrapSelected()" class="lc-editor-btn waves-effect waves-light btn"><i class="material-icons">format_clear</i></a>
     `
                 })
             ], RemoveFormatComponent);
@@ -1118,7 +1118,7 @@ System.register("editor-features/components/create-link-component/create-link.co
                 core_39.Component({
                     selector: 'create-link-editor-button',
                     template: `
-      <a (click)="wrapSelected()" class="waves-effect waves-light btn">Link</a>
+      <a (click)="wrapSelected()" class="lc-editor-btn waves-effect waves-light btn"><i class="material-icons">insert link</i></a>
     `
                 })
             ], CreateLinkComponent);
@@ -1207,7 +1207,7 @@ System.register("editor-features/components/insert-image-component/insert-image.
                 core_43.Component({
                     selector: 'insert-image-editor-button',
                     template: `
-      <a (click)="wrapSelected()" class="waves-effect waves-light btn">IMG</a>
+      <a (click)="wrapSelected()" class="lc-editor-btn waves-effect waves-light btn"><i class="material-icons">insert photo</i></a>
     `
                 })
             ], InsertImageComponent);
@@ -1937,7 +1937,7 @@ System.register("editor-features/components/b-component/b.component-old", ["@ang
                 core_54.Component({
                     selector: 'b-editor-button',
                     template: `
-      <a (click)="wrapSelected()" class="waves-effect waves-light btn"><b>B</b></a>
+      <a (click)="wrapSelected()" class="lc-editor-btn waves-effect waves-light btn"><i class="material-icons">format_bold</i></a>
     `
                 })
             ], BComponent);
