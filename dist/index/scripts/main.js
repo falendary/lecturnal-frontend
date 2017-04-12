@@ -1638,7 +1638,7 @@ System.register("app/components/slides-tree-component/slides-tree.component", ["
                 constructor() {
                     console.log('Sliders tree');
                     this.slides = [
-                        { content: '123' },
+                        { content: '<div style="border-bottom: 2px solid #ccc; padding-bottom: 10px"><div></div><ul style="padding-left: 40px"><li>Item 1</li><li>Item 2</li><li>Item 3</li><li>Item 4</li></ul></div></div><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmodtempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniamquis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>' },
                         { content: '456' }
                     ];
                 }
@@ -1652,15 +1652,16 @@ System.register("app/components/slides-tree-component/slides-tree.component", ["
                 core_50.Component({
                     selector: 'slides-tree',
                     template: `
-      <div>
+      <div class="slide-tree-component">
 
           <a (click)="addSlide()" class="waves-effect waves-light btn">Добавить страницу</a>
 
           <div class="row">
 
-              <div class="card" *ngFor="let slide of slides" (click)="selectSlide(slide)">
-                  <div class="card-content">
-                      1
+              <div class="card stc-slide-card" *ngFor="let slide of slides" (click)="selectSlide(slide)">
+                  <div class="card-content" >
+                      <div class="cc-body-content" [innerHTML]="slide.content">
+                      </div>
                   </div>
               </div>
 
