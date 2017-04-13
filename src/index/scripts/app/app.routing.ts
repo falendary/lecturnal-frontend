@@ -2,12 +2,17 @@ import {ModuleWithProviders} from '@angular/core';
 import {Routes, RouterModule} from '@angular/router';
 
 import {DashboardComponent} from "./components/dashboard-component/dashboard.component";
+import {LoginComponent} from "./components/login-component/login.component";
 import {PresentationComponent} from "./components/presentation-component/presentation.component";
 
 const appRoutes:Routes = <Routes>[
     {
         path: '',
         component: DashboardComponent,
+    },
+    {
+        path: 'login',
+        component: LoginComponent,
     },
     {
         path: 'presentation',

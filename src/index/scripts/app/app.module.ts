@@ -6,6 +6,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { EditorFeaturesModule } from '../editor-features/editor-featrues.module'
 
 import { ShellComponent } from './components/shell-component/shell.component';
+import { LoginComponent } from './components/login-component/login.component';
 import { DashboardComponent } from './components/dashboard-component/dashboard.component';
 import { PresentationComponent} from './components/presentation-component/presentation.component';
 import { SlideEditorComponent } from './components/slide-editor-component/slide-editor.component';
@@ -14,6 +15,8 @@ import { SlidesTreeComponent } from './components/slides-tree-component/slides-t
 import { ContentEditableDirective } from './directives/content-editable.directive';
 
 import { routing } from './app.routing';
+import {AuthRepository} from './repositories/auth.repository';
+import {AuthService} from './services/auth.service';
 
 @NgModule({
     imports: [
@@ -26,6 +29,9 @@ import { routing } from './app.routing';
     declarations: [
 
         ShellComponent,
+
+        LoginComponent,
+
         DashboardComponent,
         PresentationComponent,
         SlideEditorComponent,
@@ -33,7 +39,10 @@ import { routing } from './app.routing';
 
         ContentEditableDirective
     ],
-    bootstrap: [ShellComponent]
+    providers: [
+        AuthRepository
+    ],
+    bootstrap: [ShellComponent, []]
 })
 
 export class AppModule {

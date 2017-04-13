@@ -1359,69 +1359,287 @@ System.register("editor-features/editor-featrues.module", ["@angular/core", "@an
         }
     };
 });
-System.register("app/components/shell-component/shell.component", ["@angular/core"], function (exports_28, context_28) {
+System.register("app/services/cookie.service", [], function (exports_28, context_28) {
     "use strict";
     var __moduleName = context_28 && context_28.id;
-    var core_46, ShellComponent;
+    var CookieService;
+    return {
+        setters: [],
+        execute: function () {
+            CookieService = class CookieService {
+                static getCookie(name) {
+                    let cookieValue = null;
+                    if (document.cookie && document.cookie != '') {
+                        let cookies = document.cookie.split(';');
+                        for (let i = 0; i < cookies.length; i++) {
+                            let cookie = cookies[i].trim();
+                            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                                break;
+                            }
+                        }
+                    }
+                    return cookieValue;
+                }
+                static setCookie(name, value, options) {
+                    options = options || {};
+                    let expires = options.expires;
+                    if (typeof expires == "number" && expires) {
+                        let d = new Date();
+                        d.setTime(expires);
+                        expires = options.expires = d;
+                    }
+                    if (expires && expires.toUTCString) {
+                        options.expires = expires.toUTCString();
+                    }
+                    value = encodeURIComponent(value);
+                    let updatedCookie = name + "=" + value;
+                    for (let propName in options) {
+                        updatedCookie += "; " + propName;
+                        let propValue = options[propName];
+                        if (propValue !== true) {
+                            updatedCookie += "=" + propValue;
+                        }
+                    }
+                    document.cookie = updatedCookie;
+                }
+                ;
+                static deleteCookie(name) {
+                    CookieService.setCookie(name, "", { expires: -1 });
+                }
+            };
+            exports_28("CookieService", CookieService);
+        }
+    };
+});
+System.register("app/repositories/auth.repository", ["@angular/core", "rxjs/Rx", "@angular/http", "rxjs/add/operator/map", "rxjs/add/operator/catch"], function (exports_29, context_29) {
+    "use strict";
+    var __moduleName = context_29 && context_29.id;
+    var core_46, Rx_1, http_1, AuthRepository;
     return {
         setters: [
             function (core_46_1) {
                 core_46 = core_46_1;
+            },
+            function (Rx_1_1) {
+                Rx_1 = Rx_1_1;
+            },
+            function (http_1_1) {
+                http_1 = http_1_1;
+            },
+            function (_1) {
+            },
+            function (_2) {
+            }
+        ],
+        execute: function () {
+            AuthRepository = class AuthRepository {
+                constructor(http) {
+                    this.http = http;
+                    console.log('repository', this.http);
+                }
+                login(username, password) {
+                    return this.http.post('http://diploma-backend.loc/backend/web/v1/auth/login', JSON.stringify({ username, password }))
+                        .map((res) => res.json())
+                        .catch((error) => Rx_1.Observable.throw(error.json().error || 'Server error'));
+                }
+            };
+            AuthRepository = __decorate([
+                core_46.Injectable(),
+                __metadata("design:paramtypes", [http_1.Http])
+            ], AuthRepository);
+            exports_29("AuthRepository", AuthRepository);
+        }
+    };
+});
+System.register("app/services/auth.service", ["@angular/core", "app/services/cookie.service", "app/repositories/auth.repository"], function (exports_30, context_30) {
+    "use strict";
+    var __moduleName = context_30 && context_30.id;
+    var core_47, cookie_service_1, auth_repository_1, AuthService;
+    return {
+        setters: [
+            function (core_47_1) {
+                core_47 = core_47_1;
+            },
+            function (cookie_service_1_1) {
+                cookie_service_1 = cookie_service_1_1;
+            },
+            function (auth_repository_1_1) {
+                auth_repository_1 = auth_repository_1_1;
+            }
+        ],
+        execute: function () {
+            AuthService = class AuthService {
+                constructor(authRepository) {
+                    this.authRepository = authRepository;
+                }
+                isAuthorized() {
+                    return !!cookie_service_1.CookieService.getCookie('token');
+                }
+                login(username, password) {
+                    return this.authRepository.login(username, password);
+                }
+            };
+            AuthService = __decorate([
+                core_47.Injectable(),
+                __metadata("design:paramtypes", [auth_repository_1.AuthRepository])
+            ], AuthService);
+            exports_30("AuthService", AuthService);
+        }
+    };
+});
+System.register("app/components/shell-component/shell.component", ["@angular/core", "@angular/router", "app/services/auth.service", "rxjs/add/operator/filter"], function (exports_31, context_31) {
+    "use strict";
+    var __moduleName = context_31 && context_31.id;
+    var core_48, router_1, auth_service_1, ShellComponent;
+    return {
+        setters: [
+            function (core_48_1) {
+                core_48 = core_48_1;
+            },
+            function (router_1_1) {
+                router_1 = router_1_1;
+            },
+            function (auth_service_1_1) {
+                auth_service_1 = auth_service_1_1;
+            },
+            function (_3) {
             }
         ],
         execute: function () {
             ShellComponent = class ShellComponent {
-                constructor() {
+                constructor(router, authService) {
+                    this.router = router;
                     console.log('ShellComponent init');
+                    this.authService = authService;
+                    this.router.events
+                        .filter((event) => event instanceof router_1.NavigationStart)
+                        .subscribe((event) => {
+                        if (!this.authService.isAuthorized()) {
+                            if (event.url !== '/login') {
+                                router.navigateByUrl('/login');
+                            }
+                        }
+                        console.log('event', event);
+                    });
                 }
             };
             ShellComponent = __decorate([
-                core_46.Component({
+                core_48.Component({
                     selector: 'shell',
                     template: `
       <router-outlet></router-outlet>
-    `
+    `,
+                    providers: [auth_service_1.AuthService]
                 }),
-                __metadata("design:paramtypes", [])
+                __metadata("design:paramtypes", [router_1.Router, auth_service_1.AuthService])
             ], ShellComponent);
-            exports_28("ShellComponent", ShellComponent);
+            exports_31("ShellComponent", ShellComponent);
         }
     };
 });
-System.register("app/models/Slide", [], function (exports_29, context_29) {
+System.register("app/components/login-component/login.component", ["@angular/core", "app/services/auth.service"], function (exports_32, context_32) {
     "use strict";
-    var __moduleName = context_29 && context_29.id;
+    var __moduleName = context_32 && context_32.id;
+    var core_49, auth_service_2, LoginComponent;
+    return {
+        setters: [
+            function (core_49_1) {
+                core_49 = core_49_1;
+            },
+            function (auth_service_2_1) {
+                auth_service_2 = auth_service_2_1;
+            }
+        ],
+        execute: function () {
+            LoginComponent = class LoginComponent {
+                constructor(authService) {
+                    this.authService = authService;
+                }
+                auth() {
+                    this.authService.login(this.username, this.password).subscribe(response => {
+                    });
+                }
+            };
+            LoginComponent = __decorate([
+                core_49.Component({
+                    selector: 'login-component',
+                    template: `
+      <div class="login-component">
+
+
+          <div class="card">
+
+              <div class="card-content">
+
+                  <div class="card-title">Авторизация</div>
+
+                  <div class="row">
+
+                      <div class="input-field col s12">
+
+                          <input [(ngModel)]="username" type="text" id="username" placeholder="Username">
+                          <!--<label for="username">Username</label>-->
+
+                          <input [(ngModel)]="password" type="password" id="password" placeholder="Password">
+
+                      </div>
+
+                  </div>
+
+                  <div class="row card-footer">
+                      <a class="waves-effect waves-light btn" (click)="auth()">Войти</a>
+                  </div>
+
+              </div>
+
+
+          </div>
+
+
+      </div>
+    `
+                }),
+                __metadata("design:paramtypes", [auth_service_2.AuthService])
+            ], LoginComponent);
+            exports_32("LoginComponent", LoginComponent);
+        }
+    };
+});
+System.register("app/models/Slide", [], function (exports_33, context_33) {
+    "use strict";
+    var __moduleName = context_33 && context_33.id;
     var Slide;
     return {
         setters: [],
         execute: function () {
             Slide = class Slide {
             };
-            exports_29("Slide", Slide);
+            exports_33("Slide", Slide);
         }
     };
 });
-System.register("app/models/Presentation", [], function (exports_30, context_30) {
+System.register("app/models/Presentation", [], function (exports_34, context_34) {
     "use strict";
-    var __moduleName = context_30 && context_30.id;
+    var __moduleName = context_34 && context_34.id;
     var Presentation;
     return {
         setters: [],
         execute: function () {
             Presentation = class Presentation {
             };
-            exports_30("Presentation", Presentation);
+            exports_34("Presentation", Presentation);
         }
     };
 });
-System.register("app/components/dashboard-component/dashboard.component", ["@angular/core"], function (exports_31, context_31) {
+System.register("app/components/dashboard-component/dashboard.component", ["@angular/core"], function (exports_35, context_35) {
     "use strict";
-    var __moduleName = context_31 && context_31.id;
-    var core_47, DashboardComponent;
+    var __moduleName = context_35 && context_35.id;
+    var core_50, DashboardComponent;
     return {
         setters: [
-            function (core_47_1) {
-                core_47 = core_47_1;
+            function (core_50_1) {
+                core_50 = core_50_1;
             }
         ],
         execute: function () {
@@ -1432,7 +1650,7 @@ System.register("app/components/dashboard-component/dashboard.component", ["@ang
                 }
             };
             DashboardComponent = __decorate([
-                core_47.Component({
+                core_50.Component({
                     selector: 'dashboard',
                     template: `
       <nav>
@@ -1471,18 +1689,18 @@ System.register("app/components/dashboard-component/dashboard.component", ["@ang
                 }),
                 __metadata("design:paramtypes", [])
             ], DashboardComponent);
-            exports_31("DashboardComponent", DashboardComponent);
+            exports_35("DashboardComponent", DashboardComponent);
         }
     };
 });
-System.register("app/components/presentation-component/presentation.component", ["@angular/core"], function (exports_32, context_32) {
+System.register("app/components/presentation-component/presentation.component", ["@angular/core"], function (exports_36, context_36) {
     "use strict";
-    var __moduleName = context_32 && context_32.id;
-    var core_48, PresentationComponent;
+    var __moduleName = context_36 && context_36.id;
+    var core_51, PresentationComponent;
     return {
         setters: [
-            function (core_48_1) {
-                core_48 = core_48_1;
+            function (core_51_1) {
+                core_51 = core_51_1;
             }
         ],
         execute: function () {
@@ -1492,7 +1710,7 @@ System.register("app/components/presentation-component/presentation.component", 
                 }
             };
             PresentationComponent = __decorate([
-                core_48.Component({
+                core_51.Component({
                     selector: 'presentation',
                     template: `
       <nav>
@@ -1514,18 +1732,18 @@ System.register("app/components/presentation-component/presentation.component", 
                 }),
                 __metadata("design:paramtypes", [])
             ], PresentationComponent);
-            exports_32("PresentationComponent", PresentationComponent);
+            exports_36("PresentationComponent", PresentationComponent);
         }
     };
 });
-System.register("app/components/slide-editor-component/slide-editor.component", ["@angular/core"], function (exports_33, context_33) {
+System.register("app/components/slide-editor-component/slide-editor.component", ["@angular/core"], function (exports_37, context_37) {
     "use strict";
-    var __moduleName = context_33 && context_33.id;
-    var core_49, SlideEditorComponent;
+    var __moduleName = context_37 && context_37.id;
+    var core_52, SlideEditorComponent;
     return {
         setters: [
-            function (core_49_1) {
-                core_49 = core_49_1;
+            function (core_52_1) {
+                core_52 = core_52_1;
             }
         ],
         execute: function () {
@@ -1546,7 +1764,7 @@ System.register("app/components/slide-editor-component/slide-editor.component", 
                 }
             };
             SlideEditorComponent = __decorate([
-                core_49.Component({
+                core_52.Component({
                     selector: 'slide-editor',
                     template: `
       <div class="slide-editor-component">
@@ -1619,18 +1837,18 @@ System.register("app/components/slide-editor-component/slide-editor.component", 
                 }),
                 __metadata("design:paramtypes", [])
             ], SlideEditorComponent);
-            exports_33("SlideEditorComponent", SlideEditorComponent);
+            exports_37("SlideEditorComponent", SlideEditorComponent);
         }
     };
 });
-System.register("app/components/slides-tree-component/slides-tree.component", ["@angular/core"], function (exports_34, context_34) {
+System.register("app/components/slides-tree-component/slides-tree.component", ["@angular/core"], function (exports_38, context_38) {
     "use strict";
-    var __moduleName = context_34 && context_34.id;
-    var core_50, SlidesTreeComponent;
+    var __moduleName = context_38 && context_38.id;
+    var core_53, SlidesTreeComponent;
     return {
         setters: [
-            function (core_50_1) {
-                core_50 = core_50_1;
+            function (core_53_1) {
+                core_53 = core_53_1;
             }
         ],
         execute: function () {
@@ -1649,7 +1867,7 @@ System.register("app/components/slides-tree-component/slides-tree.component", ["
                 }
             };
             SlidesTreeComponent = __decorate([
-                core_50.Component({
+                core_53.Component({
                     selector: 'slides-tree',
                     template: `
       <div class="slide-tree-component">
@@ -1672,26 +1890,26 @@ System.register("app/components/slides-tree-component/slides-tree.component", ["
                 }),
                 __metadata("design:paramtypes", [])
             ], SlidesTreeComponent);
-            exports_34("SlidesTreeComponent", SlidesTreeComponent);
+            exports_38("SlidesTreeComponent", SlidesTreeComponent);
         }
     };
 });
-System.register("app/directives/content-editable.directive", ["@angular/core"], function (exports_35, context_35) {
+System.register("app/directives/content-editable.directive", ["@angular/core"], function (exports_39, context_39) {
     "use strict";
-    var __moduleName = context_35 && context_35.id;
-    var core_51, core_52, ContentEditableDirective;
+    var __moduleName = context_39 && context_39.id;
+    var core_54, core_55, ContentEditableDirective;
     return {
         setters: [
-            function (core_51_1) {
-                core_51 = core_51_1;
-                core_52 = core_51_1;
+            function (core_54_1) {
+                core_54 = core_54_1;
+                core_55 = core_54_1;
             }
         ],
         execute: function () {
             ContentEditableDirective = class ContentEditableDirective {
                 constructor(elementRef) {
                     this.elementRef = elementRef;
-                    this.update = new core_51.EventEmitter();
+                    this.update = new core_54.EventEmitter();
                 }
                 ngOnChanges(changes) {
                     if (changes.model.firstChange == true) {
@@ -1708,38 +1926,41 @@ System.register("app/directives/content-editable.directive", ["@angular/core"], 
                 }
             };
             __decorate([
-                core_52.Input('contenteditableModel'),
+                core_55.Input('contenteditableModel'),
                 __metadata("design:type", Object)
             ], ContentEditableDirective.prototype, "model", void 0);
             __decorate([
-                core_52.Output('contenteditableModelChange'),
+                core_55.Output('contenteditableModelChange'),
                 __metadata("design:type", Object)
             ], ContentEditableDirective.prototype, "update", void 0);
             ContentEditableDirective = __decorate([
-                core_51.Directive({
+                core_54.Directive({
                     selector: '[contenteditableModel]',
                     host: {
                         '(blur)': 'onEdit()',
                         '(keyup)': 'onEdit()'
                     }
                 }),
-                __metadata("design:paramtypes", [core_51.ElementRef])
+                __metadata("design:paramtypes", [core_54.ElementRef])
             ], ContentEditableDirective);
-            exports_35("ContentEditableDirective", ContentEditableDirective);
+            exports_39("ContentEditableDirective", ContentEditableDirective);
         }
     };
 });
-System.register("app/app.routing", ["@angular/router", "app/components/dashboard-component/dashboard.component", "app/components/presentation-component/presentation.component"], function (exports_36, context_36) {
+System.register("app/app.routing", ["@angular/router", "app/components/dashboard-component/dashboard.component", "app/components/login-component/login.component", "app/components/presentation-component/presentation.component"], function (exports_40, context_40) {
     "use strict";
-    var __moduleName = context_36 && context_36.id;
-    var router_1, dashboard_component_1, presentation_component_1, appRoutes, routing;
+    var __moduleName = context_40 && context_40.id;
+    var router_2, dashboard_component_1, login_component_1, presentation_component_1, appRoutes, routing;
     return {
         setters: [
-            function (router_1_1) {
-                router_1 = router_1_1;
+            function (router_2_1) {
+                router_2 = router_2_1;
             },
             function (dashboard_component_1_1) {
                 dashboard_component_1 = dashboard_component_1_1;
+            },
+            function (login_component_1_1) {
+                login_component_1 = login_component_1_1;
             },
             function (presentation_component_1_1) {
                 presentation_component_1 = presentation_component_1_1;
@@ -1752,6 +1973,10 @@ System.register("app/app.routing", ["@angular/router", "app/components/dashboard
                     component: dashboard_component_1.DashboardComponent,
                 },
                 {
+                    path: 'login',
+                    component: login_component_1.LoginComponent,
+                },
+                {
                     path: 'presentation',
                     children: [{
                             path: 'new',
@@ -1762,21 +1987,21 @@ System.register("app/app.routing", ["@angular/router", "app/components/dashboard
                         }]
                 },
             ];
-            exports_36("routing", routing = router_1.RouterModule.forRoot(appRoutes));
+            exports_40("routing", routing = router_2.RouterModule.forRoot(appRoutes));
         }
     };
 });
-System.register("app/app.module", ["@angular/core", "@angular/http", "@angular/forms", "@angular/platform-browser", "editor-features/editor-featrues.module", "app/components/shell-component/shell.component", "app/components/dashboard-component/dashboard.component", "app/components/presentation-component/presentation.component", "app/components/slide-editor-component/slide-editor.component", "app/components/slides-tree-component/slides-tree.component", "app/directives/content-editable.directive", "app/app.routing"], function (exports_37, context_37) {
+System.register("app/app.module", ["@angular/core", "@angular/http", "@angular/forms", "@angular/platform-browser", "editor-features/editor-featrues.module", "app/components/shell-component/shell.component", "app/components/login-component/login.component", "app/components/dashboard-component/dashboard.component", "app/components/presentation-component/presentation.component", "app/components/slide-editor-component/slide-editor.component", "app/components/slides-tree-component/slides-tree.component", "app/directives/content-editable.directive", "app/app.routing", "app/repositories/auth.repository"], function (exports_41, context_41) {
     "use strict";
-    var __moduleName = context_37 && context_37.id;
-    var core_53, http_1, forms_2, platform_browser_1, editor_featrues_module_1, shell_component_1, dashboard_component_2, presentation_component_2, slide_editor_component_1, slides_tree_component_1, content_editable_directive_1, app_routing_1, AppModule;
+    var __moduleName = context_41 && context_41.id;
+    var core_56, http_2, forms_2, platform_browser_1, editor_featrues_module_1, shell_component_1, login_component_2, dashboard_component_2, presentation_component_2, slide_editor_component_1, slides_tree_component_1, content_editable_directive_1, app_routing_1, auth_repository_2, AppModule;
     return {
         setters: [
-            function (core_53_1) {
-                core_53 = core_53_1;
+            function (core_56_1) {
+                core_56 = core_56_1;
             },
-            function (http_1_1) {
-                http_1 = http_1_1;
+            function (http_2_1) {
+                http_2 = http_2_1;
             },
             function (forms_2_1) {
                 forms_2 = forms_2_1;
@@ -1789,6 +2014,9 @@ System.register("app/app.module", ["@angular/core", "@angular/http", "@angular/f
             },
             function (shell_component_1_1) {
                 shell_component_1 = shell_component_1_1;
+            },
+            function (login_component_2_1) {
+                login_component_2 = login_component_2_1;
             },
             function (dashboard_component_2_1) {
                 dashboard_component_2 = dashboard_component_2_1;
@@ -1807,6 +2035,9 @@ System.register("app/app.module", ["@angular/core", "@angular/http", "@angular/f
             },
             function (app_routing_1_1) {
                 app_routing_1 = app_routing_1_1;
+            },
+            function (auth_repository_2_1) {
+                auth_repository_2 = auth_repository_2_1;
             }
         ],
         execute: function () {
@@ -1816,33 +2047,37 @@ System.register("app/app.module", ["@angular/core", "@angular/http", "@angular/f
                 }
             };
             AppModule = __decorate([
-                core_53.NgModule({
+                core_56.NgModule({
                     imports: [
                         platform_browser_1.BrowserModule,
-                        http_1.HttpModule,
+                        http_2.HttpModule,
                         forms_2.FormsModule,
                         app_routing_1.routing,
                         editor_featrues_module_1.EditorFeaturesModule
                     ],
                     declarations: [
                         shell_component_1.ShellComponent,
+                        login_component_2.LoginComponent,
                         dashboard_component_2.DashboardComponent,
                         presentation_component_2.PresentationComponent,
                         slide_editor_component_1.SlideEditorComponent,
                         slides_tree_component_1.SlidesTreeComponent,
                         content_editable_directive_1.ContentEditableDirective
                     ],
-                    bootstrap: [shell_component_1.ShellComponent]
+                    providers: [
+                        auth_repository_2.AuthRepository
+                    ],
+                    bootstrap: [shell_component_1.ShellComponent, []]
                 }),
                 __metadata("design:paramtypes", [])
             ], AppModule);
-            exports_37("AppModule", AppModule);
+            exports_41("AppModule", AppModule);
         }
     };
 });
-System.register("main", ["@angular/platform-browser-dynamic", "app/app.module"], function (exports_38, context_38) {
+System.register("main", ["@angular/platform-browser-dynamic", "app/app.module"], function (exports_42, context_42) {
     "use strict";
-    var __moduleName = context_38 && context_38.id;
+    var __moduleName = context_42 && context_42.id;
     var platform_browser_dynamic_1, app_module_1;
     return {
         setters: [
@@ -1858,15 +2093,15 @@ System.register("main", ["@angular/platform-browser-dynamic", "app/app.module"],
         }
     };
 });
-System.register("editor-features/components/b-component/b.component-old", ["@angular/core", "editor-features/helpers/selection.helper", "editor-features/helpers/node.helper"], function (exports_39, context_39) {
+System.register("editor-features/components/b-component/b.component-old", ["@angular/core", "editor-features/helpers/selection.helper", "editor-features/helpers/node.helper"], function (exports_43, context_43) {
     "use strict";
-    var __moduleName = context_39 && context_39.id;
-    var core_54, core_55, selection_helper_1, node_helper_1, BComponent;
+    var __moduleName = context_43 && context_43.id;
+    var core_57, core_58, selection_helper_1, node_helper_1, BComponent;
     return {
         setters: [
-            function (core_54_1) {
-                core_54 = core_54_1;
-                core_55 = core_54_1;
+            function (core_57_1) {
+                core_57 = core_57_1;
+                core_58 = core_57_1;
             },
             function (selection_helper_1_1) {
                 selection_helper_1 = selection_helper_1_1;
@@ -1878,7 +2113,7 @@ System.register("editor-features/components/b-component/b.component-old", ["@ang
         execute: function () {
             BComponent = class BComponent {
                 constructor() {
-                    this.update = new core_54.EventEmitter();
+                    this.update = new core_57.EventEmitter();
                 }
                 wrapSelected() {
                     let selection = window.getSelection();
@@ -1927,26 +2162,26 @@ System.register("editor-features/components/b-component/b.component-old", ["@ang
                 }
             };
             __decorate([
-                core_55.Output('contenteditableModelChange'),
+                core_58.Output('contenteditableModelChange'),
                 __metadata("design:type", Object)
             ], BComponent.prototype, "update", void 0);
             __decorate([
-                core_55.Input('content'),
+                core_58.Input('content'),
                 __metadata("design:type", String)
             ], BComponent.prototype, "content", void 0);
             __decorate([
-                core_55.Input('editorId'),
+                core_58.Input('editorId'),
                 __metadata("design:type", String)
             ], BComponent.prototype, "editorId", void 0);
             BComponent = __decorate([
-                core_54.Component({
+                core_57.Component({
                     selector: 'b-editor-button',
                     template: `
       <a (click)="wrapSelected()" class="lc-editor-btn waves-effect waves-light btn"><i class="material-icons">format_bold</i></a>
     `
                 })
             ], BComponent);
-            exports_39("BComponent", BComponent);
+            exports_43("BComponent", BComponent);
         }
     };
 });
