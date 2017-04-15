@@ -1439,9 +1439,17 @@ System.register("app/repositories/auth.repository", ["@angular/core", "rxjs/Rx",
                     console.log('repository', this.http);
                 }
                 login(username, password) {
-                    return this.http.post('http://diploma-backend.loc/backend/web/v1/auth/login', JSON.stringify({ username, password }))
+                    return this.http.post('backend/web/v1/auth/login', JSON.stringify({ username, password }))
                         .map((res) => res.json())
                         .catch((error) => Rx_1.Observable.throw(error.json().error || 'Server error'));
+                }
+                signup(username, password, email) {
+                    return this.http.post('backend/web/v1/auth/signup', JSON.stringify({ username, password, email }))
+                        .map((res) => res.json())
+                        .catch((error) => Rx_1.Observable.throw(error.json().error || 'Server error'));
+                }
+                logout() {
+                    this.http.get('backend/web/v1/auth/logout');
                 }
             };
             AuthRepository = __decorate([
@@ -1479,6 +1487,13 @@ System.register("app/services/auth.service", ["@angular/core", "app/services/coo
                 login(username, password) {
                     return this.authRepository.login(username, password);
                 }
+                signup(username, password, email) {
+                    return this.authRepository.signup(username, password, email);
+                }
+                logout() {
+                    cookie_service_1.CookieService.deleteCookie('token');
+                    this.authRepository.logout();
+                }
             };
             AuthService = __decorate([
                 core_47.Injectable(),
@@ -1515,19 +1530,44 @@ System.register("app/components/shell-component/shell.component", ["@angular/cor
                     this.router.events
                         .filter((event) => event instanceof router_1.NavigationStart)
                         .subscribe((event) => {
+                        this.currentState = event.url;
                         if (!this.authService.isAuthorized()) {
-                            if (event.url !== '/login') {
-                                router.navigateByUrl('/login');
+                            if (event.url !== '/login' && event.url !== '/registration') {
+                                this.router.navigateByUrl('/login');
+                            }
+                        }
+                        else {
+                            if (event.url == '/login' || event.url == '/registration') {
+                                this.router.navigateByUrl('/');
                             }
                         }
                         console.log('event', event);
                     });
+                }
+                isAuth() {
+                    let result = true;
+                    if (this.currentState != '/login' && this.currentState != '/registration') {
+                        result = false;
+                    }
+                    return result;
+                }
+                logout() {
+                    this.authService.logout();
+                    this.router.navigateByUrl('/login');
                 }
             };
             ShellComponent = __decorate([
                 core_48.Component({
                     selector: 'shell',
                     template: `
+      <nav *ngIf="!isAuth()">
+          <div class="nav-wrapper">
+              <a href="/" class="brand-logo" style="padding-left: 24px">Lecturnal</a>
+              <ul id="nav-mobile" class="right hide-on-med-and-down">
+                  <li><a (click)="logout()">Выйти</a></li>
+              </ul>
+          </div>
+      </nav>
       <router-outlet></router-outlet>
     `,
                     providers: [auth_service_1.AuthService]
@@ -1538,14 +1578,17 @@ System.register("app/components/shell-component/shell.component", ["@angular/cor
         }
     };
 });
-System.register("app/components/login-component/login.component", ["@angular/core", "app/services/auth.service"], function (exports_32, context_32) {
+System.register("app/components/login-component/login.component", ["@angular/core", "@angular/router", "app/services/auth.service"], function (exports_32, context_32) {
     "use strict";
     var __moduleName = context_32 && context_32.id;
-    var core_49, auth_service_2, LoginComponent;
+    var core_49, router_2, auth_service_2, LoginComponent;
     return {
         setters: [
             function (core_49_1) {
                 core_49 = core_49_1;
+            },
+            function (router_2_1) {
+                router_2 = router_2_1;
             },
             function (auth_service_2_1) {
                 auth_service_2 = auth_service_2_1;
@@ -1553,11 +1596,13 @@ System.register("app/components/login-component/login.component", ["@angular/cor
         ],
         execute: function () {
             LoginComponent = class LoginComponent {
-                constructor(authService) {
+                constructor(router, authService) {
+                    this.router = router;
                     this.authService = authService;
                 }
                 auth() {
                     this.authService.login(this.username, this.password).subscribe(response => {
+                        this.router.navigateByUrl('/');
                     });
                 }
             };
@@ -1598,71 +1643,307 @@ System.register("app/components/login-component/login.component", ["@angular/cor
 
 
       </div>
-    `
+    `,
+                    providers: [auth_service_2.AuthService]
                 }),
-                __metadata("design:paramtypes", [auth_service_2.AuthService])
+                __metadata("design:paramtypes", [router_2.Router, auth_service_2.AuthService])
             ], LoginComponent);
             exports_32("LoginComponent", LoginComponent);
         }
     };
 });
-System.register("app/models/Slide", [], function (exports_33, context_33) {
+System.register("app/components/registration-component/registration.component", ["@angular/core", "@angular/router", "app/services/auth.service"], function (exports_33, context_33) {
     "use strict";
     var __moduleName = context_33 && context_33.id;
+    var core_50, router_3, auth_service_3, RegistrationComponent;
+    return {
+        setters: [
+            function (core_50_1) {
+                core_50 = core_50_1;
+            },
+            function (router_3_1) {
+                router_3 = router_3_1;
+            },
+            function (auth_service_3_1) {
+                auth_service_3 = auth_service_3_1;
+            }
+        ],
+        execute: function () {
+            RegistrationComponent = class RegistrationComponent {
+                constructor(router, authService) {
+                    this.router = router;
+                    this.authService = authService;
+                }
+                signup() {
+                    this.authService.signup(this.username, this.password, this.email).subscribe(response => {
+                        this.router.navigateByUrl('/');
+                    });
+                }
+            };
+            RegistrationComponent = __decorate([
+                core_50.Component({
+                    selector: 'registration-component',
+                    template: `
+      <div class="login-component">
+
+
+          <div class="card">
+
+              <div class="card-content">
+
+                  <div class="card-title">Регистрация</div>
+
+                  <div class="row">
+
+                      <div class="input-field col s12">
+
+                          <input [(ngModel)]="username" type="text" id="username" placeholder="Username">
+
+                          <input [(ngModel)]="email" type="text" id="email" placeholder="Email">
+                          <!--<label for="username">Username</label>-->
+
+                          <input [(ngModel)]="password" type="password" id="password" placeholder="Password">
+
+                      </div>
+
+                  </div>
+
+                  <div class="row card-footer">
+                      <a class="waves-effect waves-light btn" (click)="signup()">Зарегистрироваться</a>
+                  </div>
+
+              </div>
+
+
+          </div>
+
+
+      </div>
+    `,
+                    providers: [auth_service_3.AuthService]
+                }),
+                __metadata("design:paramtypes", [router_3.Router, auth_service_3.AuthService])
+            ], RegistrationComponent);
+            exports_33("RegistrationComponent", RegistrationComponent);
+        }
+    };
+});
+System.register("app/models/interfaces/IEntity", [], function (exports_34, context_34) {
+    "use strict";
+    var __moduleName = context_34 && context_34.id;
+    return {
+        setters: [],
+        execute: function () {
+        }
+    };
+});
+System.register("app/models/Slide", [], function (exports_35, context_35) {
+    "use strict";
+    var __moduleName = context_35 && context_35.id;
     var Slide;
     return {
         setters: [],
         execute: function () {
             Slide = class Slide {
             };
-            exports_33("Slide", Slide);
+            exports_35("Slide", Slide);
         }
     };
 });
-System.register("app/models/Presentation", [], function (exports_34, context_34) {
+System.register("app/models/Presentation", [], function (exports_36, context_36) {
     "use strict";
-    var __moduleName = context_34 && context_34.id;
+    var __moduleName = context_36 && context_36.id;
     var Presentation;
     return {
         setters: [],
         execute: function () {
             Presentation = class Presentation {
             };
-            exports_34("Presentation", Presentation);
+            exports_36("Presentation", Presentation);
         }
     };
 });
-System.register("app/components/dashboard-component/dashboard.component", ["@angular/core"], function (exports_35, context_35) {
+System.register("app/models/interfaces/IQueryParameter", [], function (exports_37, context_37) {
     "use strict";
-    var __moduleName = context_35 && context_35.id;
-    var core_50, DashboardComponent;
+    var __moduleName = context_37 && context_37.id;
+    return {
+        setters: [],
+        execute: function () {
+        }
+    };
+});
+System.register("app/repositories/interfaces/IRepository", [], function (exports_38, context_38) {
+    "use strict";
+    var __moduleName = context_38 && context_38.id;
+    return {
+        setters: [],
+        execute: function () {
+        }
+    };
+});
+System.register("app/helpers/url.helper", [], function (exports_39, context_39) {
+    "use strict";
+    var __moduleName = context_39 && context_39.id;
+    var UrlHelper;
+    return {
+        setters: [],
+        execute: function () {
+            UrlHelper = class UrlHelper {
+                static createQueryParamtersString(parameters) {
+                    let parametersString = '?';
+                    for (let i = 0; i < parameters.length; i = i + 1) {
+                        if (i == parameters.length - 1) {
+                            parametersString = parametersString + parameters[i].key + '=' + parameters[i].key;
+                        }
+                        else {
+                            parametersString = parametersString + parameters[i].key + '=' + parameters[i].key + '&';
+                        }
+                    }
+                    return parametersString;
+                }
+            };
+            exports_39("UrlHelper", UrlHelper);
+        }
+    };
+});
+System.register("app/repositories/presentation.repository", ["@angular/core", "rxjs/Rx", "@angular/http", "rxjs/add/operator/map", "rxjs/add/operator/catch", "app/helpers/url.helper"], function (exports_40, context_40) {
+    "use strict";
+    var __moduleName = context_40 && context_40.id;
+    var core_51, Rx_2, http_2, url_helper_1, PresentationRepository;
     return {
         setters: [
-            function (core_50_1) {
-                core_50 = core_50_1;
+            function (core_51_1) {
+                core_51 = core_51_1;
+            },
+            function (Rx_2_1) {
+                Rx_2 = Rx_2_1;
+            },
+            function (http_2_1) {
+                http_2 = http_2_1;
+            },
+            function (_4) {
+            },
+            function (_5) {
+            },
+            function (url_helper_1_1) {
+                url_helper_1 = url_helper_1_1;
+            }
+        ],
+        execute: function () {
+            PresentationRepository = class PresentationRepository {
+                constructor(http) {
+                    this.http = http;
+                }
+                getList(parameters) {
+                    let parametersString = '';
+                    if (parameters) {
+                        parametersString = url_helper_1.UrlHelper.createQueryParamtersString(parameters);
+                    }
+                    return this.http.get('backend/web/v1/presentations' + parametersString)
+                        .map((res) => res.json())
+                        .catch((error) => Rx_2.Observable.throw(error.json().error || 'Server error'));
+                }
+                getByKey(key) {
+                    return this.http.get('backend/web/v1/presentations/' + key)
+                        .map((res) => res.json())
+                        .catch((error) => Rx_2.Observable.throw(error.json().error || 'Server error'));
+                }
+                update(key, item) {
+                    return this.http.put('backend/web/v1/presentations/' + key, { item })
+                        .map((res) => res.json())
+                        .catch((error) => Rx_2.Observable.throw(error.json().error || 'Server error'));
+                }
+                create(item) {
+                    return this.http.post('backend/web/v1/presentations/', { item })
+                        .map((res) => res.json())
+                        .catch((error) => Rx_2.Observable.throw(error.json().error || 'Server error'));
+                }
+                deleteByKey(key) {
+                    this.http.delete('backend/web/v1/presentations/' + key)
+                        .map((res) => res.json())
+                        .catch((error) => Rx_2.Observable.throw(error.json().error || 'Server error'));
+                }
+            };
+            PresentationRepository = __decorate([
+                core_51.Injectable(),
+                __metadata("design:paramtypes", [http_2.Http])
+            ], PresentationRepository);
+            exports_40("PresentationRepository", PresentationRepository);
+        }
+    };
+});
+System.register("app/services/presentation.service", ["@angular/core", "app/repositories/presentation.repository"], function (exports_41, context_41) {
+    "use strict";
+    var __moduleName = context_41 && context_41.id;
+    var core_52, presentation_repository_1, PresentationService;
+    return {
+        setters: [
+            function (core_52_1) {
+                core_52 = core_52_1;
+            },
+            function (presentation_repository_1_1) {
+                presentation_repository_1 = presentation_repository_1_1;
+            }
+        ],
+        execute: function () {
+            PresentationService = class PresentationService {
+                constructor(presentationRepository) {
+                    this.presentationRepository = presentationRepository;
+                }
+                getList(parameters) {
+                    return this.presentationRepository.getList(parameters);
+                }
+                getByKey(key) {
+                    return this.presentationRepository.getByKey(key);
+                }
+                update(key, item) {
+                    return this.presentationRepository.update(key, item);
+                }
+                create(item) {
+                    return this.presentationRepository.create(item);
+                }
+                deleteByKey(key) {
+                    this.presentationRepository.deleteByKey(key);
+                }
+            };
+            PresentationService = __decorate([
+                core_52.Injectable(),
+                __metadata("design:paramtypes", [presentation_repository_1.PresentationRepository])
+            ], PresentationService);
+            exports_41("PresentationService", PresentationService);
+        }
+    };
+});
+System.register("app/components/dashboard-component/dashboard.component", ["@angular/core", "app/services/presentation.service"], function (exports_42, context_42) {
+    "use strict";
+    var __moduleName = context_42 && context_42.id;
+    var core_53, presentation_service_1, DashboardComponent;
+    return {
+        setters: [
+            function (core_53_1) {
+                core_53 = core_53_1;
+            },
+            function (presentation_service_1_1) {
+                presentation_service_1 = presentation_service_1_1;
             }
         ],
         execute: function () {
             DashboardComponent = class DashboardComponent {
-                constructor() {
+                constructor(presentationService) {
+                    this.presentationService = presentationService;
                     console.log('DashboardComponent init');
-                    this.presentations = [{ id: 1, name: 'Компьютерная геометрия и графика', slides: [] }, { id: 2, name: 'Веб-дизайн', slides: [] }];
+                    this.getList();
+                }
+                getList() {
+                    this.presentationService.getList().subscribe(presentations => {
+                        this.presentations = presentations;
+                    });
                 }
             };
             DashboardComponent = __decorate([
-                core_50.Component({
+                core_53.Component({
                     selector: 'dashboard',
                     template: `
-      <nav>
-          <div class="nav-wrapper">
-              <a href="#" class="brand-logo">Lecturnal</a>
-              <ul id="nav-mobile" class="right hide-on-med-and-down">
-                  <li><a href="sass.html">Sass</a></li>
-                  <li><a href="badges.html">Components</a></li>
-                  <li><a href="collapsible.html">JavaScript</a></li>
-              </ul>
-          </div>
-      </nav>
       <div class="dashboard-component">
 
           <div class="container">
@@ -1685,22 +1966,23 @@ System.register("app/components/dashboard-component/dashboard.component", ["@ang
           </div>
 
       </div>
-    `
+    `,
+                    providers: [presentation_service_1.PresentationService]
                 }),
-                __metadata("design:paramtypes", [])
+                __metadata("design:paramtypes", [presentation_service_1.PresentationService])
             ], DashboardComponent);
-            exports_35("DashboardComponent", DashboardComponent);
+            exports_42("DashboardComponent", DashboardComponent);
         }
     };
 });
-System.register("app/components/presentation-component/presentation.component", ["@angular/core"], function (exports_36, context_36) {
+System.register("app/components/presentation-component/presentation.component", ["@angular/core"], function (exports_43, context_43) {
     "use strict";
-    var __moduleName = context_36 && context_36.id;
-    var core_51, PresentationComponent;
+    var __moduleName = context_43 && context_43.id;
+    var core_54, PresentationComponent;
     return {
         setters: [
-            function (core_51_1) {
-                core_51 = core_51_1;
+            function (core_54_1) {
+                core_54 = core_54_1;
             }
         ],
         execute: function () {
@@ -1710,14 +1992,9 @@ System.register("app/components/presentation-component/presentation.component", 
                 }
             };
             PresentationComponent = __decorate([
-                core_51.Component({
+                core_54.Component({
                     selector: 'presentation',
                     template: `
-      <nav>
-          <div class="nav-wrapper">
-              Toolbar here
-          </div>
-      </nav>
       <div class="editor-component">
           <div class="row">
               <div class="col s2">
@@ -1732,18 +2009,21 @@ System.register("app/components/presentation-component/presentation.component", 
                 }),
                 __metadata("design:paramtypes", [])
             ], PresentationComponent);
-            exports_36("PresentationComponent", PresentationComponent);
+            exports_43("PresentationComponent", PresentationComponent);
         }
     };
 });
-System.register("app/components/slide-editor-component/slide-editor.component", ["@angular/core"], function (exports_37, context_37) {
+System.register("app/components/slide-editor-component/slide-editor.component", ["@angular/core", "app/models/Slide"], function (exports_44, context_44) {
     "use strict";
-    var __moduleName = context_37 && context_37.id;
-    var core_52, SlideEditorComponent;
+    var __moduleName = context_44 && context_44.id;
+    var core_55, Slide_1, SlideEditorComponent;
     return {
         setters: [
-            function (core_52_1) {
-                core_52 = core_52_1;
+            function (core_55_1) {
+                core_55 = core_55_1;
+            },
+            function (Slide_1_1) {
+                Slide_1 = Slide_1_1;
             }
         ],
         execute: function () {
@@ -1752,19 +2032,18 @@ System.register("app/components/slide-editor-component/slide-editor.component", 
                     this.isVisualizer = true;
                     console.log('SlideEditorCompoennt init');
                     this.editorId = 'editor1';
-                    this.slide = {
-                        content: '<div style="border-bottom: 2px solid #ccc; padding-bottom: 10px"><div></div><ul style="padding-left: 40px"><li>Item 1</li><li>Item 2</li><li>Item 3</li><li>Item 4</li></ul></div></div><p>'
-                            + 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod'
-                            + 'tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam'
-                            + 'quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo '
-                            + 'consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse '
-                            + 'cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non '
-                            + 'proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>'
-                    };
+                    this.slide = new Slide_1.Slide();
+                    this.slide.content = '<div style="border-bottom: 2px solid #ccc; padding-bottom: 10px"><div></div><ul style="padding-left: 40px"><li>Item 1</li><li>Item 2</li><li>Item 3</li><li>Item 4</li></ul></div></div><p>'
+                        + 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod'
+                        + 'tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam'
+                        + 'quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo '
+                        + 'consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse '
+                        + 'cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non '
+                        + 'proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>';
                 }
             };
             SlideEditorComponent = __decorate([
-                core_52.Component({
+                core_55.Component({
                     selector: 'slide-editor',
                     template: `
       <div class="slide-editor-component">
@@ -1837,37 +2116,36 @@ System.register("app/components/slide-editor-component/slide-editor.component", 
                 }),
                 __metadata("design:paramtypes", [])
             ], SlideEditorComponent);
-            exports_37("SlideEditorComponent", SlideEditorComponent);
+            exports_44("SlideEditorComponent", SlideEditorComponent);
         }
     };
 });
-System.register("app/components/slides-tree-component/slides-tree.component", ["@angular/core"], function (exports_38, context_38) {
+System.register("app/components/slides-tree-component/slides-tree.component", ["@angular/core", "app/models/Slide"], function (exports_45, context_45) {
     "use strict";
-    var __moduleName = context_38 && context_38.id;
-    var core_53, SlidesTreeComponent;
+    var __moduleName = context_45 && context_45.id;
+    var core_56, Slide_2, SlidesTreeComponent;
     return {
         setters: [
-            function (core_53_1) {
-                core_53 = core_53_1;
+            function (core_56_1) {
+                core_56 = core_56_1;
+            },
+            function (Slide_2_1) {
+                Slide_2 = Slide_2_1;
             }
         ],
         execute: function () {
             SlidesTreeComponent = class SlidesTreeComponent {
                 constructor() {
                     console.log('Sliders tree');
-                    this.slides = [
-                        { content: '<div style="border-bottom: 2px solid #ccc; padding-bottom: 10px"><div></div><ul style="padding-left: 40px"><li>Item 1</li><li>Item 2</li><li>Item 3</li><li>Item 4</li></ul></div></div><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmodtempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniamquis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>' },
-                        { content: '456' }
-                    ];
                 }
                 addSlide() {
-                    this.slides.push({ content: '' });
+                    this.slides.push(new Slide_2.Slide());
                 }
                 selectSlide() {
                 }
             };
             SlidesTreeComponent = __decorate([
-                core_53.Component({
+                core_56.Component({
                     selector: 'slides-tree',
                     template: `
       <div class="slide-tree-component">
@@ -1890,26 +2168,26 @@ System.register("app/components/slides-tree-component/slides-tree.component", ["
                 }),
                 __metadata("design:paramtypes", [])
             ], SlidesTreeComponent);
-            exports_38("SlidesTreeComponent", SlidesTreeComponent);
+            exports_45("SlidesTreeComponent", SlidesTreeComponent);
         }
     };
 });
-System.register("app/directives/content-editable.directive", ["@angular/core"], function (exports_39, context_39) {
+System.register("app/directives/content-editable.directive", ["@angular/core"], function (exports_46, context_46) {
     "use strict";
-    var __moduleName = context_39 && context_39.id;
-    var core_54, core_55, ContentEditableDirective;
+    var __moduleName = context_46 && context_46.id;
+    var core_57, core_58, ContentEditableDirective;
     return {
         setters: [
-            function (core_54_1) {
-                core_54 = core_54_1;
-                core_55 = core_54_1;
+            function (core_57_1) {
+                core_57 = core_57_1;
+                core_58 = core_57_1;
             }
         ],
         execute: function () {
             ContentEditableDirective = class ContentEditableDirective {
                 constructor(elementRef) {
                     this.elementRef = elementRef;
-                    this.update = new core_54.EventEmitter();
+                    this.update = new core_57.EventEmitter();
                 }
                 ngOnChanges(changes) {
                     if (changes.model.firstChange == true) {
@@ -1926,41 +2204,44 @@ System.register("app/directives/content-editable.directive", ["@angular/core"], 
                 }
             };
             __decorate([
-                core_55.Input('contenteditableModel'),
+                core_58.Input('contenteditableModel'),
                 __metadata("design:type", Object)
             ], ContentEditableDirective.prototype, "model", void 0);
             __decorate([
-                core_55.Output('contenteditableModelChange'),
+                core_58.Output('contenteditableModelChange'),
                 __metadata("design:type", Object)
             ], ContentEditableDirective.prototype, "update", void 0);
             ContentEditableDirective = __decorate([
-                core_54.Directive({
+                core_57.Directive({
                     selector: '[contenteditableModel]',
                     host: {
                         '(blur)': 'onEdit()',
                         '(keyup)': 'onEdit()'
                     }
                 }),
-                __metadata("design:paramtypes", [core_54.ElementRef])
+                __metadata("design:paramtypes", [core_57.ElementRef])
             ], ContentEditableDirective);
-            exports_39("ContentEditableDirective", ContentEditableDirective);
+            exports_46("ContentEditableDirective", ContentEditableDirective);
         }
     };
 });
-System.register("app/app.routing", ["@angular/router", "app/components/dashboard-component/dashboard.component", "app/components/login-component/login.component", "app/components/presentation-component/presentation.component"], function (exports_40, context_40) {
+System.register("app/app.routing", ["@angular/router", "app/components/dashboard-component/dashboard.component", "app/components/login-component/login.component", "app/components/registration-component/registration.component", "app/components/presentation-component/presentation.component"], function (exports_47, context_47) {
     "use strict";
-    var __moduleName = context_40 && context_40.id;
-    var router_2, dashboard_component_1, login_component_1, presentation_component_1, appRoutes, routing;
+    var __moduleName = context_47 && context_47.id;
+    var router_4, dashboard_component_1, login_component_1, registration_component_1, presentation_component_1, appRoutes, routing;
     return {
         setters: [
-            function (router_2_1) {
-                router_2 = router_2_1;
+            function (router_4_1) {
+                router_4 = router_4_1;
             },
             function (dashboard_component_1_1) {
                 dashboard_component_1 = dashboard_component_1_1;
             },
             function (login_component_1_1) {
                 login_component_1 = login_component_1_1;
+            },
+            function (registration_component_1_1) {
+                registration_component_1 = registration_component_1_1;
             },
             function (presentation_component_1_1) {
                 presentation_component_1 = presentation_component_1_1;
@@ -1977,6 +2258,10 @@ System.register("app/app.routing", ["@angular/router", "app/components/dashboard
                     component: login_component_1.LoginComponent,
                 },
                 {
+                    path: 'registration',
+                    component: registration_component_1.RegistrationComponent
+                },
+                {
                     path: 'presentation',
                     children: [{
                             path: 'new',
@@ -1987,21 +2272,129 @@ System.register("app/app.routing", ["@angular/router", "app/components/dashboard
                         }]
                 },
             ];
-            exports_40("routing", routing = router_2.RouterModule.forRoot(appRoutes));
+            exports_47("routing", routing = router_4.RouterModule.forRoot(appRoutes));
         }
     };
 });
-System.register("app/app.module", ["@angular/core", "@angular/http", "@angular/forms", "@angular/platform-browser", "editor-features/editor-featrues.module", "app/components/shell-component/shell.component", "app/components/login-component/login.component", "app/components/dashboard-component/dashboard.component", "app/components/presentation-component/presentation.component", "app/components/slide-editor-component/slide-editor.component", "app/components/slides-tree-component/slides-tree.component", "app/directives/content-editable.directive", "app/app.routing", "app/repositories/auth.repository"], function (exports_41, context_41) {
+System.register("app/repositories/slide.repository", ["@angular/core", "rxjs/Rx", "@angular/http", "rxjs/add/operator/map", "rxjs/add/operator/catch", "app/helpers/url.helper"], function (exports_48, context_48) {
     "use strict";
-    var __moduleName = context_41 && context_41.id;
-    var core_56, http_2, forms_2, platform_browser_1, editor_featrues_module_1, shell_component_1, login_component_2, dashboard_component_2, presentation_component_2, slide_editor_component_1, slides_tree_component_1, content_editable_directive_1, app_routing_1, auth_repository_2, AppModule;
+    var __moduleName = context_48 && context_48.id;
+    var core_59, Rx_3, http_3, url_helper_2, SlideRepository;
     return {
         setters: [
-            function (core_56_1) {
-                core_56 = core_56_1;
+            function (core_59_1) {
+                core_59 = core_59_1;
             },
-            function (http_2_1) {
-                http_2 = http_2_1;
+            function (Rx_3_1) {
+                Rx_3 = Rx_3_1;
+            },
+            function (http_3_1) {
+                http_3 = http_3_1;
+            },
+            function (_6) {
+            },
+            function (_7) {
+            },
+            function (url_helper_2_1) {
+                url_helper_2 = url_helper_2_1;
+            }
+        ],
+        execute: function () {
+            SlideRepository = class SlideRepository {
+                constructor(http) {
+                    this.http = http;
+                }
+                getList(parameters) {
+                    let parametersString = '';
+                    if (parameters) {
+                        parametersString = url_helper_2.UrlHelper.createQueryParamtersString(parameters);
+                    }
+                    return this.http.get('backend/web/v1/presentations' + parametersString)
+                        .map((res) => res.json())
+                        .catch((error) => Rx_3.Observable.throw(error.json().error || 'Server error'));
+                }
+                getByKey(key) {
+                    return this.http.get('backend/web/v1/presentations/' + key)
+                        .map((res) => res.json())
+                        .catch((error) => Rx_3.Observable.throw(error.json().error || 'Server error'));
+                }
+                update(key, item) {
+                    return this.http.put('backend/web/v1/presentations/' + key, { item })
+                        .map((res) => res.json())
+                        .catch((error) => Rx_3.Observable.throw(error.json().error || 'Server error'));
+                }
+                create(item) {
+                    return this.http.post('backend/web/v1/presentations/', { item })
+                        .map((res) => res.json())
+                        .catch((error) => Rx_3.Observable.throw(error.json().error || 'Server error'));
+                }
+                deleteByKey(key) {
+                    this.http.delete('backend/web/v1/presentations/' + key)
+                        .map((res) => res.json())
+                        .catch((error) => Rx_3.Observable.throw(error.json().error || 'Server error'));
+                }
+            };
+            SlideRepository = __decorate([
+                core_59.Injectable(),
+                __metadata("design:paramtypes", [http_3.Http])
+            ], SlideRepository);
+            exports_48("SlideRepository", SlideRepository);
+        }
+    };
+});
+System.register("app/services/slide.service", ["@angular/core", "app/repositories/slide.repository"], function (exports_49, context_49) {
+    "use strict";
+    var __moduleName = context_49 && context_49.id;
+    var core_60, slide_repository_1, SlideService;
+    return {
+        setters: [
+            function (core_60_1) {
+                core_60 = core_60_1;
+            },
+            function (slide_repository_1_1) {
+                slide_repository_1 = slide_repository_1_1;
+            }
+        ],
+        execute: function () {
+            SlideService = class SlideService {
+                constructor(slideRepository) {
+                    this.slideRepository = slideRepository;
+                }
+                getList(parameters) {
+                    return this.slideRepository.getList(parameters);
+                }
+                getByKey(key) {
+                    return this.slideRepository.getByKey(key);
+                }
+                update(key, item) {
+                    return this.slideRepository.update(key, item);
+                }
+                create(item) {
+                    return this.slideRepository.create(item);
+                }
+                deleteByKey(key) {
+                    this.slideRepository.deleteByKey(key);
+                }
+            };
+            SlideService = __decorate([
+                core_60.Injectable(),
+                __metadata("design:paramtypes", [slide_repository_1.SlideRepository])
+            ], SlideService);
+            exports_49("SlideService", SlideService);
+        }
+    };
+});
+System.register("app/app.module", ["@angular/core", "@angular/http", "@angular/forms", "@angular/platform-browser", "editor-features/editor-featrues.module", "app/components/shell-component/shell.component", "app/components/login-component/login.component", "app/components/registration-component/registration.component", "app/components/dashboard-component/dashboard.component", "app/components/presentation-component/presentation.component", "app/components/slide-editor-component/slide-editor.component", "app/components/slides-tree-component/slides-tree.component", "app/directives/content-editable.directive", "app/app.routing", "app/repositories/auth.repository", "app/repositories/presentation.repository", "app/repositories/slide.repository"], function (exports_50, context_50) {
+    "use strict";
+    var __moduleName = context_50 && context_50.id;
+    var core_61, http_4, forms_2, platform_browser_1, editor_featrues_module_1, shell_component_1, login_component_2, registration_component_2, dashboard_component_2, presentation_component_2, slide_editor_component_1, slides_tree_component_1, content_editable_directive_1, app_routing_1, auth_repository_2, presentation_repository_2, slide_repository_2, AppModule;
+    return {
+        setters: [
+            function (core_61_1) {
+                core_61 = core_61_1;
+            },
+            function (http_4_1) {
+                http_4 = http_4_1;
             },
             function (forms_2_1) {
                 forms_2 = forms_2_1;
@@ -2017,6 +2410,9 @@ System.register("app/app.module", ["@angular/core", "@angular/http", "@angular/f
             },
             function (login_component_2_1) {
                 login_component_2 = login_component_2_1;
+            },
+            function (registration_component_2_1) {
+                registration_component_2 = registration_component_2_1;
             },
             function (dashboard_component_2_1) {
                 dashboard_component_2 = dashboard_component_2_1;
@@ -2038,6 +2434,12 @@ System.register("app/app.module", ["@angular/core", "@angular/http", "@angular/f
             },
             function (auth_repository_2_1) {
                 auth_repository_2 = auth_repository_2_1;
+            },
+            function (presentation_repository_2_1) {
+                presentation_repository_2 = presentation_repository_2_1;
+            },
+            function (slide_repository_2_1) {
+                slide_repository_2 = slide_repository_2_1;
             }
         ],
         execute: function () {
@@ -2047,10 +2449,10 @@ System.register("app/app.module", ["@angular/core", "@angular/http", "@angular/f
                 }
             };
             AppModule = __decorate([
-                core_56.NgModule({
+                core_61.NgModule({
                     imports: [
                         platform_browser_1.BrowserModule,
-                        http_2.HttpModule,
+                        http_4.HttpModule,
                         forms_2.FormsModule,
                         app_routing_1.routing,
                         editor_featrues_module_1.EditorFeaturesModule
@@ -2058,6 +2460,7 @@ System.register("app/app.module", ["@angular/core", "@angular/http", "@angular/f
                     declarations: [
                         shell_component_1.ShellComponent,
                         login_component_2.LoginComponent,
+                        registration_component_2.RegistrationComponent,
                         dashboard_component_2.DashboardComponent,
                         presentation_component_2.PresentationComponent,
                         slide_editor_component_1.SlideEditorComponent,
@@ -2065,19 +2468,21 @@ System.register("app/app.module", ["@angular/core", "@angular/http", "@angular/f
                         content_editable_directive_1.ContentEditableDirective
                     ],
                     providers: [
-                        auth_repository_2.AuthRepository
+                        auth_repository_2.AuthRepository,
+                        presentation_repository_2.PresentationRepository,
+                        slide_repository_2.SlideRepository
                     ],
                     bootstrap: [shell_component_1.ShellComponent, []]
                 }),
                 __metadata("design:paramtypes", [])
             ], AppModule);
-            exports_41("AppModule", AppModule);
+            exports_50("AppModule", AppModule);
         }
     };
 });
-System.register("main", ["@angular/platform-browser-dynamic", "app/app.module"], function (exports_42, context_42) {
+System.register("main", ["@angular/platform-browser-dynamic", "app/app.module"], function (exports_51, context_51) {
     "use strict";
-    var __moduleName = context_42 && context_42.id;
+    var __moduleName = context_51 && context_51.id;
     var platform_browser_dynamic_1, app_module_1;
     return {
         setters: [
@@ -2093,15 +2498,15 @@ System.register("main", ["@angular/platform-browser-dynamic", "app/app.module"],
         }
     };
 });
-System.register("editor-features/components/b-component/b.component-old", ["@angular/core", "editor-features/helpers/selection.helper", "editor-features/helpers/node.helper"], function (exports_43, context_43) {
+System.register("editor-features/components/b-component/b.component-old", ["@angular/core", "editor-features/helpers/selection.helper", "editor-features/helpers/node.helper"], function (exports_52, context_52) {
     "use strict";
-    var __moduleName = context_43 && context_43.id;
-    var core_57, core_58, selection_helper_1, node_helper_1, BComponent;
+    var __moduleName = context_52 && context_52.id;
+    var core_62, core_63, selection_helper_1, node_helper_1, BComponent;
     return {
         setters: [
-            function (core_57_1) {
-                core_57 = core_57_1;
-                core_58 = core_57_1;
+            function (core_62_1) {
+                core_62 = core_62_1;
+                core_63 = core_62_1;
             },
             function (selection_helper_1_1) {
                 selection_helper_1 = selection_helper_1_1;
@@ -2113,7 +2518,7 @@ System.register("editor-features/components/b-component/b.component-old", ["@ang
         execute: function () {
             BComponent = class BComponent {
                 constructor() {
-                    this.update = new core_57.EventEmitter();
+                    this.update = new core_62.EventEmitter();
                 }
                 wrapSelected() {
                     let selection = window.getSelection();
@@ -2162,26 +2567,26 @@ System.register("editor-features/components/b-component/b.component-old", ["@ang
                 }
             };
             __decorate([
-                core_58.Output('contenteditableModelChange'),
+                core_63.Output('contenteditableModelChange'),
                 __metadata("design:type", Object)
             ], BComponent.prototype, "update", void 0);
             __decorate([
-                core_58.Input('content'),
+                core_63.Input('content'),
                 __metadata("design:type", String)
             ], BComponent.prototype, "content", void 0);
             __decorate([
-                core_58.Input('editorId'),
+                core_63.Input('editorId'),
                 __metadata("design:type", String)
             ], BComponent.prototype, "editorId", void 0);
             BComponent = __decorate([
-                core_57.Component({
+                core_62.Component({
                     selector: 'b-editor-button',
                     template: `
       <a (click)="wrapSelected()" class="lc-editor-btn waves-effect waves-light btn"><i class="material-icons">format_bold</i></a>
     `
                 })
             ], BComponent);
-            exports_43("BComponent", BComponent);
+            exports_52("BComponent", BComponent);
         }
     };
 });

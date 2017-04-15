@@ -3,22 +3,23 @@ import {Router} from '@angular/router';
 import {AuthService} from '../../services/auth.service';
 
 @Component({
-    selector: 'login-component',
-    templateUrl: 'login.component.html',
+    selector: 'registration-component',
+    templateUrl: 'registration.component.html',
     providers: [AuthService]
 })
 
-export class LoginComponent {
+export class RegistrationComponent {
 
     public username:string;
     public password:string;
+    public email:string;
 
     constructor(private router: Router, private authService: AuthService){}
 
-    public auth():void {
+    public signup():void {
 
-        this.authService.login(this.username, this.password).subscribe(response => {
-            this.router.navigateByUrl('/')
+        this.authService.signup(this.username, this.password, this.email).subscribe(response => {
+            this.router.navigateByUrl('/');
         })
 
     }

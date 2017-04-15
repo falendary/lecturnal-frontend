@@ -12,20 +12,28 @@ import 'rxjs/add/operator/filter';
 
 export class ShellComponent {
 
-    private authService:AuthService;
+    private authService: AuthService;
 
-    constructor(private router:Router, authService:AuthService) {
+    private currentState: string;
+
+    constructor(private router: Router, authService: AuthService) {
         console.log('ShellComponent init');
 
         this.authService = authService;
 
         this.router.events
-            .filter((event:RouteConfigLoadEnd) => event instanceof NavigationStart)
-            .subscribe((event:NavigationStart) => {
+            .filter((event: RouteConfigLoadEnd) => event instanceof NavigationStart)
+            .subscribe((event: NavigationStart) => {
+
+                this.currentState = event.url;
 
                 if (!this.authService.isAuthorized()) {
-                    if (event.url !== '/login') {
-                        router.navigateByUrl('/login');
+                    if (event.url !== '/login' && event.url !== '/registration') {
+                        this.router.navigateByUrl('/login');
+                    }
+                } else {
+                    if (event.url == '/login' || event.url == '/registration') {
+                        this.router.navigateByUrl('/');
                     }
                 }
 
@@ -33,6 +41,24 @@ export class ShellComponent {
 
             })
 
+    }
+
+    public isAuth(): boolean {
+
+        let result = true;
+
+        if (this.currentState != '/login' && this.currentState != '/registration') {
+            result = false;
+        }
+
+
+        return result;
+
+    }
+
+    public logout() {
+        this.authService.logout();
+        this.router.navigateByUrl('/login');
     }
 
 }

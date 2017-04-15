@@ -1,1 +1,9 @@
+<nav *ngIf="!isAuth()">
+    <div class="nav-wrapper">
+        <a href="/" class="brand-logo" style="padding-left: 24px">Lecturnal</a>
+        <ul id="nav-mobile" class="right hide-on-med-and-down">
+            <li><a (click)="logout()">Выйти</a></li>
+        </ul>
+    </div>
+</nav>
 <router-outlet></router-outlet>

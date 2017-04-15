@@ -1,0 +1,35 @@
+<div class="login-component">
+
+
+    <div class="card">
+
+        <div class="card-content">
+
+            <div class="card-title">Регистрация</div>
+
+            <div class="row">
+
+                <div class="input-field col s12">
+
+                    <input [(ngModel)]="username" type="text" id="username" placeholder="Username">
+
+                    <input [(ngModel)]="email" type="text" id="email" placeholder="Email">
+                    <!--<label for="username">Username</label>-->
+
+                    <input [(ngModel)]="password" type="password" id="password" placeholder="Password">
+
+                </div>
+
+            </div>
+
+            <div class="row card-footer">
+                <a class="waves-effect waves-light btn" (click)="signup()">Зарегистрироваться</a>
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+</div>

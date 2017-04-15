@@ -8,16 +8,20 @@ const cleanCSS = require('gulp-clean-css');
 const htmlmin = require('gulp-htmlmin');
 const inlineNg2Template = require('gulp-inline-ng2-template');
 
+const proxy = require('proxy-middleware');
 const historyApiFallback = require('connect-history-api-fallback');
 
 const rename = require('gulp-rename');
 
+const url = require('url');
 const browserSync = require('browser-sync');
 const reload = browserSync.reload;
 
 const del = require('del');
 
 const tscConfig = require('../tsconfig.json');
+
+
 
 const appName = 'index';
 
@@ -75,11 +79,20 @@ gulp.task(appName + ':less-to-css', function () {
 
 gulp.task(appName + ':serve', [appName + ':build'], function () {
 
+
+    //var proxyOptions = url.parse('https://colledge.online/backend/web');
+    var proxyOptions = url.parse('http://diploma-backend.loc/backend/web');
+    proxyOptions.route = '/backend/web';
+
     browserSync({
         server: {
             baseDir: 'dist',
-            middleware: [ historyApiFallback() ]
+            //middleware: [ historyApiFallback(), proxy(proxyOptions)]
+            middleware: [proxy(proxyOptions), historyApiFallback()]
         }
+        //proxy: {
+        //    target: 'https://colledge.online/backend/web'
+        //}
     });
 
     gulp.watch(['src/' + appName + '/scripts/**/*.ts'], [appName + ':compile']);

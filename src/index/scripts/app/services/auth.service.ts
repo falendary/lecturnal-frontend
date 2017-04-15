@@ -5,20 +5,29 @@ import {AuthRepository} from '../repositories/auth.repository';
 @Injectable()
 export class AuthService {
 
-    constructor(private authRepository:AuthRepository) {
+    constructor(private authRepository: AuthRepository) {
 
     }
 
-    public isAuthorized():boolean {
+    public isAuthorized(): boolean {
 
         return !!CookieService.getCookie('token');
 
     }
 
-    public login(username:string, password:string) {
+    public login(username: string, password: string) {
 
         return this.authRepository.login(username, password);
 
+    }
+
+    public signup(username: string, password: string, email: string){
+        return this.authRepository.signup(username, password, email);
+    }
+
+    public logout() {
+        CookieService.deleteCookie('token');
+        this.authRepository.logout();
     }
 
 }

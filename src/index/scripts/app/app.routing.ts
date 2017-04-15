@@ -3,6 +3,7 @@ import {Routes, RouterModule} from '@angular/router';
 
 import {DashboardComponent} from "./components/dashboard-component/dashboard.component";
 import {LoginComponent} from "./components/login-component/login.component";
+import {RegistrationComponent} from "./components/registration-component/registration.component";
 import {PresentationComponent} from "./components/presentation-component/presentation.component";
 
 const appRoutes:Routes = <Routes>[
@@ -13,6 +14,10 @@ const appRoutes:Routes = <Routes>[
     {
         path: 'login',
         component: LoginComponent,
+    },
+    {
+        path: 'registration',
+        component: RegistrationComponent
     },
     {
         path: 'presentation',
