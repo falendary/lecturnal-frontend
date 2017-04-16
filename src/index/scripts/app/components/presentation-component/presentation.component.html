@@ -1,7 +1,17 @@
 <div class="editor-component">
+    <div class="row" *ngIf="checkReadyStatus()">
+        <div class="input-field col s6 presentation-name-holder">
+            <input placeholder="Presentation name" [(ngModel)]="presentation.name" (blur)="updatePresentationName()"
+                   id="presentation_name" type="text" class="validate">
+        </div>
+
+    </div>
+    <div class="row" *ngIf="!checkReadyStatus()">
+        Loading...
+    </div>
     <div class="row">
         <div class="col s2">
-            <slides-tree></slides-tree>
+            <slides-list></slides-list>
         </div>
         <div class="col s10">
             <slide-editor></slide-editor>

@@ -1,0 +1,21 @@
+<div class="slide-list-component">
+
+    <a (click)="addSlide()" class="waves-effect waves-light btn">Добавить страницу</a>
+
+    <div class="row slides-list-container" *ngIf="checkReadyStatus()">
+
+        <div class="card stc-slide-card {{slide.isActive ? 'active' : ''}}" *ngFor="let slide of slides"
+             (click)="selectSlide(slide)">
+            <div class="card-content">
+                <div class="cc-body-content" [innerHTML]="slide.content">
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row" *ngIf="!checkReadyStatus()">
+        Loading..
+    </div>
+
+</div>

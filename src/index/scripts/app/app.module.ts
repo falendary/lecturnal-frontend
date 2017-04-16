@@ -14,7 +14,7 @@ import {DashboardComponent} from './components/dashboard-component/dashboard.com
 
 import {PresentationComponent} from './components/presentation-component/presentation.component';
 import {SlideEditorComponent} from './components/slide-editor-component/slide-editor.component';
-import {SlidesTreeComponent} from './components/slides-tree-component/slides-tree.component';
+import {SlidesListComponent} from './components/slides-list-component/slides-list.component';
 
 import {ContentEditableDirective } from './directives/content-editable.directive';
 
@@ -45,7 +45,7 @@ import {SlideService} from './services/slide.service';
         DashboardComponent,
         PresentationComponent,
         SlideEditorComponent,
-        SlidesTreeComponent,
+        SlidesListComponent,
 
         ContentEditableDirective
     ],

@@ -6,7 +6,7 @@ import {LoginComponent} from "./components/login-component/login.component";
 import {RegistrationComponent} from "./components/registration-component/registration.component";
 import {PresentationComponent} from "./components/presentation-component/presentation.component";
 
-const appRoutes:Routes = <Routes>[
+const appRoutes: Routes = <Routes>[
     {
         path: '',
         component: DashboardComponent,
@@ -21,16 +21,18 @@ const appRoutes:Routes = <Routes>[
     },
     {
         path: 'presentation',
-        children: [{
-            path: 'new',
-            component: PresentationComponent
-        }, {
-            path: ':id',
-            component: PresentationComponent
-        }]
+        children: [
+            {
+                path: ':id',
+                component: PresentationComponent
+            },
+            {
+                path: ':id/slides/:slideId',
+                component: PresentationComponent
+            }]
     },
 ];
 
-export const routing:ModuleWithProviders = RouterModule.forRoot(appRoutes);
+export const routing: ModuleWithProviders = RouterModule.forRoot(appRoutes);
 
 

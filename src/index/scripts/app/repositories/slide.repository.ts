@@ -10,6 +10,7 @@ import {IEntity} from '../models/interfaces/IEntity';
 import {IQueryParameter} from '../models/interfaces/IQueryParameter';
 import {UrlHelper} from '../helpers/url.helper';
 import {Slide} from '../models/Slide';
+import {CookieService} from '../services/cookie.service';
 
 @Injectable()
 export class SlideRepository implements IRepository {
@@ -18,7 +19,10 @@ export class SlideRepository implements IRepository {
     constructor(private http: Http) {
     }
 
-    getList(parameters?: IQueryParameter[]): Observable<Slide[]> {
+    getList(parameters: IQueryParameter[], presentationId: number): Observable<Slide[]> {
+
+        let headers = new Headers({ 'Content-Type': 'application/json', 'authorization': 'Bearer ' + CookieService.getCookie('token') });
+        let options = new RequestOptions({ headers: headers });
 
         let parametersString: string = '';
 
@@ -26,31 +30,47 @@ export class SlideRepository implements IRepository {
             parametersString = UrlHelper.createQueryParamtersString(parameters);
         }
 
-        return this.http.get('backend/web/v1/presentations' + parametersString)
+        return this.http.get('backend/web/v1/presentations/' + presentationId + '/slides' + parametersString, options)
             .map((res: Response) => res.json())
             .catch((error: any) => Observable.throw(error.json().error || 'Server error'));
     }
 
-    getByKey(key: number): Observable<Slide> {
-        return this.http.get('backend/web/v1/presentations/' + key)
+    getByKey(presentationId: number, slideId: number): Observable<Slide> {
+
+        let headers = new Headers({ 'Content-Type': 'application/json', 'authorization': 'Bearer ' + CookieService.getCookie('token') });
+        let options = new RequestOptions({ headers: headers });
+
+        return this.http.get('backend/web/v1/presentations/' + presentationId + '/slides/' + slideId, options)
             .map((res: Response) => res.json())
             .catch((error: any) => Observable.throw(error.json().error || 'Server error'));
     }
 
-    update(key: number, item: IEntity): Observable<Slide> {
-        return this.http.put('backend/web/v1/presentations/' + key, {item})
+    update(item: IEntity, presentationId: number, slideId: number): Observable<Slide> {
+
+        let headers = new Headers({ 'Content-Type': 'application/json', 'authorization': 'Bearer ' + CookieService.getCookie('token') });
+        let options = new RequestOptions({ headers: headers });
+
+        return this.http.put('backend/web/v1/presentations/' + presentationId + '/slides/' + slideId, JSON.stringify(item), options)
             .map((res: Response) => res.json())
             .catch((error: any) => Observable.throw(error.json().error || 'Server error'));
     }
 
-    create(item: IEntity): Observable<Slide> {
-        return this.http.post('backend/web/v1/presentations/', {item})
+    create(item: IEntity, presentationId: number): Observable<Slide> {
+
+        let headers = new Headers({ 'Content-Type': 'application/json', 'authorization': 'Bearer ' + CookieService.getCookie('token') });
+        let options = new RequestOptions({ headers: headers });
+
+        return this.http.post('backend/web/v1/presentations/' + presentationId + '/slides', JSON.stringify(item), options)
             .map((res: Response) => res.json())
             .catch((error: any) => Observable.throw(error.json().error || 'Server error'));
     }
 
-    deleteByKey(key: number): void {
-        this.http.delete('backend/web/v1/presentations/' + key)
+    deleteByKey(presentationId: number, slidesId: number): void {
+
+        let headers = new Headers({ 'Content-Type': 'application/json', 'authorization': 'Bearer ' + CookieService.getCookie('token') });
+        let options = new RequestOptions({ headers: headers });
+
+        this.http.delete('backend/web/v1/presentations/' + presentationId + '/slides/' + slidesId, options)
             .map((res: Response) => res.json())
             .catch((error: any) => Observable.throw(error.json().error || 'Server error'));
     }

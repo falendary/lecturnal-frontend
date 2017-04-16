@@ -10,25 +10,25 @@ export class SlideService {
 
     constructor(private slideRepository: SlideRepository) {}
 
-    getList(parameters?: IQueryParameter[]): Observable<Slide[]> {
+    getList(parameters: IQueryParameter[], presentationId: number): Observable<Slide[]> {
 
-        return this.slideRepository.getList(parameters);
+        return this.slideRepository.getList(parameters, presentationId);
     }
 
-    getByKey(key: number): Observable<Slide> {
-        return this.slideRepository.getByKey(key);
+    getByKey(presentationId: number, slideId: number): Observable<Slide> {
+        return this.slideRepository.getByKey(presentationId, slideId);
     }
 
-    update(key: number, item: Slide): Observable<Slide> {
-        return this.slideRepository.update(key, item);
+    update(item: Slide, presentationId: number, slideId: number): Observable<Slide> {
+        return this.slideRepository.update(item, presentationId, slideId);
     }
 
-    create(item: IEntity): Observable<Slide> {
-        return this.slideRepository.create(item);
+    create(item: IEntity, presentationId: number): Observable<Slide> {
+        return this.slideRepository.create(item, presentationId);
     }
 
-    deleteByKey(key: number): void {
-        this.slideRepository.deleteByKey(key);
+    deleteByKey(presentationId: number, slideId: number): void {
+        this.slideRepository.deleteByKey(presentationId, slideId);
     }
 
 }

@@ -2,6 +2,13 @@
 .editor-component {
   padding-top: 16px;
 
+  .presentation-name-holder {
+    margin-top: 0;
+    input {
+      margin-bottom: 0;
+    }
+  }
+
   .slide-editor-component {
     position: relative;
 
@@ -18,6 +25,8 @@
     padding: 12px;
     border-radius: 4px;
     outline: none;
+    max-height: 80vh;
+    overflow-y: auto;
   }
 
   .slide-editor-textarea {

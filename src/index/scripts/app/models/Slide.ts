@@ -5,5 +5,5 @@ export class Slide implements IEntity{
     created_at: string;
     updated_at: string;
     presentation_id: number;
-    content:string
+    content:string = ''
 }

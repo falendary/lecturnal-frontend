@@ -10,25 +10,25 @@ export class PresentationService {
 
     constructor(private presentationRepository: PresentationRepository) {}
 
-    getList(parameters?: IQueryParameter[]): Observable<Presentation[]> {
+    getList(parameters: IQueryParameter[]): Observable<Presentation[]> {
 
         return this.presentationRepository.getList(parameters);
     }
 
-    getByKey(key: number): Observable<Presentation> {
-        return this.presentationRepository.getByKey(key);
+    getByKey(presentationId: number): Observable<Presentation> {
+        return this.presentationRepository.getByKey(presentationId);
     }
 
-    update(key: number, item: Presentation): Observable<Presentation> {
-        return this.presentationRepository.update(key, item);
+    update(item: Presentation, presentationId: number): Observable<Presentation> {
+        return this.presentationRepository.update(item , presentationId);
     }
 
     create(item: IEntity): Observable<Presentation> {
         return this.presentationRepository.create(item);
     }
 
-    deleteByKey(key: number): void {
-        this.presentationRepository.deleteByKey(key);
+    deleteByKey(presentationId: number): void {
+        this.presentationRepository.deleteByKey(presentationId);
     }
 
 }

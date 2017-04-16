@@ -1745,6 +1745,9 @@ System.register("app/models/Slide", [], function (exports_35, context_35) {
         setters: [],
         execute: function () {
             Slide = class Slide {
+                constructor() {
+                    this.content = '';
+                }
             };
             exports_35("Slide", Slide);
         }
@@ -1758,6 +1761,9 @@ System.register("app/models/Presentation", [], function (exports_36, context_36)
         setters: [],
         execute: function () {
             Presentation = class Presentation {
+                constructor() {
+                    this.name = '';
+                }
             };
             exports_36("Presentation", Presentation);
         }
@@ -1806,10 +1812,10 @@ System.register("app/helpers/url.helper", [], function (exports_39, context_39) 
         }
     };
 });
-System.register("app/repositories/presentation.repository", ["@angular/core", "rxjs/Rx", "@angular/http", "rxjs/add/operator/map", "rxjs/add/operator/catch", "app/helpers/url.helper"], function (exports_40, context_40) {
+System.register("app/repositories/presentation.repository", ["@angular/core", "rxjs/Rx", "@angular/http", "rxjs/add/operator/map", "rxjs/add/operator/catch", "app/helpers/url.helper", "app/services/cookie.service"], function (exports_40, context_40) {
     "use strict";
     var __moduleName = context_40 && context_40.id;
-    var core_51, Rx_2, http_2, url_helper_1, PresentationRepository;
+    var core_51, Rx_2, http_2, url_helper_1, cookie_service_2, PresentationRepository;
     return {
         setters: [
             function (core_51_1) {
@@ -1827,6 +1833,9 @@ System.register("app/repositories/presentation.repository", ["@angular/core", "r
             },
             function (url_helper_1_1) {
                 url_helper_1 = url_helper_1_1;
+            },
+            function (cookie_service_2_1) {
+                cookie_service_2 = cookie_service_2_1;
             }
         ],
         execute: function () {
@@ -1835,31 +1844,41 @@ System.register("app/repositories/presentation.repository", ["@angular/core", "r
                     this.http = http;
                 }
                 getList(parameters) {
+                    let headers = new http_2.Headers({ 'Content-Type': 'application/json', 'authorization': 'Bearer ' + cookie_service_2.CookieService.getCookie('token') });
+                    let options = new http_2.RequestOptions({ headers: headers });
                     let parametersString = '';
                     if (parameters) {
                         parametersString = url_helper_1.UrlHelper.createQueryParamtersString(parameters);
                     }
-                    return this.http.get('backend/web/v1/presentations' + parametersString)
+                    return this.http.get('backend/web/v1/presentations' + parametersString, options)
                         .map((res) => res.json())
                         .catch((error) => Rx_2.Observable.throw(error.json().error || 'Server error'));
                 }
-                getByKey(key) {
-                    return this.http.get('backend/web/v1/presentations/' + key)
+                getByKey(presentationId) {
+                    let headers = new http_2.Headers({ 'Content-Type': 'application/json', 'authorization': 'Bearer ' + cookie_service_2.CookieService.getCookie('token') });
+                    let options = new http_2.RequestOptions({ headers: headers });
+                    return this.http.get('backend/web/v1/presentations/' + presentationId, options)
                         .map((res) => res.json())
                         .catch((error) => Rx_2.Observable.throw(error.json().error || 'Server error'));
                 }
-                update(key, item) {
-                    return this.http.put('backend/web/v1/presentations/' + key, { item })
+                update(item, presentationId) {
+                    let headers = new http_2.Headers({ 'Content-Type': 'application/json', 'authorization': 'Bearer ' + cookie_service_2.CookieService.getCookie('token') });
+                    let options = new http_2.RequestOptions({ headers: headers });
+                    return this.http.put('backend/web/v1/presentations/' + presentationId, JSON.stringify(item), options)
                         .map((res) => res.json())
                         .catch((error) => Rx_2.Observable.throw(error.json().error || 'Server error'));
                 }
                 create(item) {
-                    return this.http.post('backend/web/v1/presentations/', { item })
+                    let headers = new http_2.Headers({ 'Content-Type': 'application/json', 'authorization': 'Bearer ' + cookie_service_2.CookieService.getCookie('token') });
+                    let options = new http_2.RequestOptions({ headers: headers });
+                    return this.http.post('backend/web/v1/presentations', JSON.stringify(item), options)
                         .map((res) => res.json())
                         .catch((error) => Rx_2.Observable.throw(error.json().error || 'Server error'));
                 }
-                deleteByKey(key) {
-                    this.http.delete('backend/web/v1/presentations/' + key)
+                deleteByKey(presentationId) {
+                    let headers = new http_2.Headers({ 'Content-Type': 'application/json', 'authorization': 'Bearer ' + cookie_service_2.CookieService.getCookie('token') });
+                    let options = new http_2.RequestOptions({ headers: headers });
+                    this.http.delete('backend/web/v1/presentations/' + presentationId, options)
                         .map((res) => res.json())
                         .catch((error) => Rx_2.Observable.throw(error.json().error || 'Server error'));
                 }
@@ -1893,17 +1912,17 @@ System.register("app/services/presentation.service", ["@angular/core", "app/repo
                 getList(parameters) {
                     return this.presentationRepository.getList(parameters);
                 }
-                getByKey(key) {
-                    return this.presentationRepository.getByKey(key);
+                getByKey(presentationId) {
+                    return this.presentationRepository.getByKey(presentationId);
                 }
-                update(key, item) {
-                    return this.presentationRepository.update(key, item);
+                update(item, presentationId) {
+                    return this.presentationRepository.update(item, presentationId);
                 }
                 create(item) {
                     return this.presentationRepository.create(item);
                 }
-                deleteByKey(key) {
-                    this.presentationRepository.deleteByKey(key);
+                deleteByKey(presentationId) {
+                    this.presentationRepository.deleteByKey(presentationId);
                 }
             };
             PresentationService = __decorate([
@@ -1914,34 +1933,180 @@ System.register("app/services/presentation.service", ["@angular/core", "app/repo
         }
     };
 });
-System.register("app/components/dashboard-component/dashboard.component", ["@angular/core", "app/services/presentation.service"], function (exports_42, context_42) {
+System.register("app/repositories/slide.repository", ["@angular/core", "rxjs/Rx", "@angular/http", "rxjs/add/operator/map", "rxjs/add/operator/catch", "app/helpers/url.helper", "app/services/cookie.service"], function (exports_42, context_42) {
     "use strict";
     var __moduleName = context_42 && context_42.id;
-    var core_53, presentation_service_1, DashboardComponent;
+    var core_53, Rx_3, http_3, url_helper_2, cookie_service_3, SlideRepository;
     return {
         setters: [
             function (core_53_1) {
                 core_53 = core_53_1;
             },
+            function (Rx_3_1) {
+                Rx_3 = Rx_3_1;
+            },
+            function (http_3_1) {
+                http_3 = http_3_1;
+            },
+            function (_6) {
+            },
+            function (_7) {
+            },
+            function (url_helper_2_1) {
+                url_helper_2 = url_helper_2_1;
+            },
+            function (cookie_service_3_1) {
+                cookie_service_3 = cookie_service_3_1;
+            }
+        ],
+        execute: function () {
+            SlideRepository = class SlideRepository {
+                constructor(http) {
+                    this.http = http;
+                }
+                getList(parameters, presentationId) {
+                    let headers = new http_3.Headers({ 'Content-Type': 'application/json', 'authorization': 'Bearer ' + cookie_service_3.CookieService.getCookie('token') });
+                    let options = new http_3.RequestOptions({ headers: headers });
+                    let parametersString = '';
+                    if (parameters) {
+                        parametersString = url_helper_2.UrlHelper.createQueryParamtersString(parameters);
+                    }
+                    return this.http.get('backend/web/v1/presentations/' + presentationId + '/slides' + parametersString, options)
+                        .map((res) => res.json())
+                        .catch((error) => Rx_3.Observable.throw(error.json().error || 'Server error'));
+                }
+                getByKey(presentationId, slideId) {
+                    let headers = new http_3.Headers({ 'Content-Type': 'application/json', 'authorization': 'Bearer ' + cookie_service_3.CookieService.getCookie('token') });
+                    let options = new http_3.RequestOptions({ headers: headers });
+                    return this.http.get('backend/web/v1/presentations/' + presentationId + '/slides/' + slideId, options)
+                        .map((res) => res.json())
+                        .catch((error) => Rx_3.Observable.throw(error.json().error || 'Server error'));
+                }
+                update(item, presentationId, slideId) {
+                    let headers = new http_3.Headers({ 'Content-Type': 'application/json', 'authorization': 'Bearer ' + cookie_service_3.CookieService.getCookie('token') });
+                    let options = new http_3.RequestOptions({ headers: headers });
+                    return this.http.put('backend/web/v1/presentations/' + presentationId + '/slides/' + slideId, JSON.stringify(item), options)
+                        .map((res) => res.json())
+                        .catch((error) => Rx_3.Observable.throw(error.json().error || 'Server error'));
+                }
+                create(item, presentationId) {
+                    let headers = new http_3.Headers({ 'Content-Type': 'application/json', 'authorization': 'Bearer ' + cookie_service_3.CookieService.getCookie('token') });
+                    let options = new http_3.RequestOptions({ headers: headers });
+                    return this.http.post('backend/web/v1/presentations/' + presentationId + '/slides', JSON.stringify(item), options)
+                        .map((res) => res.json())
+                        .catch((error) => Rx_3.Observable.throw(error.json().error || 'Server error'));
+                }
+                deleteByKey(presentationId, slidesId) {
+                    let headers = new http_3.Headers({ 'Content-Type': 'application/json', 'authorization': 'Bearer ' + cookie_service_3.CookieService.getCookie('token') });
+                    let options = new http_3.RequestOptions({ headers: headers });
+                    this.http.delete('backend/web/v1/presentations/' + presentationId + '/slides/' + slidesId, options)
+                        .map((res) => res.json())
+                        .catch((error) => Rx_3.Observable.throw(error.json().error || 'Server error'));
+                }
+            };
+            SlideRepository = __decorate([
+                core_53.Injectable(),
+                __metadata("design:paramtypes", [http_3.Http])
+            ], SlideRepository);
+            exports_42("SlideRepository", SlideRepository);
+        }
+    };
+});
+System.register("app/services/slide.service", ["@angular/core", "app/repositories/slide.repository"], function (exports_43, context_43) {
+    "use strict";
+    var __moduleName = context_43 && context_43.id;
+    var core_54, slide_repository_1, SlideService;
+    return {
+        setters: [
+            function (core_54_1) {
+                core_54 = core_54_1;
+            },
+            function (slide_repository_1_1) {
+                slide_repository_1 = slide_repository_1_1;
+            }
+        ],
+        execute: function () {
+            SlideService = class SlideService {
+                constructor(slideRepository) {
+                    this.slideRepository = slideRepository;
+                }
+                getList(parameters, presentationId) {
+                    return this.slideRepository.getList(parameters, presentationId);
+                }
+                getByKey(presentationId, slideId) {
+                    return this.slideRepository.getByKey(presentationId, slideId);
+                }
+                update(item, presentationId, slideId) {
+                    return this.slideRepository.update(item, presentationId, slideId);
+                }
+                create(item, presentationId) {
+                    return this.slideRepository.create(item, presentationId);
+                }
+                deleteByKey(presentationId, slideId) {
+                    this.slideRepository.deleteByKey(presentationId, slideId);
+                }
+            };
+            SlideService = __decorate([
+                core_54.Injectable(),
+                __metadata("design:paramtypes", [slide_repository_1.SlideRepository])
+            ], SlideService);
+            exports_43("SlideService", SlideService);
+        }
+    };
+});
+System.register("app/components/dashboard-component/dashboard.component", ["@angular/core", "@angular/router", "app/models/Presentation", "app/services/presentation.service", "app/services/slide.service", "app/models/Slide"], function (exports_44, context_44) {
+    "use strict";
+    var __moduleName = context_44 && context_44.id;
+    var core_55, router_4, Presentation_1, presentation_service_1, slide_service_1, Slide_1, DashboardComponent;
+    return {
+        setters: [
+            function (core_55_1) {
+                core_55 = core_55_1;
+            },
+            function (router_4_1) {
+                router_4 = router_4_1;
+            },
+            function (Presentation_1_1) {
+                Presentation_1 = Presentation_1_1;
+            },
             function (presentation_service_1_1) {
                 presentation_service_1 = presentation_service_1_1;
+            },
+            function (slide_service_1_1) {
+                slide_service_1 = slide_service_1_1;
+            },
+            function (Slide_1_1) {
+                Slide_1 = Slide_1_1;
             }
         ],
         execute: function () {
             DashboardComponent = class DashboardComponent {
-                constructor(presentationService) {
+                constructor(router, presentationService, slideService) {
+                    this.router = router;
                     this.presentationService = presentationService;
+                    this.slideService = slideService;
                     console.log('DashboardComponent init');
                     this.getList();
                 }
                 getList() {
-                    this.presentationService.getList().subscribe(presentations => {
+                    let queryParameters = [];
+                    this.presentationService.getList(queryParameters).subscribe(presentations => {
                         this.presentations = presentations;
+                    });
+                }
+                addPresentation() {
+                    console.log('add presentation');
+                    this.presentationService.create(new Presentation_1.Presentation()).subscribe(presentation => {
+                        let slide = new Slide_1.Slide();
+                        slide.presentation_id = presentation.id;
+                        this.slideService.create(slide, presentation.id).subscribe(slide => {
+                            this.router.navigateByUrl('/presentation/' + presentation.id + '/slides/' + slide.id);
+                        });
                     });
                 }
             };
             DashboardComponent = __decorate([
-                core_53.Component({
+                core_55.Component({
                     selector: 'dashboard',
                     template: `
       <div class="dashboard-component">
@@ -1965,85 +2130,212 @@ System.register("app/components/dashboard-component/dashboard.component", ["@ang
 
           </div>
 
+          <div class="fixed-action-btn">
+              <a class="btn-floating btn-large red" (click)="addPresentation()">
+                  <i class="large material-icons">add</i>
+              </a>
+          </div>
+
       </div>
     `,
-                    providers: [presentation_service_1.PresentationService]
+                    providers: [presentation_service_1.PresentationService, slide_service_1.SlideService]
                 }),
-                __metadata("design:paramtypes", [presentation_service_1.PresentationService])
+                __metadata("design:paramtypes", [router_4.Router, presentation_service_1.PresentationService, slide_service_1.SlideService])
             ], DashboardComponent);
-            exports_42("DashboardComponent", DashboardComponent);
+            exports_44("DashboardComponent", DashboardComponent);
         }
     };
 });
-System.register("app/components/presentation-component/presentation.component", ["@angular/core"], function (exports_43, context_43) {
+System.register("app/helpers/controller.helper", [], function (exports_45, context_45) {
     "use strict";
-    var __moduleName = context_43 && context_43.id;
-    var core_54, PresentationComponent;
+    var __moduleName = context_45 && context_45.id;
+    var ControllerHelper, ReadyStatus;
+    return {
+        setters: [],
+        execute: function () {
+            ControllerHelper = class ControllerHelper {
+                static check(readyStatus) {
+                    for (status in readyStatus) {
+                        if (readyStatus.hasOwnProperty(status)) {
+                            if (readyStatus[status] == false) {
+                                return false;
+                            }
+                        }
+                    }
+                    return true;
+                }
+            };
+            exports_45("ControllerHelper", ControllerHelper);
+            ReadyStatus = class ReadyStatus {
+            };
+        }
+    };
+});
+System.register("app/components/presentation-component/presentation.component", ["@angular/core", "@angular/router", "app/services/presentation.service", "app/helpers/controller.helper"], function (exports_46, context_46) {
+    "use strict";
+    var __moduleName = context_46 && context_46.id;
+    var core_56, router_5, presentation_service_2, controller_helper_1, PresentationComponent, ReadyStatus;
     return {
         setters: [
-            function (core_54_1) {
-                core_54 = core_54_1;
+            function (core_56_1) {
+                core_56 = core_56_1;
+            },
+            function (router_5_1) {
+                router_5 = router_5_1;
+            },
+            function (presentation_service_2_1) {
+                presentation_service_2 = presentation_service_2_1;
+            },
+            function (controller_helper_1_1) {
+                controller_helper_1 = controller_helper_1_1;
             }
         ],
         execute: function () {
             PresentationComponent = class PresentationComponent {
-                constructor() {
+                constructor(router, route, presentationService) {
+                    this.router = router;
+                    this.route = route;
+                    this.presentationService = presentationService;
+                    this.readyStatus = new ReadyStatus();
                     console.log('PresentationComponent init');
+                }
+                ngOnInit() {
+                    this.sub = this.route
+                        .params
+                        .subscribe(params => {
+                        console.log('params', params);
+                        this.presentationId = +params['id'] || 0;
+                        this.getPresentation();
+                    });
+                }
+                ngOnDestroy() {
+                    this.sub.unsubscribe();
+                }
+                checkReadyStatus() {
+                    return controller_helper_1.ControllerHelper.check(this.readyStatus);
+                }
+                ;
+                getPresentation() {
+                    this.readyStatus.content = false;
+                    this.presentationService.getByKey(this.presentationId).subscribe(presentation => {
+                        this.presentation = presentation;
+                        this.readyStatus.content = true;
+                    });
+                }
+                updatePresentationName() {
+                    this.presentationService.update(this.presentation, this.presentationId).subscribe(presentation => {
+                        this.presentation = presentation;
+                    });
                 }
             };
             PresentationComponent = __decorate([
-                core_54.Component({
+                core_56.Component({
                     selector: 'presentation',
                     template: `
       <div class="editor-component">
+          <div class="row" *ngIf="checkReadyStatus()">
+              <div class="input-field col s6 presentation-name-holder">
+                  <input placeholder="Presentation name" [(ngModel)]="presentation.name" (blur)="updatePresentationName()"
+                         id="presentation_name" type="text" class="validate">
+              </div>
+
+          </div>
+          <div class="row" *ngIf="!checkReadyStatus()">
+              Loading...
+          </div>
           <div class="row">
               <div class="col s2">
-                  <slides-tree></slides-tree>
+                  <slides-list></slides-list>
               </div>
               <div class="col s10">
                   <slide-editor></slide-editor>
               </div>
           </div>
       </div>
-    `
+    `,
+                    providers: [presentation_service_2.PresentationService]
                 }),
-                __metadata("design:paramtypes", [])
+                __metadata("design:paramtypes", [router_5.Router, router_5.ActivatedRoute, presentation_service_2.PresentationService])
             ], PresentationComponent);
-            exports_43("PresentationComponent", PresentationComponent);
+            exports_46("PresentationComponent", PresentationComponent);
+            ReadyStatus = class ReadyStatus {
+                constructor() {
+                    this.content = false;
+                }
+            };
         }
     };
 });
-System.register("app/components/slide-editor-component/slide-editor.component", ["@angular/core", "app/models/Slide"], function (exports_44, context_44) {
+System.register("app/components/slide-editor-component/slide-editor.component", ["@angular/core", "@angular/router", "app/models/Slide", "app/services/slide.service", "app/helpers/controller.helper"], function (exports_47, context_47) {
     "use strict";
-    var __moduleName = context_44 && context_44.id;
-    var core_55, Slide_1, SlideEditorComponent;
+    var __moduleName = context_47 && context_47.id;
+    var core_57, router_6, Slide_2, slide_service_2, controller_helper_2, SlideEditorComponent, ReadyStatus;
     return {
         setters: [
-            function (core_55_1) {
-                core_55 = core_55_1;
+            function (core_57_1) {
+                core_57 = core_57_1;
             },
-            function (Slide_1_1) {
-                Slide_1 = Slide_1_1;
+            function (router_6_1) {
+                router_6 = router_6_1;
+            },
+            function (Slide_2_1) {
+                Slide_2 = Slide_2_1;
+            },
+            function (slide_service_2_1) {
+                slide_service_2 = slide_service_2_1;
+            },
+            function (controller_helper_2_1) {
+                controller_helper_2 = controller_helper_2_1;
             }
         ],
         execute: function () {
             SlideEditorComponent = class SlideEditorComponent {
-                constructor() {
+                constructor(router, route, slideService) {
+                    this.router = router;
+                    this.route = route;
+                    this.slideService = slideService;
+                    this.slide = new Slide_2.Slide();
                     this.isVisualizer = true;
+                    this.readyStatus = new ReadyStatus();
                     console.log('SlideEditorCompoennt init');
                     this.editorId = 'editor1';
-                    this.slide = new Slide_1.Slide();
-                    this.slide.content = '<div style="border-bottom: 2px solid #ccc; padding-bottom: 10px"><div></div><ul style="padding-left: 40px"><li>Item 1</li><li>Item 2</li><li>Item 3</li><li>Item 4</li></ul></div></div><p>'
-                        + 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod'
-                        + 'tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam'
-                        + 'quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo '
-                        + 'consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse '
-                        + 'cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non '
-                        + 'proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>';
+                }
+                checkReadyStatus() {
+                    return controller_helper_2.ControllerHelper.check(this.readyStatus);
+                }
+                ;
+                getSlide() {
+                    this.readyStatus.content = false;
+                    this.slideService.getByKey(this.presentationId, this.slideId).subscribe(slide => {
+                        console.log('slide', slide);
+                        this.readyStatus.content = true;
+                        this.slide = slide;
+                    });
+                }
+                saveSlide() {
+                    console.log('update');
+                    this.slideService.update(this.slide, this.presentationId, this.slideId).subscribe(slide => {
+                        console.log('updated');
+                    });
+                }
+                ngOnInit() {
+                    this.sub = this.route
+                        .params
+                        .subscribe(params => {
+                        console.log('params', params);
+                        this.presentationId = +params['id'] || 0;
+                        this.slideId = +params['slideId'] || 0;
+                        if (this.slideId !== 0) {
+                            this.getSlide();
+                        }
+                    });
+                }
+                ngOnDestroy() {
+                    this.sub.unsubscribe();
                 }
             };
             SlideEditorComponent = __decorate([
-                core_55.Component({
+                core_57.Component({
                     selector: 'slide-editor',
                     template: `
       <div class="slide-editor-component">
@@ -2092,12 +2384,13 @@ System.register("app/components/slide-editor-component/slide-editor.component", 
 
           </div>
 
-          <div>
+          <div *ngIf="checkReadyStatus()">
 
               <div *ngIf="isVisualizer == true">
 
                   <div contentEditable="true"
                        id="{{editorId}}"
+                       (blur)="saveSlide()"
                        [(contenteditableModel)]="slide.content"
                        class="slide-editor-wrapper" tabindex="1">
                   </div>
@@ -2105,57 +2398,146 @@ System.register("app/components/slide-editor-component/slide-editor.component", 
 
               <div *ngIf="isVisualizer == false">
 
-                  <textarea contentEditable="true" class="slide-editor-textarea" name="" id="" cols="30" rows="10"
+                  <textarea contentEditable="true" (blur)="saveSlide()" class="slide-editor-textarea" name="" id="" cols="30" rows="10"
                             [(ngModel)]="slide.content"></textarea>
               </div>
 
           </div>
 
+          <div *ngIf="!checkReadyStatus()">
+              Loading...
+          </div>
+
       </div>
-    `
+    `,
+                    providers: [slide_service_2.SlideService]
                 }),
-                __metadata("design:paramtypes", [])
+                __metadata("design:paramtypes", [router_6.Router, router_6.ActivatedRoute, slide_service_2.SlideService])
             ], SlideEditorComponent);
-            exports_44("SlideEditorComponent", SlideEditorComponent);
+            exports_47("SlideEditorComponent", SlideEditorComponent);
+            ReadyStatus = class ReadyStatus {
+                constructor() {
+                    this.content = false;
+                }
+            };
         }
     };
 });
-System.register("app/components/slides-tree-component/slides-tree.component", ["@angular/core", "app/models/Slide"], function (exports_45, context_45) {
+System.register("app/models/SlideViewModel", [], function (exports_48, context_48) {
     "use strict";
-    var __moduleName = context_45 && context_45.id;
-    var core_56, Slide_2, SlidesTreeComponent;
+    var __moduleName = context_48 && context_48.id;
+    var SlideViewModel;
+    return {
+        setters: [],
+        execute: function () {
+            SlideViewModel = class SlideViewModel {
+                constructor(slide) {
+                    this.isActive = false;
+                    this.id = slide.id;
+                    this.created_at = slide.created_at;
+                    this.updated_at = slide.updated_at;
+                    this.presentation_id = slide.presentation_id;
+                    this.content = slide.content;
+                    this.isActive = false;
+                }
+            };
+            exports_48("SlideViewModel", SlideViewModel);
+        }
+    };
+});
+System.register("app/components/slides-list-component/slides-list.component", ["@angular/core", "@angular/router", "app/models/Slide", "app/services/slide.service", "app/models/SlideViewModel", "app/helpers/controller.helper"], function (exports_49, context_49) {
+    "use strict";
+    var __moduleName = context_49 && context_49.id;
+    var core_58, router_7, Slide_3, slide_service_3, SlideViewModel_1, controller_helper_3, SlidesListComponent, ReadyStatus;
     return {
         setters: [
-            function (core_56_1) {
-                core_56 = core_56_1;
+            function (core_58_1) {
+                core_58 = core_58_1;
             },
-            function (Slide_2_1) {
-                Slide_2 = Slide_2_1;
+            function (router_7_1) {
+                router_7 = router_7_1;
+            },
+            function (Slide_3_1) {
+                Slide_3 = Slide_3_1;
+            },
+            function (slide_service_3_1) {
+                slide_service_3 = slide_service_3_1;
+            },
+            function (SlideViewModel_1_1) {
+                SlideViewModel_1 = SlideViewModel_1_1;
+            },
+            function (controller_helper_3_1) {
+                controller_helper_3 = controller_helper_3_1;
             }
         ],
         execute: function () {
-            SlidesTreeComponent = class SlidesTreeComponent {
-                constructor() {
+            SlidesListComponent = class SlidesListComponent {
+                constructor(router, route, slideService) {
+                    this.router = router;
+                    this.route = route;
+                    this.slideService = slideService;
+                    this.readyStatus = new ReadyStatus();
                     console.log('Sliders tree');
                 }
-                addSlide() {
-                    this.slides.push(new Slide_2.Slide());
+                ngOnInit() {
+                    this.sub = this.route
+                        .params
+                        .subscribe(params => {
+                        console.log('params', params);
+                        this.presentationId = +params['id'] || 0;
+                        this.slideId = +params['slideId'] || 0;
+                        this.getList();
+                    });
                 }
-                selectSlide() {
+                ngOnDestroy() {
+                    this.sub.unsubscribe();
+                }
+                getList() {
+                    let queryParameters = [];
+                    this.readyStatus.content = false;
+                    this.slideService.getList(queryParameters, this.presentationId).subscribe(slides => {
+                        this.slides = slides.map(function (slide) {
+                            return new SlideViewModel_1.SlideViewModel(slide);
+                        });
+                        this.findActiveSlide();
+                        this.readyStatus.content = true;
+                    });
+                }
+                findActiveSlide() {
+                    this.slides.forEach(slide => {
+                        if (slide.id == this.slideId) {
+                            slide.isActive = true;
+                        }
+                    });
+                }
+                checkReadyStatus() {
+                    return controller_helper_3.ControllerHelper.check(this.readyStatus);
+                }
+                ;
+                addSlide() {
+                    this.slideService.create(new Slide_3.Slide(), this.presentationId).subscribe(slide => {
+                        console.log('updated');
+                        this.getList();
+                    });
+                }
+                selectSlide(slide) {
+                    console.log('select slide');
+                    this.router.navigateByUrl('/presentation/' + this.presentationId + '/slides/' + slide.id);
                 }
             };
-            SlidesTreeComponent = __decorate([
-                core_56.Component({
-                    selector: 'slides-tree',
+            SlidesListComponent = __decorate([
+                core_58.Component({
+                    selector: 'slides-list',
                     template: `
-      <div class="slide-tree-component">
+      <div class="slide-list-component">
 
           <a (click)="addSlide()" class="waves-effect waves-light btn">Добавить страницу</a>
 
-          <div class="row">
+          <div class="row slides-list-container" *ngIf="checkReadyStatus()">
 
-              <div class="card stc-slide-card" *ngFor="let slide of slides" (click)="selectSlide(slide)">
-                  <div class="card-content" >
+              <div class="card stc-slide-card {{slide.isActive ? 'active' : ''}}" *ngFor="let slide of slides"
+                   (click)="selectSlide(slide)">
+                  <div class="card-content">
                       <div class="cc-body-content" [innerHTML]="slide.content">
                       </div>
                   </div>
@@ -2163,31 +2545,41 @@ System.register("app/components/slides-tree-component/slides-tree.component", ["
 
           </div>
 
+          <div class="row" *ngIf="!checkReadyStatus()">
+              Loading..
+          </div>
+
       </div>
-    `
+    `,
+                    providers: [slide_service_3.SlideService]
                 }),
-                __metadata("design:paramtypes", [])
-            ], SlidesTreeComponent);
-            exports_45("SlidesTreeComponent", SlidesTreeComponent);
+                __metadata("design:paramtypes", [router_7.Router, router_7.ActivatedRoute, slide_service_3.SlideService])
+            ], SlidesListComponent);
+            exports_49("SlidesListComponent", SlidesListComponent);
+            ReadyStatus = class ReadyStatus {
+                constructor() {
+                    this.content = false;
+                }
+            };
         }
     };
 });
-System.register("app/directives/content-editable.directive", ["@angular/core"], function (exports_46, context_46) {
+System.register("app/directives/content-editable.directive", ["@angular/core"], function (exports_50, context_50) {
     "use strict";
-    var __moduleName = context_46 && context_46.id;
-    var core_57, core_58, ContentEditableDirective;
+    var __moduleName = context_50 && context_50.id;
+    var core_59, core_60, ContentEditableDirective;
     return {
         setters: [
-            function (core_57_1) {
-                core_57 = core_57_1;
-                core_58 = core_57_1;
+            function (core_59_1) {
+                core_59 = core_59_1;
+                core_60 = core_59_1;
             }
         ],
         execute: function () {
             ContentEditableDirective = class ContentEditableDirective {
                 constructor(elementRef) {
                     this.elementRef = elementRef;
-                    this.update = new core_57.EventEmitter();
+                    this.update = new core_59.EventEmitter();
                 }
                 ngOnChanges(changes) {
                     if (changes.model.firstChange == true) {
@@ -2195,7 +2587,6 @@ System.register("app/directives/content-editable.directive", ["@angular/core"], 
                     }
                 }
                 onEdit() {
-                    console.log('heeer?', this.model);
                     let value = this.elementRef.nativeElement.innerHTML;
                     this.update.emit(value);
                 }
@@ -2204,35 +2595,35 @@ System.register("app/directives/content-editable.directive", ["@angular/core"], 
                 }
             };
             __decorate([
-                core_58.Input('contenteditableModel'),
+                core_60.Input('contenteditableModel'),
                 __metadata("design:type", Object)
             ], ContentEditableDirective.prototype, "model", void 0);
             __decorate([
-                core_58.Output('contenteditableModelChange'),
+                core_60.Output('contenteditableModelChange'),
                 __metadata("design:type", Object)
             ], ContentEditableDirective.prototype, "update", void 0);
             ContentEditableDirective = __decorate([
-                core_57.Directive({
+                core_59.Directive({
                     selector: '[contenteditableModel]',
                     host: {
                         '(blur)': 'onEdit()',
                         '(keyup)': 'onEdit()'
                     }
                 }),
-                __metadata("design:paramtypes", [core_57.ElementRef])
+                __metadata("design:paramtypes", [core_59.ElementRef])
             ], ContentEditableDirective);
-            exports_46("ContentEditableDirective", ContentEditableDirective);
+            exports_50("ContentEditableDirective", ContentEditableDirective);
         }
     };
 });
-System.register("app/app.routing", ["@angular/router", "app/components/dashboard-component/dashboard.component", "app/components/login-component/login.component", "app/components/registration-component/registration.component", "app/components/presentation-component/presentation.component"], function (exports_47, context_47) {
+System.register("app/app.routing", ["@angular/router", "app/components/dashboard-component/dashboard.component", "app/components/login-component/login.component", "app/components/registration-component/registration.component", "app/components/presentation-component/presentation.component"], function (exports_51, context_51) {
     "use strict";
-    var __moduleName = context_47 && context_47.id;
-    var router_4, dashboard_component_1, login_component_1, registration_component_1, presentation_component_1, appRoutes, routing;
+    var __moduleName = context_51 && context_51.id;
+    var router_8, dashboard_component_1, login_component_1, registration_component_1, presentation_component_1, appRoutes, routing;
     return {
         setters: [
-            function (router_4_1) {
-                router_4 = router_4_1;
+            function (router_8_1) {
+                router_8 = router_8_1;
             },
             function (dashboard_component_1_1) {
                 dashboard_component_1 = dashboard_component_1_1;
@@ -2263,131 +2654,26 @@ System.register("app/app.routing", ["@angular/router", "app/components/dashboard
                 },
                 {
                     path: 'presentation',
-                    children: [{
-                            path: 'new',
-                            component: presentation_component_1.PresentationComponent
-                        }, {
+                    children: [
+                        {
                             path: ':id',
                             component: presentation_component_1.PresentationComponent
-                        }]
+                        },
+                        {
+                            path: ':id/slides/:slideId',
+                            component: presentation_component_1.PresentationComponent
+                        }
+                    ]
                 },
             ];
-            exports_47("routing", routing = router_4.RouterModule.forRoot(appRoutes));
+            exports_51("routing", routing = router_8.RouterModule.forRoot(appRoutes));
         }
     };
 });
-System.register("app/repositories/slide.repository", ["@angular/core", "rxjs/Rx", "@angular/http", "rxjs/add/operator/map", "rxjs/add/operator/catch", "app/helpers/url.helper"], function (exports_48, context_48) {
+System.register("app/app.module", ["@angular/core", "@angular/http", "@angular/forms", "@angular/platform-browser", "editor-features/editor-featrues.module", "app/components/shell-component/shell.component", "app/components/login-component/login.component", "app/components/registration-component/registration.component", "app/components/dashboard-component/dashboard.component", "app/components/presentation-component/presentation.component", "app/components/slide-editor-component/slide-editor.component", "app/components/slides-list-component/slides-list.component", "app/directives/content-editable.directive", "app/app.routing", "app/repositories/auth.repository", "app/repositories/presentation.repository", "app/repositories/slide.repository"], function (exports_52, context_52) {
     "use strict";
-    var __moduleName = context_48 && context_48.id;
-    var core_59, Rx_3, http_3, url_helper_2, SlideRepository;
-    return {
-        setters: [
-            function (core_59_1) {
-                core_59 = core_59_1;
-            },
-            function (Rx_3_1) {
-                Rx_3 = Rx_3_1;
-            },
-            function (http_3_1) {
-                http_3 = http_3_1;
-            },
-            function (_6) {
-            },
-            function (_7) {
-            },
-            function (url_helper_2_1) {
-                url_helper_2 = url_helper_2_1;
-            }
-        ],
-        execute: function () {
-            SlideRepository = class SlideRepository {
-                constructor(http) {
-                    this.http = http;
-                }
-                getList(parameters) {
-                    let parametersString = '';
-                    if (parameters) {
-                        parametersString = url_helper_2.UrlHelper.createQueryParamtersString(parameters);
-                    }
-                    return this.http.get('backend/web/v1/presentations' + parametersString)
-                        .map((res) => res.json())
-                        .catch((error) => Rx_3.Observable.throw(error.json().error || 'Server error'));
-                }
-                getByKey(key) {
-                    return this.http.get('backend/web/v1/presentations/' + key)
-                        .map((res) => res.json())
-                        .catch((error) => Rx_3.Observable.throw(error.json().error || 'Server error'));
-                }
-                update(key, item) {
-                    return this.http.put('backend/web/v1/presentations/' + key, { item })
-                        .map((res) => res.json())
-                        .catch((error) => Rx_3.Observable.throw(error.json().error || 'Server error'));
-                }
-                create(item) {
-                    return this.http.post('backend/web/v1/presentations/', { item })
-                        .map((res) => res.json())
-                        .catch((error) => Rx_3.Observable.throw(error.json().error || 'Server error'));
-                }
-                deleteByKey(key) {
-                    this.http.delete('backend/web/v1/presentations/' + key)
-                        .map((res) => res.json())
-                        .catch((error) => Rx_3.Observable.throw(error.json().error || 'Server error'));
-                }
-            };
-            SlideRepository = __decorate([
-                core_59.Injectable(),
-                __metadata("design:paramtypes", [http_3.Http])
-            ], SlideRepository);
-            exports_48("SlideRepository", SlideRepository);
-        }
-    };
-});
-System.register("app/services/slide.service", ["@angular/core", "app/repositories/slide.repository"], function (exports_49, context_49) {
-    "use strict";
-    var __moduleName = context_49 && context_49.id;
-    var core_60, slide_repository_1, SlideService;
-    return {
-        setters: [
-            function (core_60_1) {
-                core_60 = core_60_1;
-            },
-            function (slide_repository_1_1) {
-                slide_repository_1 = slide_repository_1_1;
-            }
-        ],
-        execute: function () {
-            SlideService = class SlideService {
-                constructor(slideRepository) {
-                    this.slideRepository = slideRepository;
-                }
-                getList(parameters) {
-                    return this.slideRepository.getList(parameters);
-                }
-                getByKey(key) {
-                    return this.slideRepository.getByKey(key);
-                }
-                update(key, item) {
-                    return this.slideRepository.update(key, item);
-                }
-                create(item) {
-                    return this.slideRepository.create(item);
-                }
-                deleteByKey(key) {
-                    this.slideRepository.deleteByKey(key);
-                }
-            };
-            SlideService = __decorate([
-                core_60.Injectable(),
-                __metadata("design:paramtypes", [slide_repository_1.SlideRepository])
-            ], SlideService);
-            exports_49("SlideService", SlideService);
-        }
-    };
-});
-System.register("app/app.module", ["@angular/core", "@angular/http", "@angular/forms", "@angular/platform-browser", "editor-features/editor-featrues.module", "app/components/shell-component/shell.component", "app/components/login-component/login.component", "app/components/registration-component/registration.component", "app/components/dashboard-component/dashboard.component", "app/components/presentation-component/presentation.component", "app/components/slide-editor-component/slide-editor.component", "app/components/slides-tree-component/slides-tree.component", "app/directives/content-editable.directive", "app/app.routing", "app/repositories/auth.repository", "app/repositories/presentation.repository", "app/repositories/slide.repository"], function (exports_50, context_50) {
-    "use strict";
-    var __moduleName = context_50 && context_50.id;
-    var core_61, http_4, forms_2, platform_browser_1, editor_featrues_module_1, shell_component_1, login_component_2, registration_component_2, dashboard_component_2, presentation_component_2, slide_editor_component_1, slides_tree_component_1, content_editable_directive_1, app_routing_1, auth_repository_2, presentation_repository_2, slide_repository_2, AppModule;
+    var __moduleName = context_52 && context_52.id;
+    var core_61, http_4, forms_2, platform_browser_1, editor_featrues_module_1, shell_component_1, login_component_2, registration_component_2, dashboard_component_2, presentation_component_2, slide_editor_component_1, slides_list_component_1, content_editable_directive_1, app_routing_1, auth_repository_2, presentation_repository_2, slide_repository_2, AppModule;
     return {
         setters: [
             function (core_61_1) {
@@ -2423,8 +2709,8 @@ System.register("app/app.module", ["@angular/core", "@angular/http", "@angular/f
             function (slide_editor_component_1_1) {
                 slide_editor_component_1 = slide_editor_component_1_1;
             },
-            function (slides_tree_component_1_1) {
-                slides_tree_component_1 = slides_tree_component_1_1;
+            function (slides_list_component_1_1) {
+                slides_list_component_1 = slides_list_component_1_1;
             },
             function (content_editable_directive_1_1) {
                 content_editable_directive_1 = content_editable_directive_1_1;
@@ -2464,7 +2750,7 @@ System.register("app/app.module", ["@angular/core", "@angular/http", "@angular/f
                         dashboard_component_2.DashboardComponent,
                         presentation_component_2.PresentationComponent,
                         slide_editor_component_1.SlideEditorComponent,
-                        slides_tree_component_1.SlidesTreeComponent,
+                        slides_list_component_1.SlidesListComponent,
                         content_editable_directive_1.ContentEditableDirective
                     ],
                     providers: [
@@ -2476,13 +2762,13 @@ System.register("app/app.module", ["@angular/core", "@angular/http", "@angular/f
                 }),
                 __metadata("design:paramtypes", [])
             ], AppModule);
-            exports_50("AppModule", AppModule);
+            exports_52("AppModule", AppModule);
         }
     };
 });
-System.register("main", ["@angular/platform-browser-dynamic", "app/app.module"], function (exports_51, context_51) {
+System.register("main", ["@angular/platform-browser-dynamic", "app/app.module"], function (exports_53, context_53) {
     "use strict";
-    var __moduleName = context_51 && context_51.id;
+    var __moduleName = context_53 && context_53.id;
     var platform_browser_dynamic_1, app_module_1;
     return {
         setters: [
@@ -2498,9 +2784,9 @@ System.register("main", ["@angular/platform-browser-dynamic", "app/app.module"],
         }
     };
 });
-System.register("editor-features/components/b-component/b.component-old", ["@angular/core", "editor-features/helpers/selection.helper", "editor-features/helpers/node.helper"], function (exports_52, context_52) {
+System.register("editor-features/components/b-component/b.component-old", ["@angular/core", "editor-features/helpers/selection.helper", "editor-features/helpers/node.helper"], function (exports_54, context_54) {
     "use strict";
-    var __moduleName = context_52 && context_52.id;
+    var __moduleName = context_54 && context_54.id;
     var core_62, core_63, selection_helper_1, node_helper_1, BComponent;
     return {
         setters: [
@@ -2586,7 +2872,7 @@ System.register("editor-features/components/b-component/b.component-old", ["@ang
     `
                 })
             ], BComponent);
-            exports_52("BComponent", BComponent);
+            exports_54("BComponent", BComponent);
         }
     };
 });
