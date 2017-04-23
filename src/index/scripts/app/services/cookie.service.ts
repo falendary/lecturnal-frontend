@@ -18,6 +18,8 @@ export class CookieService {
 
     public static setCookie(name:string, value:string, options:any):void {
 
+        //console.log('options', options);
+
         options = options || {};
 
         let expires = options.expires;

@@ -26,7 +26,9 @@ export class AuthService {
     }
 
     public logout() {
+
         CookieService.deleteCookie('token');
+
         this.authRepository.logout();
     }
 
