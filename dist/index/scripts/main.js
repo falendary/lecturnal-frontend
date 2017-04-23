@@ -1553,7 +1553,9 @@ System.register("app/components/shell-component/shell.component", ["@angular/cor
                 }
                 logout() {
                     this.authService.logout();
-                    this.router.navigateByUrl('/login');
+                    setTimeout(function () {
+                        this.router.navigateByUrl('/login');
+                    }, 10);
                 }
             };
             ShellComponent = __decorate([

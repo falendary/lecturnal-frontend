@@ -58,7 +58,9 @@ export class ShellComponent {
 
     public logout(): void {
         this.authService.logout();
-        this.router.navigateByUrl('/login');
+        setTimeout(function () {
+            this.router.navigateByUrl('/login');
+        }, 10)
     }
 
 }
