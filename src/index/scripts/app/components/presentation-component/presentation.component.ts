@@ -6,7 +6,7 @@ import {ControllerHelper} from "../../helpers/controller.helper";
 
 @Component({
     selector: 'presentation',
-    templateUrl: 'presentation.component.html',
+    template: require('./presentation.component.html'),
     providers: [PresentationService]
 })
 

@@ -6,7 +6,7 @@ import {NodeHelper} from '../../helpers/node.helper';
 
 @Component({
     selector: 'ol-editor-button',
-    templateUrl: 'ol.component.html'
+    template: require('./ol.component.html')
 })
 
 export class OlComponent implements IEditorButton {

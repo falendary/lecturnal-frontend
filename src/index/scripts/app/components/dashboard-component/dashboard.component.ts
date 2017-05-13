@@ -9,7 +9,7 @@ import {Slide} from "../../models/Slide";
 
 @Component({
     selector: 'dashboard',
-    templateUrl: 'dashboard.component.html',
+    template: require('./dashboard.component.html'),
     providers: [PresentationService, SlideService]
 })
 

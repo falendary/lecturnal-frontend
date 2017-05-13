@@ -4,7 +4,7 @@ import {IEditorButton} from "../interfaces/IEditorButton";
 
 @Component({
     selector: 'hr-editor-button',
-    templateUrl: 'hr.component.html'
+    template: require('./hr.component.html')
 })
 
 export class HrComponent implements IEditorButton {

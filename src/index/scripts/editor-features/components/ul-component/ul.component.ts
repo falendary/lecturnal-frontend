@@ -4,7 +4,7 @@ import {IEditorButton} from '../interfaces/IEditorButton';
 
 @Component({
     selector: 'ul-editor-button',
-    templateUrl: 'ul.component.html'
+    template: require('./ul.component.html')
 })
 
 export class UlComponent implements IEditorButton {

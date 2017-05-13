@@ -7,7 +7,7 @@ import {NodeHelper} from "../../helpers/node.helper";
 
 @Component({
     selector: 'i-editor-button',
-    templateUrl: 'i.component.html'
+    template: require('./i.component.html')
 })
 
 export class IComponent implements IEditorButton {

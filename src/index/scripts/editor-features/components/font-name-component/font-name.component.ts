@@ -4,7 +4,7 @@ import {IEditorButton} from "../interfaces/IEditorButton";
 
 @Component({
     selector: 'font-name-editor-button',
-    templateUrl: 'font-name.component.html'
+    template: require('./font-name.component.html')
 })
 
 export class FontNameComponent implements IEditorButton {

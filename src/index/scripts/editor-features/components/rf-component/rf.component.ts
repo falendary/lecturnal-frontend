@@ -4,7 +4,7 @@ import {IEditorButton} from "../interfaces/IEditorButton";
 
 @Component({
     selector: 'rf-editor-button',
-    templateUrl: 'rf.component.html'
+    template: require('./rf.component.html')
 })
 
 export class RemoveFormatComponent implements IEditorButton {

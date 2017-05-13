@@ -4,7 +4,7 @@ import {IEditorButton} from "../interfaces/IEditorButton";
 
 @Component({
     selector: 'create-link-editor-button',
-    templateUrl: 'create-link.component.html'
+    template: require('./create-link.component.html')
 })
 
 export class CreateLinkComponent implements IEditorButton {

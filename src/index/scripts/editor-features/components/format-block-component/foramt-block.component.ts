@@ -4,7 +4,7 @@ import {IEditorButton} from "../interfaces/IEditorButton";
 
 @Component({
     selector: 'format-block-editor-button',
-    templateUrl: 'format-block.component.html'
+    template: require('./format-block.component.html')
 })
 
 export class FormatBlockComponent implements IEditorButton {

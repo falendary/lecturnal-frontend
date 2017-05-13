@@ -4,7 +4,7 @@ import {IEditorButton} from "../interfaces/IEditorButton";
 
 @Component({
     selector: 'insert-image-editor-button',
-    templateUrl: 'insert-image.component.html'
+    template: require('./insert-image.component.html')
 })
 
 export class InsertImageComponent implements IEditorButton {

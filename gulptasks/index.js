@@ -95,7 +95,7 @@ gulp.task(appName + ':serve', [appName + ':build'], function () {
         //}
     });
 
-    gulp.watch(['src/' + appName + '/scripts/**/*.ts'], [appName + ':compile']);
+    //gulp.watch(['src/' + appName + '/scripts/**/*.ts'], [appName + ':compile']);
     gulp.watch(['src/' + appName + '/scripts/**/*.html'], [appName + ':compile']);
     gulp.watch(['src/' + appName + '/content/**/*.less'], [appName + ':less-to-css']);
     gulp.watch(['src/index.html'], [appName + ':app-html']);

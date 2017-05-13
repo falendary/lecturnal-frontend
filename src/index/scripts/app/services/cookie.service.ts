@@ -48,7 +48,7 @@ export class CookieService {
         document.cookie = updatedCookie;
     };
 
-    public static deleteCookie(name:string):void {
+    public static deleteCookie(name: string):void {
 
         CookieService.setCookie(name, "", {expires: -1})
     }

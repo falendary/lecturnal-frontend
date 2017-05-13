@@ -4,7 +4,7 @@ import {IEditorButton} from "../interfaces/IEditorButton";
 
 @Component({
     selector: 'strike-editor-button',
-    templateUrl: 'strike.component.html'
+    template: require('./strike.component.html')
 })
 
 export class StrikeComponent implements IEditorButton {

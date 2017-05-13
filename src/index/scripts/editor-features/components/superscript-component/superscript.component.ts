@@ -4,7 +4,7 @@ import {IEditorButton} from "../interfaces/IEditorButton";
 
 @Component({
     selector: 'superscript-editor-button',
-    templateUrl: 'superscript.component.html'
+    template: require('./superscript.component.html')
 })
 
 export class SuperscriptComponent implements IEditorButton {

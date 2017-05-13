@@ -54,7 +54,7 @@ import {SlideService} from './services/slide.service';
         PresentationRepository,
         SlideRepository
     ],
-    bootstrap: [ShellComponent, []]
+    bootstrap: [ShellComponent]
 })
 
 export class AppModule {

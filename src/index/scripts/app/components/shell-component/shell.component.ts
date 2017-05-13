@@ -6,7 +6,7 @@ import 'rxjs/add/operator/filter';
 
 @Component({
     selector: 'shell',
-    templateUrl: 'shell.component.html',
+    template: require('./shell.component.html'),
     providers: [AuthService]
 })
 
@@ -58,9 +58,9 @@ export class ShellComponent {
 
     public logout(): void {
         this.authService.logout();
-        setTimeout(() => {
-            this.router.navigateByUrl('/login');
-        }, 10)
+
+        this.router.navigateByUrl('/login');
+
     }
 
 }

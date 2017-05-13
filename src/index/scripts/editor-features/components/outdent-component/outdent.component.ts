@@ -4,7 +4,7 @@ import {IEditorButton} from "../interfaces/IEditorButton";
 
 @Component({
     selector: 'outdent-editor-button',
-    templateUrl: 'outdent.component.html'
+    template: require('./outdent.component.html')
 })
 
 export class OutdentComponent implements IEditorButton {

@@ -1,28 +1,27 @@
 {
   "compilerOptions": {
-    "outDir": "dist/index/scripts",
-    "outFile": "main.js",
-    "target": "ES6",
-    "module": "system",
+    "target": "es5",
+    "lib": [
+      "es5",
+      "es2015",
+      "es2017",
+      "dom",
+      "scripthost"
+    ],
+    "module": "commonjs",
+    "moduleResolution": "node",
     "sourceMap": true,
-    "inlineSourceMap": true,
-    "inlineSources": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "declaration": false,
-    "stripInternal": true,
-    "moduleResolution": "node",
-    "removeComments": true,
-    "noImplicitAny": true,
+    "removeComments": false,
+    "noImplicitAny": false,
+    "types": [
+      "node"
+    ],
     "typeRoots": [
       "node_modules/@types"
-    ],
-    "suppressImplicitAnyIndexErrors": true
+    ]
   },
-  "types": [
-    "node",
-    "core-js"
-  ],
   "exclude": [
     "node_modules"
   ]

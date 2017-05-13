@@ -62,18 +62,29 @@ gulp.task(appName + ':copy-fonts', function () {
 
 });
 
-gulp.task(appName + ':copy-libs', function () {
+gulp.task(appName + ':copy-vendor', function () {
+    return gulp.src([
+            'node_modules/zone.js/dist/zone.js',
+            'node_modules/systemjs/dist/system-polyfills.js',
+            'node_modules/core-js/client/shim.min.js',
+            'node_modules/systemjs/dist/system.js'
+        ])
+        .pipe(concat('vendors.js'))
+        .pipe(gulp.dest('dist/core/scripts'));
+});
+
+gulp.task(appName + ':copy-bundle', function () {
 
     const pathToJs = [
-        'core-js/client/shim.min.js',
-        'systemjs/dist/system.js',
-        'typescript/lib/**/typescript.js',
-        'rxjs/**/*.js',
-        'zone.js/dist/**',
-        '@angular/**/bundles/**'
+        'node_modules/core-js/client/shim.min.js',
+        'node_modules/systemjs/dist/system.js',
+        'node_modules/typescript/lib/**/typescript.js',
+        'node_modules/rxjs/**/*.js',
+        'node_modules/zone.js/dist/**/*.js',
+        'node_modules/@angular/**/bundles/**/*.js'
     ];
 
-    return gulp.src(pathToJs, {cwd: "node_modules/**"})
-        //.pipe(concat('core.js'))
+    return gulp.src(pathToJs)
+        .pipe(concat('core.js'))
         .pipe(gulp.dest('dist/' + appName + '/scripts'));
 });

@@ -6,7 +6,7 @@ import {SelectionHelper} from '../../helpers/selection.helper';
 
 @Component({
     selector: 'text-right-editor-button',
-    templateUrl: 'text-right.component.html'
+    template: require('./text-right.component.html')
 })
 
 export class TextRightComponent implements IEditorButton {

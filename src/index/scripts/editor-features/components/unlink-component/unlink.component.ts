@@ -4,7 +4,7 @@ import {IEditorButton} from "../interfaces/IEditorButton";
 
 @Component({
     selector: 'unlink-editor-button',
-    templateUrl: 'unlink.component.html'
+    template: require('./unlink.component.html')
 })
 
 export class UnlinkComponent implements IEditorButton {

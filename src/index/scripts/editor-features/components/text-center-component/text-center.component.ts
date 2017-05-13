@@ -6,7 +6,7 @@ import {SelectionHelper} from '../../helpers/selection.helper';
 
 @Component({
     selector: 'text-center-editor-button',
-    templateUrl: 'text-center.component.html'
+    template: require('./text-center.component.html')
 })
 
 export class TextCenterComponent implements IEditorButton {

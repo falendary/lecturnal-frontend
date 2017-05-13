@@ -1,0 +1,1 @@
+{"version":3,"sources":["editor-features/models/selectionData.ts"],"names":[],"mappings":";;AAAA;IAAA;IAQA,CAAC;IAAD,oBAAC;AAAD,CARA,AAQC,IAAA;AARY,sCAAa","file":"selectionData.js","sourcesContent":["export class SelectionData {\n\n    offsetFrom:number;\n    offsetTo:number;\n\n    startString:string;\n    middleString:string;\n    endString:string;\n}"]}

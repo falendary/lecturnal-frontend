@@ -9,7 +9,7 @@ import {NodeHelper} from "../../helpers/node.helper";
 
 @Component({
     selector: 'u-editor-button',
-    templateUrl: 'u.component.html'
+    template: require('./u.component.html')
 })
 
 export class UComponent implements IEditorButton {

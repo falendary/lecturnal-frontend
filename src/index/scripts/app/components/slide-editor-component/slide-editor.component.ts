@@ -8,7 +8,7 @@ import {ControllerHelper} from "../../helpers/controller.helper";
 
 @Component({
     selector: 'slide-editor',
-    templateUrl: 'slide-editor.component.html',
+    template: require('./slide-editor.component.html'),
     providers: [SlideService]
 })
 

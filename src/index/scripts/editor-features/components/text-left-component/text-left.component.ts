@@ -4,7 +4,7 @@ import {IEditorButton} from "../interfaces/IEditorButton";
 
 @Component({
     selector: 'text-left-editor-button',
-    templateUrl: 'text-left.component.html'
+    template: require('./text-left.component.html')
 })
 
 export class TextLeftComponent implements IEditorButton {

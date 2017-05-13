@@ -4,7 +4,7 @@ import {AuthService} from '../../services/auth.service';
 
 @Component({
     selector: 'login-component',
-    templateUrl: 'login.component.html',
+    template: require('./login.component.html'),
     providers: [AuthService]
 })
 

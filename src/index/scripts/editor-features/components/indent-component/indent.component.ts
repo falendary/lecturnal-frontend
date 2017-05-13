@@ -4,7 +4,7 @@ import {IEditorButton} from "../interfaces/IEditorButton";
 
 @Component({
     selector: 'indent-editor-button',
-    templateUrl: 'indent.component.html'
+    template: require('./indent.component.html')
 })
 
 export class IndentComponent implements IEditorButton {

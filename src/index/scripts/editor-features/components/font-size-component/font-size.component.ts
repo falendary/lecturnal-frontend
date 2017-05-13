@@ -4,7 +4,7 @@ import {IEditorButton} from "../interfaces/IEditorButton";
 
 @Component({
     selector: 'font-size-editor-button',
-    templateUrl: 'font-size.component.html'
+    template: require('./font-size.component.html')
 })
 
 export class FontSizeComponent implements IEditorButton {

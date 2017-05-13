@@ -4,7 +4,7 @@ import {IEditorButton} from "../interfaces/IEditorButton";
 
 @Component({
     selector: 'text-justify-editor-button',
-    templateUrl: 'text-justify.component.html'
+    template: require('./text-justify.component.html')
 })
 
 export class TextJustifyComponent implements IEditorButton {

@@ -4,7 +4,7 @@ import {IEditorButton} from "../interfaces/IEditorButton";
 
 @Component({
     selector: 'subscript-editor-button',
-    templateUrl: 'subscript.component.html'
+    template: require('./subscript.component.html')
 })
 
 export class SubscriptComponent implements IEditorButton {
